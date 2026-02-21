@@ -4539,14 +4539,29 @@ function bindControls() {
   }
 
   if (embeddedResultsRoot) {
-    embeddedResultsRoot.addEventListener("click", (event) => {
+    embeddedResultsRoot.addEventListener("click", async (event) => {
       const addBtn = event.target.closest(".js-embedded-add");
       if (addBtn) {
         event.preventDefault();
         const anime = embeddedSearchResults.find((item) => item.id === Number(addBtn.dataset.id));
         if (!anime) return;
-        upsertAnime(anime, addBtn.dataset.status);
-        showToast(`Saved "${anime.title}" as ${statusLabel(addBtn.dataset.status)}.`);
+
+        const targetStatus = String(addBtn.dataset.status || "").toLowerCase();
+        if (!["plan", "watching", "completed"].includes(targetStatus)) return;
+
+        addBtn.disabled = true;
+        const result = await upsertAnime(anime, targetStatus);
+        if (result.success) {
+          const message =
+            targetStatus === "watching"
+              ? `Added "${anime.title}" to Currently Watching.`
+              : `Saved "${anime.title}" as ${statusLabel(targetStatus)}.`;
+          showToast(message);
+          await refreshDashboard();
+        } else {
+          showToast(result.error || "Failed to update anime.");
+        }
+        addBtn.disabled = false;
         return;
       }
 

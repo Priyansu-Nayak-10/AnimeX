@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animex - Create Your Account</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="css/login.css">
+</head>
+
+<body class="login-body">
+    <main class="login-wrapper">
+        <!-- Left Side: Sign Up Section -->
+        <section class="login-container">
+            <div class="login-header">
+                <h1>CREATE YOUR ACCOUNT</h1>
+                <p>Already have an account? <a href="login.html" class="gold-link">Sign in</a></p>
+            </div>
+
+            <form id="signupForm" class="login-form">
+                <div class="input-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" placeholder="Choose a username" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" placeholder="Enter your email" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="password" placeholder="Create a strong password" required>
+                        <button type="button" class="toggle-btn" aria-label="Toggle password visibility">
+                            <i class="fa-regular fa-eye"></i>
+                        </button>
+                    </div>
+                    <div class="strength-meter">
+                        <div id="strengthBar" class="strength-bar"></div>
+                    </div>
+                    <p id="strengthText" class="strength-text"></p>
+                </div>
+
+                <div class="input-group">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="confirmPassword" placeholder="Repeat your password" required>
+                        <button type="button" class="toggle-btn" aria-label="Toggle password visibility">
+                            <i class="fa-regular fa-eye"></i>
+                        </button>
+                    </div>
+                    <p id="matchText" class="validation-text"></p>
+                </div>
+
+                <div class="form-options">
+                    <label class="checkbox-container">
+                        <input type="checkbox" id="terms" required>
+                        <span class="checkmark"></span>
+                        I agree to the <a href="#" class="gold-link">Terms & Conditions</a>
+                    </label>
+                </div>
+
+                <button type="submit" class="btn-signin">Create Account</button>
+            </form>
+        </section>
+
+        <!-- Right Side: Visual Section -->
+        <section class="visual-container">
+            <div class="video-panel">
+                <div class="video-overlay"></div>
+                <video id="loginBackgroundVideo" class="background-video" autoplay muted loop playsinline
+                    poster="https://cdn.myanimelist.net/images/anime/10/47347.jpg">
+                    <!-- High-quality local anime wallpaper provided by user -->
+                    <source src="video/Girl Behind Curtains Live Wallpaper.mp4" type="video/mp4">
+                </video>
+            </div>
+        </section>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase.js"></script>
+    <script src="js/signup.js"></script>
+</body>
+
+</html>

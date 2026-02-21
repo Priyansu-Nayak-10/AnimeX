@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AnimeTracker - Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body class="dashboard-body">
+  <div class="bg-radial"></div>
+
+  <aside class="sidebar glass">
+    <p class="sidebar-logo">ANIMEX</p>
+    <p class="sidebar-section-label">MAIN</p>
+    <nav class="sidebar-nav">
+      <button class="nav-link nav-btn active" data-tab-target="dashboardPanel" title="Dashboard"
+        aria-label="Dashboard"><i class="fa-solid fa-house"></i><span>Dashboard</span></button>
+      <button class="nav-link nav-btn" data-tab-target="searchPanel" title="Search Anime" aria-label="Search Anime"><i
+          class="fa-solid fa-magnifying-glass"></i><span>Search</span></button>
+      <button class="nav-link nav-btn" data-tab-target="watchlistPanel" title="Watchlist" aria-label="Watchlist"><i
+          class="fa-solid fa-bookmark"></i><span>Watchlist</span></button>
+      <button class="nav-link nav-btn" data-tab-target="completedPanel" title="Complete" aria-label="Complete"><i
+          class="fa-solid fa-circle-check"></i><span>Complete</span></button>
+    </nav>
+    <div class="sidebar-divider" aria-hidden="true"></div>
+    <p class="sidebar-section-label">INSIGHTS</p>
+    <nav class="sidebar-nav sidebar-nav-short">
+      <button class="nav-link nav-btn" data-tab-target="insightsPanel" title="Insights" aria-label="Insights"><i
+          class="fa-solid fa-chart-line"></i><span>Insights</span></button>
+    </nav>
+    <div class="sidebar-divider" aria-hidden="true"></div>
+    <p class="sidebar-section-label">ACCOUNT</p>
+    <div class="sidebar-account">
+      <button id="sidebarProfileBtn" class="nav-link nav-btn sidebar-account-btn" data-tab-target="profilePanel"
+        type="button" aria-label="Profile"><i class="fa-solid fa-user"></i><span>Profile</span></button>
+      <button id="sidebarSettingsBtn" class="nav-link nav-btn sidebar-account-btn" data-tab-target="settingsPanel"
+        type="button" aria-label="Settings"><i class="fa-solid fa-gear"></i><span>Settings</span></button>
+      <button id="sidebarExportBtn" class="nav-link nav-btn sidebar-account-btn" data-tab-target="exportPanel"
+        type="button" aria-label="Export data"><i class="fa-solid fa-file-export"></i><span>Export Data</span></button>
+      <button id="sidebarLogoutBtn" class="nav-link nav-btn sidebar-account-btn sidebar-account-logout"
+        data-tab-target="logoutPanel" type="button" aria-label="Logout"><i
+          class="fa-solid fa-right-from-bracket"></i><span>Logout</span></button>
+    </div>
+  </aside>
+  <button id="sidebarBackdrop" class="sidebar-backdrop hidden" type="button" aria-label="Close sidebar"></button>
+
+  <main class="content-shell">
+    <header class="topbar glass">
+      <button id="sidebarToggleBtn" type="button" class="icon-btn sidebar-toggle-btn" aria-label="Toggle navigation">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+      <form id="homeQuickSearchForm" class="topbar-search" autocomplete="off">
+        <div class="quick-search-autocomplete">
+          <input id="homeQuickSearchInput" type="text" placeholder="Search anime..."
+            aria-label="Search anime from dashboard" aria-autocomplete="list" aria-expanded="false"
+            aria-controls="homeQuickSearchSuggestions">
+          <div id="homeQuickSearchSuggestions" class="quick-search-suggestions hidden" role="listbox"
+            aria-label="Anime suggestions"></div>
+        </div>
+        <button type="submit" class="icon-btn" aria-label="Open search"><i
+            class="fa-solid fa-magnifying-glass"></i></button>
+      </form>
+      <div class="topbar-controls">
+        <button class="icon-btn" aria-label="Notifications"><i class="fa-regular fa-bell"></i></button>
+        <button id="profileShortcutBtn" class="icon-btn profile-shortcut-btn" type="button" aria-label="Open profile">
+          <img class="top-avatar" src="https://cdn.myanimelist.net/images/anime/10/47347.jpg" alt="User avatar">
+        </button>
+      </div>
+    </header>
+
+    <section id="dashboardPanel" class="tab-panel dashboard-home">
+      <div class="dashboard-home-grid">
+        <div class="home-main-column">
+          <article class="home-carousel-card glass reveal">
+            <div id="homeHeroCarousel" class="hero-carousel">
+              <p id="homeHeroCarouselState" class="hero-carousel-state">Loading latest anime...</p>
+              <div id="homeHeroCarouselTrack" class="hero-carousel-track hidden"></div>
+              <div id="homeHeroCarouselDots" class="hero-carousel-dots hidden"></div>
+            </div>
+          </article>
+
+          <div class="home-subgrid">
+            <div class="home-subcol home-subcol-left">
+              <article class="home-card home-featured-clip-card featured-clip-empty glass reveal" id="featuredClipCard">
+                <label for="featuredClipUpload" class="featured-clip-upload-btn" title="Upload video"
+                  aria-label="Upload featured clip">
+                  <i class="fa-solid fa-upload"></i>
+                </label>
+                <input id="featuredClipUpload" class="featured-clip-input" type="file"
+                  accept="video/mp4,video/webm,video/ogg,video/*">
+                <video id="featuredClipVideo" class="featured-clip-video" autoplay loop muted playsinline
+                  preload="metadata" poster="https://cdn.myanimelist.net/images/anime/5/17407.jpg"
+                  aria-label="Featured anime clip preview">
+                  <source id="featuredClipSource" type="video/mp4">
+                </video>
+                <p id="featuredClipEmptyText" class="featured-clip-empty-text">Insert your fav clip</p>
+              </article>
+
+              <article class="home-card home-watched-chart-card glass reveal">
+                <h3>Watched genre distribution</h3>
+                <p id="watchedGenreHomeEmptyText" class="muted-text hidden">Complete anime to unlock watched genre
+                  distribution.</p>
+                <div id="watchedGenreChartHomeWrap" class="chart-wrap home-chart-wrap">
+                  <canvas id="watchedGenreChartHome" aria-label="Watched genre distribution on dashboard"></canvas>
+                </div>
+              </article>
+
+              <article class="home-card home-quote-card glass reveal">
+                <h3>Did You Know?</h3>
+                <p id="homeQuoteText">Do you know that your anime activity unlocks smarter fun facts every day?</p>
+                <p id="homeQuoteAnime" class="muted-text">AnimeTracker</p>
+              </article>
+            </div>
+
+            <div class="home-subcol home-subcol-right">
+              <article class="home-card home-plan-chart-card home-achievements-card glass reveal">
+                <h3>Achievements</h3>
+                <p class="muted-text achievement-subtext">Unlock by watching anime</p>
+                <div id="homeAchievementsGrid" class="achievement-grid" aria-label="Achievement badges"></div>
+              </article>
+
+              <article class="home-card home-news-card glass reveal">
+                <div class="news-card-head">
+                  <div class="news-title-wrap">
+                    <h3>Anime news and updates</h3>
+                    <p id="homeNewsLastUpdated" class="news-last-updated muted-text"></p>
+                  </div>
+                  <button id="homeNewsRefreshBtn" class="icon-btn news-refresh-btn" type="button"
+                    aria-label="Refresh anime news" title="Refresh news">
+                    <i class="fa-solid fa-rotate-right"></i>
+                  </button>
+                </div>
+                <p id="homeNewsState" class="news-state">Loading latest anime news...</p>
+                <div id="homeNewsList" class="news-feed-list hidden"></div>
+              </article>
+            </div>
+          </div>
+        </div>
+
+        <aside class="home-right-column">
+          <article class="featured-card glass reveal" id="heroCard">
+            <div id="heroContent" class="featured-content">
+              <img id="heroImage" class="featured-image hidden" alt="Featured anime cover">
+              <div class="featured-info">
+                <p class="section-kicker">currently watching</p>
+                <h2 id="heroTitle">Title</h2>
+                <p id="heroMeta" class="muted-text">episodes remaining</p>
+                <button id="heroUpdateBtn" class="btn btn-primary btn-sm hidden" type="button">Update Progress</button>
+              </div>
+              <div class="hero-ring-wrap">
+                <div id="heroRing" class="hero-ring"><span id="heroRingText">0%</span></div>
+              </div>
+            </div>
+          </article>
+
+          <article class="recommend-card glass reveal">
+            <div class="card-head">
+              <h3>Recommended For You</h3>
+            </div>
+            <p class="muted-text" id="recommendationEmpty">Start watching anime to unlock recommendations.</p>
+            <div id="recommendationList" class="recommendation-list"></div>
+          </article>
+
+          <article class="home-card glass reveal mini-stats-card">
+            <h3>Your quick stats</h3>
+            <div class="mini-stat-row"><span>Total watched</span><strong id="miniStatWatched">0</strong></div>
+            <div class="mini-stat-row"><span>Plan to watch</span><strong id="miniStatPlan">0</strong></div>
+            <div class="mini-stat-row"><span>Genres Explored</span><strong id="miniStatGenresExplored">0</strong></div>
+            <p class="block-title">Top Genres</p>
+            <div id="homeTopGenres" class="genre-chip-list"></div>
+          </article>
+        </aside>
+      </div>
+    </section>
+
+    <section id="watchlistPanel" class="tab-panel hidden panel-section glass">
+      <div class="card-head watchlist-head">
+        <div class="watchlist-title-wrap">
+          <h3>Watchlist</h3>
+          <span id="watchlistCountBadge" class="watchlist-count-badge">0</span>
+        </div>
+        <button id="watchlistRandomPickBtn" type="button" class="btn btn-secondary btn-sm">Pick Something for
+          Me</button>
+      </div>
+      <p id="watchlistRandomPickResult" class="watchlist-random-result muted-text hidden"></p>
+      <p id="watchlistEmptyText" class="muted-text hidden">No anime in watchlist.</p>
+      <div id="watchlistGrid" class="panel-grid"></div>
+      <article class="watchlist-recommend-card glass">
+        <div class="card-head">
+          <h3>Recommended Based on Your Watchlist</h3>
+        </div>
+        <p id="watchlistRecommendEmpty" class="muted-text">Add anime to your watchlist to unlock picks.</p>
+        <div id="watchlistRecommendList" class="recommendation-list watchlist-recommendation-list"></div>
+      </article>
+    </section>
+
+    <section id="searchPanel" class="tab-panel hidden panel-section glass">
+      <div class="search-filters-layout">
+        <div class="search-filters-header">
+          <h3>Filters</h3>
+        </div>
+        <div class="search-filter-grid">
+          <label class="search-filter-control">
+            <span>Select Genre</span>
+            <select id="searchFilterGenre" aria-label="Select Genre">
+              <option value="">Select Genre</option>
+              <option>Action</option>
+              <option>Adventure</option>
+              <option>Cars</option>
+              <option>Comedy</option>
+              <option>Dementia</option>
+              <option>Demons</option>
+              <option>Drama</option>
+              <option>Ecchi</option>
+              <option>Fantasy</option>
+              <option>Game</option>
+              <option>Harem</option>
+              <option>Historical</option>
+              <option>Horror</option>
+              <option>Isekai</option>
+              <option>Josei</option>
+              <option>Kids</option>
+              <option>Magic</option>
+              <option>Martial Arts</option>
+              <option>Mecha</option>
+              <option>Military</option>
+              <option>Music</option>
+              <option>Mystery</option>
+              <option>Parody</option>
+              <option>Police</option>
+              <option>Psychological</option>
+              <option>Romance</option>
+              <option>Samurai</option>
+              <option>School</option>
+              <option>Sci-Fi</option>
+              <option>Seinen</option>
+              <option>Shoujo</option>
+              <option>Shoujo Ai</option>
+              <option>Shounen</option>
+              <option>Shounen Ai</option>
+              <option>Slice of Life</option>
+              <option>Space</option>
+              <option>Sports</option>
+              <option>Super Power</option>
+              <option>Supernatural</option>
+              <option>Thriller</option>
+              <option>Unknown</option>
+              <option>Vampire</option>
+            </select>
+          </label>
+          <label class="search-filter-control">
+            <span>Select Language</span>
+            <select id="searchFilterLanguage" aria-label="Select Language">
+              <option value="">Select Language</option>
+              <option>Japanese</option>
+              <option>English</option>
+              <option>Hindi</option>
+              <option>Korean</option>
+            </select>
+          </label>
+          <label class="search-filter-control">
+            <span>Select Season</span>
+            <select id="searchFilterSeason" aria-label="Select Season">
+              <option value="">Select Season</option>
+              <option>Winter</option>
+              <option>Spring</option>
+              <option>Summer</option>
+              <option>Fall</option>
+            </select>
+          </label>
+          <label class="search-filter-control">
+            <span>Select Year</span>
+            <select id="searchFilterYear" aria-label="Select Year">
+              <option value="">Select Year</option>
+              <option>2026</option>
+              <option>2025</option>
+              <option>2024</option>
+              <option>2023</option>
+              <option>2022</option>
+              <option>2021</option>
+              <option>2020</option>
+            </select>
+          </label>
+          <label class="search-filter-control">
+            <span>Select Status</span>
+            <select id="searchFilterStatus" aria-label="Select Status">
+              <option value="">Select Status</option>
+              <option>Airing</option>
+              <option>Finished</option>
+              <option>Upcoming</option>
+            </select>
+          </label>
+          <label class="search-filter-control">
+            <span>Select Rating</span>
+            <select id="searchFilterRating" aria-label="Select Rating">
+              <option value="">Select Rating</option>
+              <option>G - All Ages</option>
+              <option>PG - Children</option>
+              <option>PG-13 - Teens 13 or older</option>
+              <option>R - 17+ (violence & profanity)</option>
+              <option>R+ - Mild Nudity</option>
+            </select>
+          </label>
+          <label class="search-filter-control">
+            <span>Select Type</span>
+            <select id="searchFilterType" aria-label="Select Type">
+              <option value="">Select Type</option>
+              <option>TV</option>
+              <option>Movie</option>
+              <option>OVA</option>
+              <option>ONA</option>
+              <option>Special</option>
+            </select>
+          </label>
+          <div class="search-filter-control search-filter-reset-wrap">
+            <span>&nbsp;</span>
+            <div class="search-filter-actions">
+              <button id="searchFilterResetBtn" type="button" class="btn btn-secondary">Reset</button>
+              <button id="searchFilterSearchBtn" type="button" class="btn btn-primary">Search</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p id="embeddedSearchEmpty" class="muted-text">Use the main search bar to see results.</p>
+      <div id="embeddedSearchResults" class="results-grid"></div>
+      <div id="embeddedPaginationWrap" class="search-pagination-wrap hidden" aria-label="Search pagination controls">
+        <button id="embeddedPaginationPrev" type="button" class="btn btn-secondary btn-sm">Prev</button>
+        <div id="embeddedPaginationPages" class="search-pagination-pages"></div>
+        <button id="embeddedPaginationNext" type="button" class="btn btn-secondary btn-sm">Next</button>
+      </div>
+      <p id="embeddedPaginationInfo" class="search-pagination-info muted-text hidden"></p>
+    </section>
+
+    <section id="completedPanel" class="tab-panel hidden panel-section glass">
+      <div class="card-head completed-head">
+        <h3>Completed Anime</h3>
+        <div class="completed-head-actions">
+          <label for="completedSortSelect" class="muted-text completed-sort-label">Sort by</label>
+          <select id="completedSortSelect" class="completed-sort-select" aria-label="Sort completed anime">
+            <option value="recent">Recently Completed</option>
+            <option value="rating">Highest Rating</option>
+            <option value="episodes">Highest Episodes</option>
+          </select>
+        </div>
+      </div>
+      <div class="completed-insights-row">
+        <article class="completed-insight-card glass">
+          <p class="muted-text">Total Hours Watched</p>
+          <p id="completedTotalHours" class="completed-insight-value">0h</p>
+        </article>
+      </div>
+      <article class="chart-card glass completed-genre-card">
+        <h3>Completed Genre Breakdown</h3>
+        <p id="completedGenreEmptyText" class="muted-text hidden">Complete anime to see genre breakdown.</p>
+        <div id="completedGenreChartWrap" class="chart-wrap">
+          <canvas id="completedGenreChart" aria-label="Completed genre breakdown"></canvas>
+        </div>
+      </article>
+      <p id="completedEmptyText" class="muted-text hidden">No completed anime yet.</p>
+      <div id="completedGrid" class="panel-grid"></div>
+      <article class="completed-recommend-card glass">
+        <div class="card-head">
+          <h3>Because You Completed Similar Anime</h3>
+        </div>
+        <p id="completedRecommendEmpty" class="muted-text">Complete anime to unlock recommendations.</p>
+        <div id="completedRecommendList" class="recommendation-list completed-recommendation-list"></div>
+      </article>
+    </section>
+
+    <section id="insightsPanel" class="tab-panel hidden panel-section glass insights-panel">
+      <div class="card-head">
+        <h3>Insights</h3>
+      </div>
+
+      <section class="insights-section insights-statistics">
+        <div class="insights-section-head">
+          <h4>Statistics</h4>
+          <p class="muted-text">Performance overview from your current anime list.</p>
+        </div>
+
+        <div class="insights-summary-grid">
+          <article class="insight-card glass">
+            <p class="insight-label">Total Completed Anime</p>
+            <p id="insightTotalCompleted" class="insight-value">0</p>
+          </article>
+          <article class="insight-card glass">
+            <p class="insight-label">Currently Watching</p>
+            <p id="insightCurrentlyWatching" class="insight-value">0</p>
+          </article>
+          <article class="insight-card glass">
+            <p class="insight-label">Plan to Watch</p>
+            <p id="insightPlanToWatch" class="insight-value">0</p>
+          </article>
+          <article class="insight-card glass">
+            <p class="insight-label">Total Episodes Watched</p>
+            <p id="insightTotalEpisodesWatched" class="insight-value">0</p>
+          </article>
+          <article class="insight-card glass">
+            <p class="insight-label">Estimated Watch Time</p>
+            <p id="insightEstimatedWatchTime" class="insight-value">0h</p>
+          </article>
+          <article class="insight-card glass">
+            <p class="insight-label">Average Rating Given</p>
+            <p id="insightAverageRating" class="insight-value">0.0</p>
+          </article>
+          <article class="insight-card glass">
+            <p class="insight-label">Favorite Genre</p>
+            <p id="insightFavoriteGenre" class="insight-value">No data</p>
+          </article>
+          <article class="insight-card glass">
+            <p class="insight-label">Favorite Studio</p>
+            <p id="insightFavoriteStudio" class="insight-value">No data</p>
+          </article>
+        </div>
+
+        <div class="insights-chart-grid">
+          <article class="chart-card glass">
+            <h3>Status Breakdown</h3>
+            <p id="insightStatusBreakdownEmpty" class="muted-text hidden">No status data to visualize yet.</p>
+            <div id="insightStatusBreakdownWrap" class="chart-wrap">
+              <canvas id="insightStatusBreakdownChart" aria-label="Status breakdown chart"></canvas>
+            </div>
+          </article>
+          <article class="chart-card glass">
+            <h3>Genre Distribution</h3>
+            <p id="insightGenreDistributionEmpty" class="muted-text hidden">Watch anime to see genre distribution.</p>
+            <div id="insightGenreDistributionWrap" class="chart-wrap">
+              <canvas id="insightGenreDistributionChart" aria-label="Genre distribution chart"></canvas>
+            </div>
+          </article>
+          <article class="chart-card glass insights-month-chart">
+            <h3>Episodes Watched Per Month</h3>
+            <p id="insightEpisodesByMonthEmpty" class="muted-text hidden">Monthly trend appears once dated progress
+              exists.</p>
+            <div id="insightEpisodesByMonthWrap" class="chart-wrap">
+              <canvas id="insightEpisodesByMonthChart" aria-label="Episodes watched per month chart"></canvas>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <div class="insights-divider" aria-hidden="true"></div>
+
+      <section class="insights-section insights-achievements">
+        <div class="insights-section-head">
+          <h4>Achievements</h4>
+          <p class="muted-text">Progress unlocks rewards as your anime journey grows.</p>
+        </div>
+        <p id="insightAchievementsEmpty" class="muted-text hidden">No achievements available yet.</p>
+        <div id="insightAchievementsGrid" class="insight-achievement-grid"></div>
+      </section>
+    </section>
+
+    <section id="profilePanel" class="tab-panel hidden panel-section glass account-panel profile-panel">
+      <article class="profile-hero glass">
+        <div id="profileHeroBanner" class="profile-hero-banner"></div>
+        <button id="profileEditBtn" class="profile-edit-icon-btn icon-btn" type="button" aria-label="Edit profile">
+          <i class="fa-solid fa-pen"></i>
+        </button>
+        <div class="profile-hero-content">
+          <img id="profileAvatarPreview" class="profile-avatar profile-hero-avatar" src="" alt="Profile avatar">
+          <div class="profile-hero-meta">
+            <h2 id="profileDisplayName" class="profile-display-name">Shadow</h2>
+            <p id="profileDisplayBio" class="profile-display-bio">No bio yet. Add your anime personality.</p>
+            <p id="profileDisplayEmail" class="profile-display-email hidden"></p>
+          </div>
+        </div>
+      </article>
+
+      <article class="profile-stats-card glass">
+        <div class="card-head">
+          <h3>Quick Overview</h3>
+        </div>
+        <div id="profileStatsGrid" class="profile-stats-grid"></div>
+      </article>
+
+      <article class="profile-dna-card glass">
+        <div class="card-head">
+          <h3>Anime Taste DNA</h3>
+        </div>
+        <div id="profileTasteTags" class="profile-taste-tags"></div>
+      </article>
+    </section>
+
+    <section id="settingsPanel" class="tab-panel hidden panel-section glass account-panel">
+      <div class="card-head">
+        <h3>Settings</h3>
+        <p class="muted-text">Tune appearance and safety controls.</p>
+      </div>
+      <div class="settings-layout premium-settings-layout">
+        <article class="settings-card glass">
+          <div class="settings-section-head">
+            <h4>Appearance</h4>
+            <p>Pick your interface mood.</p>
+          </div>
+          <div id="settingsThemeSegmented" class="theme-segmented" role="group" aria-label="Theme preference">
+            <button class="theme-segment-btn" data-theme-value="dark" type="button" aria-pressed="false">Dark</button>
+            <button class="theme-segment-btn" data-theme-value="light" type="button" aria-pressed="false">Light</button>
+            <button class="theme-segment-btn" data-theme-value="system" type="button"
+              aria-pressed="false">System</button>
+          </div>
+        </article>
+
+        <article class="settings-card glass danger-zone-card">
+          <div class="settings-section-head">
+            <h4>Danger Zone</h4>
+            <p>High impact actions require confirmation.</p>
+          </div>
+          <div class="settings-actions settings-danger-actions">
+            <button id="settingsResetProgressBtn" class="btn btn-secondary" type="button">Reset Watch Progress</button>
+            <button id="settingsClearAllDataBtn" class="btn btn-danger-outline" type="button">Clear All Data</button>
+          </div>
+          <p id="settingsStatusMessage" class="muted-text hidden"></p>
+        </article>
+
+        <article class="settings-card glass">
+          <div class="settings-section-head">
+            <h4>Preferences</h4>
+            <p>Save your workflow defaults instantly.</p>
+          </div>
+          <label class="account-field">
+            <span>Default Sorting</span>
+            <select id="settingsDefaultSortSelect">
+              <option value="recent">Recently Completed</option>
+              <option value="rating">Highest Rating</option>
+              <option value="episodes">Highest Episodes</option>
+            </select>
+          </label>
+          <label class="settings-switch">
+            <input id="settingsConfirmDeleteToggle" type="checkbox" checked>
+            <span class="settings-switch-track" aria-hidden="true"><span class="settings-switch-thumb"></span></span>
+            <span class="settings-switch-label">Confirm before delete</span>
+          </label>
+        </article>
+      </div>
+    </section>
+
+    <section id="exportPanel" class="tab-panel hidden panel-section glass account-panel">
+      <div class="card-head">
+        <h3>Backup &amp; Data Transfer</h3>
+        <p class="muted-text">Secure your anime journey and move data safely.</p>
+      </div>
+      <div class="export-layout premium-export-layout">
+        <article class="export-card glass export-left-card">
+          <div class="settings-section-head">
+            <h4>Backup &amp; Export</h4>
+            <p>Create portable snapshots of your anime library.</p>
+          </div>
+          <div class="export-actions-grid">
+            <button id="exportJsonBtn" class="export-action-card export-action-json" type="button">
+              <span class="export-action-icon"><i class="fa-solid fa-cloud-arrow-down"></i></span>
+              <span class="export-action-copy">
+                <strong>Download Backup</strong>
+                <small>JSON snapshot for safe restore and migration.</small>
+              </span>
+            </button>
+            <button id="exportCsvBtn" class="export-action-card export-action-csv" type="button">
+              <span class="export-action-icon"><i class="fa-solid fa-table"></i></span>
+              <span class="export-action-copy">
+                <strong>Export Spreadsheet</strong>
+                <small>CSV file for analysis and productivity tools.</small>
+              </span>
+            </button>
+          </div>
+          <p id="exportLastBackupText" class="export-last-backup muted-text">Last backup created: Never</p>
+        </article>
+
+        <article id="exportImportCard" class="export-card glass export-right-card">
+          <div class="settings-section-head">
+            <h4>Import &amp; Restore</h4>
+            <p>Validate then merge, replace, or fully restore data.</p>
+          </div>
+          <label class="account-field file-field">
+            <span>Choose JSON file</span>
+            <input id="importDataInput" type="file" accept="application/json,.json">
+            <small id="importSelectedFile" class="field-hint">No file selected.</small>
+          </label>
+          <label id="importModeWrap" class="account-field import-mode-wrap">
+            <span>Import Mode</span>
+            <select id="importModeSelect">
+              <option value="merge">Merge</option>
+              <option value="replace">Replace</option>
+            </select>
+            <small class="field-hint import-mode-hint">Merge updates entries, Replace overwrites all existing
+              data.</small>
+          </label>
+          <div class="settings-actions export-import-actions">
+            <button id="importDataBtn" class="btn btn-secondary" type="button">Import Data</button>
+            <button id="exportRestoreBackupBtn" class="btn btn-danger-outline" type="button">Restore Backup</button>
+          </div>
+          <p id="exportStatusMessage" class="muted-text hidden"></p>
+        </article>
+      </div>
+    </section>
+
+    <section id="logoutPanel" class="tab-panel hidden panel-section glass account-panel">
+      <div class="card-head">
+        <h3>Logout</h3>
+      </div>
+      <article class="settings-card glass logout-card">
+        <p>Ready to end this session? Your anime list will stay saved unless you clear data in Settings.</p>
+        <button id="logoutActionBtn" class="btn btn-danger" type="button">Logout</button>
+      </article>
+    </section>
+  </main>
+
+  <div id="embeddedAnimeModal" class="anime-modal hidden" role="dialog" aria-modal="true"
+    aria-labelledby="embeddedModalTitle" aria-hidden="true">
+    <div class="anime-modal-backdrop" id="embeddedAnimeModalBackdrop"></div>
+    <article class="anime-modal-card glass">
+      <button id="embeddedAnimeModalClose" class="anime-modal-close" aria-label="Close details">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+      <div class="anime-modal-layout">
+        <div class="anime-modal-left">
+          <img id="embeddedModalImage" src="" alt="Anime poster">
+        </div>
+        <div class="anime-modal-right">
+          <div class="modal-title-row">
+            <h3 id="embeddedModalTitle"></h3>
+          </div>
+          <p id="embeddedModalAltTitle" class="modal-alt-title hidden"></p>
+          <p id="embeddedModalDescription" class="modal-description"></p>
+          <button id="embeddedModalReadMoreBtn" class="btn btn-secondary btn-sm hidden">Read more</button>
+          <div id="embeddedModalMetaGrid" class="modal-meta-grid"></div>
+          <div class="modal-action-row">
+            <button id="embeddedModalPlanBtn" class="btn btn-primary">Add to Plan</button>
+            <button id="embeddedModalWatchingBtn" class="btn btn-secondary">Mark as Watching</button>
+            <button id="embeddedModalCompletedBtn" class="btn btn-secondary">Mark as Completed</button>
+            <button id="embeddedModalRemoveBtn" class="btn btn-danger hidden">Remove</button>
+          </div>
+        </div>
+      </div>
+    </article>
+  </div>
+
+  <div id="confirmActionModal" class="confirm-action-modal hidden" role="dialog" aria-modal="true"
+    aria-labelledby="confirmActionTitle" aria-hidden="true">
+    <button id="confirmActionBackdrop" class="confirm-action-backdrop" type="button"
+      aria-label="Close confirmation"></button>
+    <article class="confirm-action-card glass">
+      <h3 id="confirmActionTitle">Confirm action</h3>
+      <p id="confirmActionMessage">Are you sure?</p>
+      <div class="confirm-action-row">
+        <button id="confirmActionCancelBtn" class="btn btn-secondary" type="button">Cancel</button>
+        <button id="confirmActionConfirmBtn" class="btn btn-danger" type="button">Confirm</button>
+      </div>
+    </article>
+  </div>
+
+  <div id="profileEditModal" class="profile-edit-modal hidden" role="dialog" aria-modal="true"
+    aria-labelledby="profileEditTitle" aria-hidden="true">
+    <button id="profileEditBackdrop" class="profile-edit-backdrop" type="button"
+      aria-label="Close edit profile"></button>
+    <article class="profile-edit-card glass">
+      <div class="card-head">
+        <h3 id="profileEditTitle">Edit Profile</h3>
+      </div>
+      <div class="profile-edit-fields">
+        <section class="profile-upload-block">
+          <p class="profile-upload-title">Avatar</p>
+          <div class="profile-avatar-upload-row">
+            <img id="profileAvatarUploadPreview" class="profile-avatar-upload-preview" src="" alt="Avatar preview">
+            <div class="profile-upload-actions">
+              <button id="profileAvatarUploadBtn" class="btn btn-secondary btn-sm" type="button">Change Avatar</button>
+              <button id="profileAvatarRemoveBtn" class="btn btn-danger-outline btn-sm" type="button">Remove
+                Avatar</button>
+              <input id="profileAvatarFileInput" type="file" accept="image/*" class="hidden"
+                aria-label="Upload avatar image">
+            </div>
+          </div>
+        </section>
+
+        <section class="profile-upload-block">
+          <p class="profile-upload-title">Profile Banner</p>
+          <div id="profileBannerPreview" class="profile-banner-preview">
+            <span class="profile-banner-placeholder">No custom banner selected.</span>
+          </div>
+          <div class="profile-upload-actions profile-banner-actions">
+            <button id="profileBannerImageUploadBtn" class="btn btn-secondary btn-sm" type="button">Upload
+              Image</button>
+            <button id="profileBannerVideoUploadBtn" class="btn btn-secondary btn-sm" type="button">Upload
+              Video</button>
+            <button id="profileBannerRemoveBtn" class="btn btn-danger-outline btn-sm" type="button">Remove
+              Banner</button>
+            <input id="profileBannerImageInput" type="file" accept="image/*" class="hidden"
+              aria-label="Upload profile banner image">
+            <input id="profileBannerVideoInput" type="file" accept="video/mp4,video/webm" class="hidden"
+              aria-label="Upload profile banner video">
+          </div>
+          <small class="field-hint">Video formats: MP4/WebM, max 2 MB.</small>
+          <label class="banner-height-control" for="profileBannerHeightInput">
+            <span>Banner Height</span>
+            <strong id="profileBannerHeightValue">240px</strong>
+          </label>
+          <input id="profileBannerHeightInput" class="banner-height-slider" type="range" min="180" max="400" value="240"
+            step="1" aria-label="Banner height">
+        </section>
+
+        <label class="account-field">
+          <span>Username</span>
+          <input id="profileUsernameInput" type="text" placeholder="Username">
+        </label>
+        <label class="account-field">
+          <span>Email</span>
+          <input id="profileEmailInput" type="email" placeholder="Email (optional)">
+        </label>
+        <label class="account-field">
+          <span>Bio</span>
+          <textarea id="profileBioInput" rows="3" placeholder="Tell us something about your anime taste..."></textarea>
+        </label>
+        <p id="profileUploadStatus" class="profile-upload-status muted-text hidden" aria-live="polite"></p>
+      </div>
+      <div class="profile-edit-actions">
+        <button id="profileEditCancelBtn" class="btn btn-secondary" type="button">Cancel</button>
+        <button id="profileEditSaveBtn" class="btn btn-primary" type="button">Save</button>
+      </div>
+    </article>
+  </div>
+
+  <div class="toast" id="toast">Notification Update</div>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js" defer></script>
+  <script src="js/data.js" defer></script>
+  <script src="js/chart.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase.js"></script>
+  <script src="js/dashboard.js" defer></script>
+</body>
+
+</html>

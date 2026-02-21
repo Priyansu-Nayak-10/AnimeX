@@ -567,13 +567,18 @@ function reconcileAnimeProgress(list) {
   const next = list.map((anime) => {
     const episodes = Number(anime.episodes) || 0;
     let watched = Math.max(0, Number(anime.watchedEpisodes) || 0);
-    let status = anime.status;
+    const intentStatus = String(anime.status || "").toLowerCase();
+    let status = intentStatus;
 
     if (episodes > 0 && watched >= episodes) {
       watched = episodes;
       status = "completed";
     } else if (watched > 0) {
       status = "watching";
+    } else if (intentStatus === "watching") {
+      status = "watching";
+    } else if (intentStatus === "completed") {
+      status = "completed";
     } else {
       status = "plan";
     }

@@ -1257,8 +1257,8 @@ function bindFeaturedClipUpload(card, video, source, uploadInput) {
     featuredClipObjectUrl = URL.createObjectURL(file);
     applyFeaturedClipSource(video, source, featuredClipObjectUrl, file.type || "video/mp4");
     setFeaturedClipEmptyState(card, emptyText, false);
-    card.dataset.clipSourceLoaded = "1";
     card.dataset.clipHasMedia = "1";
+    video.hidden = false;
     ensureFeaturedClipPlayback(video);
 
     if (file.size <= FEATURED_CLIP_MAX_PERSIST_BYTES) {
@@ -1557,25 +1557,22 @@ function renderFeaturedClipCard(completed, watching) {
   const { card, video, source, uploadInput, emptyText } = getFeaturedClipElements();
   if (!card || !video || !source) return;
 
-  const selectedAnime = watching[0] || completed[0] || ANIME_DB[0] || null;
-  if (selectedAnime?.image) video.poster = selectedAnime.image;
-
-  if (card.dataset.clipSourceLoaded !== "1") {
-    const stored = loadStoredFeaturedClip();
-    if (stored?.src) {
-      applyFeaturedClipSource(video, source, stored.src, stored.type);
-      setFeaturedClipEmptyState(card, emptyText, false);
-      card.dataset.clipHasMedia = "1";
-    } else {
-      clearFeaturedClipSource(video, source);
-      setFeaturedClipEmptyState(card, emptyText, true);
-      card.dataset.clipHasMedia = "0";
-    }
-    card.dataset.clipSourceLoaded = "1";
+  const stored = loadStoredFeaturedClip();
+  if (stored?.src) {
+    applyFeaturedClipSource(video, source, stored.src, stored.type);
+    setFeaturedClipEmptyState(card, emptyText, false);
+    card.dataset.clipHasMedia = "1";
+  } else {
+    clearFeaturedClipSource(video, source);
+    setFeaturedClipEmptyState(card, emptyText, true);
+    card.dataset.clipHasMedia = "0";
   }
 
+  const hasMedia = card.dataset.clipHasMedia === "1";
+  video.hidden = !hasMedia;
+
   bindFeaturedClipUpload(card, video, source, uploadInput);
-  if (card.dataset.clipHasMedia === "1") {
+  if (hasMedia) {
     ensureFeaturedClipPlayback(video);
   } else {
     video.pause();
@@ -1686,6 +1683,23 @@ function scoreRecommendationCandidate(anime, profile) {
   return score;
 }
 
+function resolveRecommendationImageUrl(value) {
+  const raw = String(value || "").trim();
+  if (!raw) return null;
+  const hasHttp = /^https?:\/\//i.test(raw);
+  const hasProtocolRelative = /^\/\//.test(raw);
+  const isDataImage = /^data:image\/[a-z]+/i.test(raw);
+  if (!hasHttp && !hasProtocolRelative && !isDataImage) return null;
+  if (hasProtocolRelative) return `https:${raw}`;
+  return raw;
+}
+
+function getRecommendationMetaText(anime) {
+  const genres = Array.isArray(anime.genres) ? anime.genres : [];
+  const filtered = genres.filter((genre) => Boolean(String(genre || "").trim()));
+  return filtered.slice(0, 3).join(", ") || "Genres unavailable";
+}
+
 function renderRecommendations(completed, fullList) {
   const root = document.getElementById("recommendationList");
   const empty = document.getElementById("recommendationEmpty");
@@ -1746,17 +1760,21 @@ function renderRecommendations(completed, fullList) {
   empty.classList.add("hidden");
   root.dataset.renderKey = renderKey;
   root.innerHTML = picks
-    .map(
-      (anime) => `
+    .map((anime) => {
+      const imageSrc = resolveRecommendationImageUrl(anime.image);
+      const imageMarkup = imageSrc
+        ? `<img loading="lazy" src="${imageSrc}" alt="${anime.title} cover">`
+        : `<div class="recommend-item-placeholder" aria-hidden="true"><i class="fa-regular fa-image"></i></div>`;
+      return `
       <article class="recommend-item">
-        <img src="${anime.image}" alt="${anime.title}">
+        ${imageMarkup}
         <div>
           <h4>${anime.title}</h4>
-          <p class="anime-meta">${anime.genres.slice(0, 3).join(", ")}</p>
+          <p class="anime-meta">${getRecommendationMetaText(anime)}</p>
           <button class="btn btn-primary btn-sm js-add-plan" data-id="${anime.id}">Add to Plan</button>
         </div>
-      </article>`
-    )
+      </article>`;
+    })
     .join("");
 }
 
@@ -3200,7 +3218,7 @@ function setEmbeddedModalActionState(animeId) {
 
   if (!isSearchMode) {
     removeBtn.disabled = !existing;
-    removeBtn.textContent = existing ? "Remove" : "Already removed";
+    removeBtn.textContent = "Remove";
     return;
   }
 
@@ -3247,28 +3265,28 @@ async function bindEmbeddedModalActions(anime) {
   watchingBtn.onclick = () => setStatus("watching");
   completedBtn.onclick = () => setStatus("completed");
 
-    removeBtn.onclick = async () => {
-        if (confirmBeforeDeleteEnabled) {
-            const approved = await openConfirmModal({
-                title: "Delete anime entry",
-                message: `Remove "${anime.title}" from your list?`,
-                confirmLabel: "Remove",
-                danger: true
-            });
-            if (!approved) return;
-        }
+  removeBtn.onclick = async () => {
+    if (confirmBeforeDeleteEnabled) {
+      const approved = await openConfirmModal({
+        title: "Delete anime entry",
+        message: `Remove "${anime.title}" from your list?`,
+        confirmLabel: "Remove",
+        danger: true
+      });
+      if (!approved) return;
+    }
 
-        removeBtn.disabled = true;
-        const success = removeAnimeEntry(anime.id);
-        if (success) {
-            showToast(`Removed "${anime.title}".`);
-            await refreshDashboard();
-            setEmbeddedModalActionState(anime.id);
-        } else {
-            showToast("Anime not found.");
-        }
-        removeBtn.disabled = false;
-    };
+    removeBtn.disabled = true;
+    const success = removeAnimeEntry(anime.id);
+    if (success) {
+      showToast(`Removed "${anime.title}".`);
+      closeEmbeddedAnimeModal();
+      await refreshDashboard();
+    } else {
+      showToast("Anime not found.");
+    }
+    removeBtn.disabled = false;
+  };
 }
 
 async function openEmbeddedAnimeModal(animeId) {
@@ -4568,13 +4586,22 @@ function bindControls() {
   bindLibraryGrid(completedGrid);
 
   if (recommendationList) {
-    recommendationList.addEventListener("click", (event) => {
+    recommendationList.addEventListener("click", async (event) => {
       const btn = event.target.closest(".js-add-plan");
       if (!btn) return;
       const anime = ANIME_DB.find((item) => item.id === Number(btn.dataset.id));
       if (!anime) return;
-      upsertAnime(anime, "plan");
-      showToast(`Added "${anime.title}" to plan.`);
+
+      btn.disabled = true;
+      const payload = { ...anime, watchedEpisodes: 0, status: "plan" };
+      const result = await upsertAnime(payload, "watching");
+      if (result.success) {
+        showToast(`Added "${anime.title}" to Currently Watching.`);
+        await refreshDashboard();
+      } else {
+        showToast(result.error || "Unable to add anime to Currently Watching.");
+      }
+      btn.disabled = false;
     });
   }
 

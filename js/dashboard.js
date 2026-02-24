@@ -3897,50 +3897,108 @@ function renderExportPage() {
 async function resetProgress() {
   const approved = await openConfirmModal({
     title: "Reset watch progress",
-    message: "Reset watched episodes for all anime and move entries back to Plan?",
+    message: "Zero out all progress for your currently watching anime?",
     confirmLabel: "Reset",
     danger: true
   });
   if (!approved) return;
 
-  const list = getAnimeList();
-  const now = new Date().toISOString();
-  const next = list.map((item) => ({
-    ...item,
-    watchedEpisodes: 0,
-    status: "plan",
-    updatedAt: now
-  }));
-  saveAnimeList(next);
-  localStorage.removeItem(ACHIEVEMENTS_STORAGE_KEY);
-  window.dispatchEvent(new Event("animeDataUpdated"));
-  setStatusMessage("settingsStatusMessage", "Watch progress reset.");
-  showToast("Watch progress reset.");
+  const session = await SupabaseAuth.getSession();
+  if (!session) {
+    setStatusMessage("settingsStatusMessage", "Session expired. Please reload and try again.", true);
+    showToast("Unable to reset progress.");
+    return;
+  }
+
+  try {
+    const { error } = await supabaseClient
+      .from("currently_watching")
+      .update({ progress: 0 })
+      .eq("user_id", session.user.id);
+
+    if (error) throw error;
+
+    const now = new Date().toISOString();
+    const nextList = getAnimeList().map((entry) =>
+      entry.status === "watching"
+        ? { ...entry, watchedEpisodes: 0, updatedAt: now }
+        : entry
+    );
+    saveAnimeList(nextList);
+    window.dispatchEvent(new Event("animeDataUpdated"));
+
+    setStatusMessage("settingsStatusMessage", "Watch progress reset.");
+    showToast("Watch progress reset.");
+  } catch (error) {
+    console.error("Unable to reset watch progress:", error);
+    setStatusMessage("settingsStatusMessage", "Reset failed. Try again later.", true);
+    showToast("Reset failed.");
+  }
 }
 
 async function clearAllData() {
   const approved = await openConfirmModal({
     title: "Clear all data",
-    message: "Delete all local anime data and profile data? This cannot be undone.",
+    message: "Delete every stored anime entry, achievements, and profile cache without removing your account?",
     confirmLabel: "Clear",
     danger: true
   });
   if (!approved) return;
+
+  const session = await SupabaseAuth.getSession();
+  if (!session) {
+    setStatusMessage("settingsStatusMessage", "Session expired. Please reload and try again.", true);
+    showToast("Unable to clear data.");
+    return;
+  }
+
+  const tablesToDelete = ["watchlist", "completed", "currently_watching", "achievements"];
+  try {
+    for (const table of tablesToDelete) {
+      const { error } = await supabaseClient.from(table).delete().eq("user_id", session.user.id);
+      if (error) throw error;
+    }
+
+    const { error: profileError } = await supabaseClient
+      .from("profiles")
+      .update({
+        avatar_url: null,
+        banner_url: null,
+        theme_preference: "system",
+        sort_preference: "recent"
+      })
+      .eq("id", session.user.id);
+    if (profileError) throw profileError;
+  } catch (error) {
+    console.error("Unable to clear all data:", error);
+    setStatusMessage("settingsStatusMessage", "Clear failed. Try again later.", true);
+    showToast("Clear failed.");
+    return;
+  }
 
   [
     ANIME_STORAGE_KEY,
     PROFILE_DATA_KEY,
     ACHIEVEMENTS_STORAGE_KEY,
     FEATURED_CLIP_STORAGE_KEY,
-    NEWS_CACHE_KEY,
-    HERO_CAROUSEL_CACHE_KEY
+    REALTIME_NEWS_CACHE_KEY,
+    HERO_CAROUSEL_CACHE_KEY,
+    LAST_BACKUP_TIMESTAMP_KEY,
+    DASHBOARD_TAB_RESET_FLAG
   ].forEach((key) => localStorage.removeItem(key));
-  setLastBackupTimestamp("");
+  AUTH_TOKEN_KEYS.forEach((key) => localStorage.removeItem(key));
+
   pendingImportFile = null;
   closeProfileEditModal();
+  saveAnimeList([]);
+  initializeAppPreferences();
+  renderSettings();
+  renderExportPage();
+  setLastBackupTimestamp("");
   window.dispatchEvent(new Event("animeDataUpdated"));
+
   setStatusMessage("settingsStatusMessage", "All local data cleared.");
-  showToast("All local data cleared.");
+  showToast("All data cleared.");
 }
 
 function dedupeAnimeList(list) {

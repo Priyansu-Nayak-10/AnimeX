@@ -4727,13 +4727,13 @@ function bindControls() {
       if (!anime) return;
 
       btn.disabled = true;
-      const payload = { ...anime, watchedEpisodes: 0, status: "plan" };
-      const result = await upsertAnime(payload, "watching");
+      const payload = { ...anime, watchedEpisodes: 0 };
+      const result = await upsertAnime(payload, "plan");
       if (result.success) {
-        showToast(`Added "${anime.title}" to Currently Watching.`);
+        showToast(`Added "${anime.title}" to your Plan to Watch list.`);
         await refreshDashboard();
       } else {
-        showToast(result.error || "Unable to add anime to Currently Watching.");
+        showToast(result.error || "Unable to add anime to your plan list.");
       }
       btn.disabled = false;
     });

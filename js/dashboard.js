@@ -5032,8 +5032,9 @@ function bindControls() {
 
 document.addEventListener("DOMContentLoaded", async () => {
   // Session Protection
-  const session = await SupabaseAuth.protectPage();
-  if (!session) return; // protectPage handles redirect
+  const authEnabled = Boolean(SupabaseAuth?.isAvailable);
+  const session = authEnabled ? await SupabaseAuth.protectPage() : null;
+  if (authEnabled && !session) return; // protectPage handles redirect
 
   initializeAppPreferences();
   bindControls();

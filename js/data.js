@@ -44,18 +44,40 @@ const ANIME_DB = [
 ];
 
 const STORAGE_KEY = "animeList";
+const ANIME_STORAGE_TABLE = "anime_list";
+const ANIME_STORAGE_USER_COLUMN = "user_id";
+
+let animeListCache = readLocalAnimeListRaw();
+let animeStorageInitPromise = null;
+let animeStorageInitialized = false;
 
 function getAnimeList() {
+  return Array.isArray(animeListCache) ? animeListCache.slice() : [];
+}
+
+function saveAnimeList(list) {
+  const normalized = Array.isArray(list) ? list : [];
+  animeListCache = normalized.slice();
+  persistLocalAnimeList(normalized);
+  persistSupabaseAnimeList(normalized);
+}
+
+function readLocalAnimeListRaw() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? JSON.parse(raw) : [];
+    const parsed = raw ? JSON.parse(raw) : [];
+    return Array.isArray(parsed) ? parsed : [];
   } catch (_) {
     return [];
   }
 }
 
-function saveAnimeList(list) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+function persistLocalAnimeList(list) {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+  } catch (_) {
+    // ignore localStorage write failures (e.g. quota)
+  }
 }
 
 function normalizeTitle(anime) {
@@ -123,4 +145,71 @@ function statusLabel(value) {
   if (value === "completed") return "Completed";
   if (value === "watching") return "Watching";
   return "Plan";
+}
+
+async function readSupabaseAnimeList() {
+  try {
+    const session = await SupabaseAuth.getSession();
+    if (!session) return null;
+    const { data, error } = await supabaseClient
+      .from(ANIME_STORAGE_TABLE)
+      .select("data")
+      .eq(ANIME_STORAGE_USER_COLUMN, session.user.id)
+      .maybeSingle();
+    if (error) throw error;
+    const payload = data?.data;
+    if (!Array.isArray(payload)) return [];
+    return payload;
+  } catch (error) {
+    console.error("Unable to fetch anime list from Supabase:", error?.message || error);
+    return null;
+  }
+}
+
+async function upsertSupabaseAnimeList(list) {
+  try {
+    const session = await SupabaseAuth.getSession();
+    if (!session) return false;
+    const payload = {
+      [ANIME_STORAGE_USER_COLUMN]: session.user.id,
+      data: list
+    };
+    const { error } = await supabaseClient
+      .from(ANIME_STORAGE_TABLE)
+      .upsert(payload, { onConflict: ANIME_STORAGE_USER_COLUMN });
+    if (error) throw error;
+    return true;
+  } catch (error) {
+    console.error("Unable to persist anime list to Supabase:", error?.message || error);
+    return false;
+  }
+}
+
+function persistSupabaseAnimeList(list) {
+  if (!Array.isArray(list)) return;
+  (async () => {
+    await upsertSupabaseAnimeList(list);
+  })();
+}
+
+async function initializeAnimeStorage() {
+  if (animeStorageInitialized) return;
+  if (animeStorageInitPromise) return animeStorageInitPromise;
+
+  animeStorageInitPromise = (async () => {
+    const localData = readLocalAnimeListRaw();
+    const remoteData = await readSupabaseAnimeList();
+    if (Array.isArray(remoteData) && remoteData.length) {
+      animeListCache = remoteData.slice();
+      persistLocalAnimeList(animeListCache);
+    } else if (localData.length) {
+      animeListCache = localData.slice();
+      await upsertSupabaseAnimeList(localData);
+    } else {
+      animeListCache = localData.slice();
+    }
+    animeStorageInitialized = true;
+  })();
+
+  await animeStorageInitPromise;
 }

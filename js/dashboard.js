@@ -4980,6 +4980,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   initializeAppPreferences();
   bindControls();
   SectionModules.Search.renderResults();
+  await initializeAnimeStorage();
   const resetAfterLogin = consumeFreshLoginTabResetFlag();
   removeUrlHash();
   const urlParams = new URLSearchParams(window.location.search);

@@ -290,10 +290,28 @@ function stableAnimeListKey(list) {
 }
 
 function normalizeAnimeTitleKey(value) {
-  return String(value || "")
+  const raw = String(value || "");
+  const asciiParentheses = raw.replace(/[（【]/g, "(").replace(/[）】]/g, ")");
+  const withoutParenthetical = asciiParentheses
+    .replace(/\([^)]*\)/g, " ")
+    .replace(/\[[^\]]*\]/g, " ");
+  const withoutEditionTerms = withoutParenthetical.replace(
+    /\b(?:season|tv|ova|ona|movie|special|part|arc|cour|edition|remake)\b/gi,
+    " "
+  );
+  const withoutYear = withoutEditionTerms.replace(/\b(?:19|20)\d{2}\b/g, " ");
+  return withoutYear
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, " ")
     .trim();
+}
+
+function getAnimeCanonicalId(anime) {
+  const malId = Number(anime?.malId || anime?.mal_id);
+  if (Number.isFinite(malId) && malId > 0) return malId;
+  const fallbackId = Number(anime?.id);
+  if (Number.isFinite(fallbackId) && fallbackId > 0) return fallbackId;
+  return null;
 }
 
 function safeParseJson(raw, fallback) {
@@ -1722,13 +1740,21 @@ function renderRecommendations(completed, fullList) {
     return;
   }
 
-  const consumedById = new Set(profile.consumed.map((anime) => Number(anime.id) || 0));
+  const consumedById = new Set(
+    profile.consumed
+      .map(getAnimeCanonicalId)
+      .filter((animeId) => Number.isFinite(animeId) && animeId > 0)
+  );
   const consumedTitleKeys = new Set(profile.consumed.map((anime) => normalizeAnimeTitleKey(anime.title)).filter(Boolean));
   const carouselTitleKeys = new Set(heroCarouselState.items.map((item) => normalizeAnimeTitleKey(item.title)).filter(Boolean));
   const seenTitleKeys = new Set();
 
   const picks = ANIME_DB
-    .filter((anime) => !consumedById.has(Number(anime.id) || 0))
+    .filter((anime) => {
+      const animeId = getAnimeCanonicalId(anime);
+      if (!animeId) return false;
+      return !consumedById.has(animeId);
+    })
     .filter((anime) => {
       const key = normalizeAnimeTitleKey(anime.title);
       if (!key) return false;
@@ -2086,7 +2112,8 @@ function pickPersonalizedRecommendations(scope, sourceList, fullList) {
   const excludedIds = new Set(
     fullList
       .filter((anime) => activeStatuses.has(String(anime.status || "").toLowerCase()))
-      .map((anime) => Number(anime.id) || 0)
+      .map(getAnimeCanonicalId)
+      .filter((animeId) => Number.isFinite(animeId) && animeId > 0)
   );
   const excludedTitleKeys = new Set(
     fullList
@@ -2097,9 +2124,10 @@ function pickPersonalizedRecommendations(scope, sourceList, fullList) {
   const seenTitleKeys = new Set();
 
   const pool = ANIME_DB.filter((anime) => {
-    const animeId = Number(anime.id) || 0;
+    const animeId = getAnimeCanonicalId(anime);
     const titleKey = normalizeAnimeTitleKey(anime.title);
     if (!titleKey) return false;
+    if (!animeId) return false;
     if (excludedIds.has(animeId)) return false;
     if (excludedTitleKeys.has(titleKey)) return false;
     if (seenTitleKeys.has(titleKey)) return false;
@@ -2126,14 +2154,15 @@ function pickPersonalizedRecommendations(scope, sourceList, fullList) {
     if (selected.length >= PERSONALIZED_RECOMMENDATION_LIMIT) return;
     if (entry.score <= 0) return;
     selected.push(entry.anime);
-    selectedIds.add(Number(entry.anime.id) || 0);
+    const canonicalId = getAnimeCanonicalId(entry.anime);
+    if (canonicalId) selectedIds.add(canonicalId);
   });
 
   if (selected.length < PERSONALIZED_RECOMMENDATION_LIMIT) {
     scored.forEach((entry) => {
       if (selected.length >= PERSONALIZED_RECOMMENDATION_LIMIT) return;
-      const animeId = Number(entry.anime.id) || 0;
-      if (selectedIds.has(animeId)) return;
+      const animeId = getAnimeCanonicalId(entry.anime);
+      if (!animeId || selectedIds.has(animeId)) return;
       selected.push(entry.anime);
       selectedIds.add(animeId);
     });

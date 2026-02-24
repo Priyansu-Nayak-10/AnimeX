@@ -42,6 +42,11 @@ function renderGenreDoughnutTarget(count, target, existingInstance, colors) {
   wrap.classList.remove("hidden");
   empty.classList.add("hidden");
   if (existingInstance) existingInstance.destroy();
+  if (typeof Chart !== "function") {
+    wrap.classList.add("hidden");
+    empty.classList.remove("hidden");
+    return null;
+  }
 
   return new Chart(canvas, {
     type: "doughnut",

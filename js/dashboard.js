@@ -2329,6 +2329,11 @@ function renderCompletedGenreBreakdownChart(completedList) {
     completedGenreChartInstance.destroy();
     completedGenreChartInstance = null;
   }
+  if (typeof Chart !== "function") {
+    wrap.classList.add("hidden");
+    empty.classList.remove("hidden");
+    return;
+  }
 
   completedGenreChartInstance = new Chart(canvas, {
     type: "doughnut",
@@ -4173,6 +4178,11 @@ function renderInsightsDoughnut(canvasId, emptyId, wrapId, labels, values, color
 
   if (instanceKey === "status" && insightsStatusChartInstance) insightsStatusChartInstance.destroy();
   if (instanceKey === "genre" && insightsGenreChartInstance) insightsGenreChartInstance.destroy();
+  if (typeof Chart !== "function") {
+    wrap.classList.add("hidden");
+    empty.classList.remove("hidden");
+    return;
+  }
 
   const chart = new Chart(canvas, {
     type: "doughnut",
@@ -4227,6 +4237,11 @@ function renderInsightsEpisodesByMonth(statistics) {
   wrap.classList.remove("hidden");
   empty.classList.add("hidden");
   if (insightsMonthlyChartInstance) insightsMonthlyChartInstance.destroy();
+  if (typeof Chart !== "function") {
+    wrap.classList.add("hidden");
+    empty.classList.remove("hidden");
+    return;
+  }
 
   insightsMonthlyChartInstance = new Chart(canvas, {
     type: "bar",

@@ -3903,37 +3903,17 @@ async function resetProgress() {
   });
   if (!approved) return;
 
-  const session = await SupabaseAuth.getSession();
-  if (!session) {
-    setStatusMessage("settingsStatusMessage", "Session expired. Please reload and try again.", true);
-    showToast("Unable to reset progress.");
-    return;
-  }
+  const now = new Date().toISOString();
+  const nextList = getAnimeList().map((entry) =>
+    entry.status === "watching"
+      ? { ...entry, watchedEpisodes: 0, updatedAt: now }
+      : entry
+  );
+  saveAnimeList(nextList);
+  window.dispatchEvent(new Event("animeDataUpdated"));
 
-  try {
-    const { error } = await supabaseClient
-      .from("currently_watching")
-      .update({ progress: 0 })
-      .eq("user_id", session.user.id);
-
-    if (error) throw error;
-
-    const now = new Date().toISOString();
-    const nextList = getAnimeList().map((entry) =>
-      entry.status === "watching"
-        ? { ...entry, watchedEpisodes: 0, updatedAt: now }
-        : entry
-    );
-    saveAnimeList(nextList);
-    window.dispatchEvent(new Event("animeDataUpdated"));
-
-    setStatusMessage("settingsStatusMessage", "Watch progress reset.");
-    showToast("Watch progress reset.");
-  } catch (error) {
-    console.error("Unable to reset watch progress:", error);
-    setStatusMessage("settingsStatusMessage", "Reset failed. Try again later.", true);
-    showToast("Reset failed.");
-  }
+  setStatusMessage("settingsStatusMessage", "Watch progress reset.");
+  showToast("Watch progress reset.");
 }
 
 async function clearAllData() {
@@ -3944,37 +3924,6 @@ async function clearAllData() {
     danger: true
   });
   if (!approved) return;
-
-  const session = await SupabaseAuth.getSession();
-  if (!session) {
-    setStatusMessage("settingsStatusMessage", "Session expired. Please reload and try again.", true);
-    showToast("Unable to clear data.");
-    return;
-  }
-
-  const tablesToDelete = ["watchlist", "completed", "currently_watching", "achievements"];
-  try {
-    for (const table of tablesToDelete) {
-      const { error } = await supabaseClient.from(table).delete().eq("user_id", session.user.id);
-      if (error) throw error;
-    }
-
-    const { error: profileError } = await supabaseClient
-      .from("profiles")
-      .update({
-        avatar_url: null,
-        banner_url: null,
-        theme_preference: "system",
-        sort_preference: "recent"
-      })
-      .eq("id", session.user.id);
-    if (profileError) throw profileError;
-  } catch (error) {
-    console.error("Unable to clear all data:", error);
-    setStatusMessage("settingsStatusMessage", "Clear failed. Try again later.", true);
-    showToast("Clear failed.");
-    return;
-  }
 
   [
     ANIME_STORAGE_KEY,

@@ -1,6 +1,8 @@
 "use strict";
 
 const PROFILE_DATA_KEY = "profileData";
+const DASHBOARD_TAB_RESET_FLAG = "animex_forceDashboardTabResetOnNextLoad";
+const ACTIVE_TAB_KEY = "activeDashboardTab";
 
 document.addEventListener("DOMContentLoaded", () => {
     const signupForm = document.getElementById("signupForm");
@@ -128,7 +130,8 @@ document.addEventListener("DOMContentLoaded", () => {
                             }
 
                             localStorage.setItem("animex_authenticated", "true");
-                            localStorage.removeItem("activeDashboardTab");
+                            localStorage.setItem(DASHBOARD_TAB_RESET_FLAG, "true");
+                            localStorage.removeItem(ACTIVE_TAB_KEY);
                             window.location.href = "index.html";
                         }
                     } catch (err) {

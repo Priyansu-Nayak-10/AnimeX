@@ -10,6 +10,8 @@ function showToast(message) {
 }
 
 const ACTIVE_TAB_KEY = "activeDashboardTab";
+const DEFAULT_TAB_ID = "dashboardPanel";
+const DASHBOARD_TAB_RESET_FLAG = "animex_forceDashboardTabResetOnNextLoad";
 const PROFILE_DATA_KEY = "profileData";
 const THEME_PREFERENCE_KEY = "themePreference";
 const DEFAULT_SORT_KEY = "defaultSortPreference";
@@ -4424,6 +4426,31 @@ function activateTab(targetId) {
   closeMobileSidebar();
 }
 
+function isValidTabId(tabId) {
+  return Boolean(tabId && document.getElementById(tabId));
+}
+
+function removeUrlHash() {
+  if (!window.location.hash) return;
+  const cleanUrl = window.location.pathname + window.location.search;
+  window.history.replaceState({}, document.title, cleanUrl);
+}
+
+function consumeFreshLoginTabResetFlag() {
+  const flag = localStorage.getItem(DASHBOARD_TAB_RESET_FLAG);
+  if (!flag) return false;
+  localStorage.removeItem(DASHBOARD_TAB_RESET_FLAG);
+  localStorage.removeItem(ACTIVE_TAB_KEY);
+  return true;
+}
+
+function resolveInitialTab({ requestedTab, savedTab, forceDashboard }) {
+  if (forceDashboard) return DEFAULT_TAB_ID;
+  if (requestedTab && isValidTabId(requestedTab)) return requestedTab;
+  if (savedTab && isValidTabId(savedTab)) return savedTab;
+  return DEFAULT_TAB_ID;
+}
+
 function bindControls() {
   document.querySelectorAll("[data-tab-target]").forEach((tab) => {
     tab.addEventListener("click", () => activateTab(tab.dataset.tabTarget));
@@ -4924,17 +4951,23 @@ document.addEventListener("DOMContentLoaded", async () => {
   initializeAppPreferences();
   bindControls();
   SectionModules.Search.renderResults();
+  const resetAfterLogin = consumeFreshLoginTabResetFlag();
+  removeUrlHash();
   const urlParams = new URLSearchParams(window.location.search);
-  const requestedTab = urlParams.get("tab");
+  const requestedTabParam = resetAfterLogin ? null : urlParams.get("tab");
+  const requestedTab = requestedTabParam && isValidTabId(requestedTabParam) ? requestedTabParam : null;
   const requestedQuery = String(urlParams.get("q") || "").trim();
-  const tabFromUrl = requestedTab && document.getElementById(requestedTab) ? requestedTab : null;
-  const savedTab = localStorage.getItem(ACTIVE_TAB_KEY);
-  const validTab = tabFromUrl || (savedTab && document.getElementById(savedTab) ? savedTab : "dashboardPanel");
-  activateTab(validTab);
+  const savedTab = resetAfterLogin ? null : localStorage.getItem(ACTIVE_TAB_KEY);
+  const startingTab = resolveInitialTab({
+    requestedTab,
+    savedTab,
+    forceDashboard: resetAfterLogin
+  });
+  activateTab(startingTab);
   initHomeHeroCarousel();
   setInterval(() => initHomeHeroCarousel(true), HERO_CAROUSEL_AUTO_REFRESH_MS);
   refreshDashboard();
-  if (validTab === "searchPanel" && requestedQuery) {
+  if (startingTab === "searchPanel" && requestedQuery) {
     const quickSearchInput = document.getElementById("homeQuickSearchInput");
     if (quickSearchInput) quickSearchInput.value = requestedQuery;
     runEmbeddedSearch(requestedQuery, 1).catch(() => {

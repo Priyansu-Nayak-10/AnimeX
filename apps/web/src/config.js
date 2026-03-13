@@ -1,11 +1,8 @@
-const env = window.__ENV || {};
+// Prefer window.ENV for production overrides; fall back to legacy __ENV.
+const env = window.ENV || window.__ENV || {};
 
-let backendUrl = String(env.BACKEND_URL || '/api').trim();
-if (!backendUrl.startsWith('http') && !backendUrl.startsWith('/')) {
-  console.error(`[Animex Config] Invalid BACKEND_URL ("${backendUrl}") configured. It must be an absolute URL or an absolute path starting with '/'. Falling back to '/api'.`);
-  backendUrl = '/api';
-}
-const normalizedBackendUrl = backendUrl.endsWith('/') && backendUrl.length > 1 ? backendUrl.slice(0, -1) : backendUrl;
+const API_BASE = String(env.API_BASE || 'https://animex-api.onrender.com').trim();
+const normalizedBackendUrl = API_BASE.endsWith('/') && API_BASE.length > 1 ? API_BASE.slice(0, -1) : API_BASE;
 
 export const CONFIG = Object.freeze({
   backendUrl: normalizedBackendUrl,

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In - Animex 2.0</title>
+    <meta name="description" content="Sign in to Animex 2.0 - Your ultimate anime tracking experience.">
+    <!-- Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Rajdhani:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Auth Styles -->
+    <link rel="stylesheet" href="../public/css/auth.css">
+</head>
+
+<body class="auth-page">
+    <div class="auth-split">
+
+        <!-- LEFT: Anime Art Panel -->
+        <div class="auth-art-panel">
+            <canvas id="auth-particles"></canvas>
+            <img src="../public/images/signin_anime.png" alt="Anime art" class="art-img">
+
+            <!-- Logo -->
+            <a href="signin.html" class="art-logo" aria-label="Animex sign in home">
+                <div class="art-logo-icon"><i class="fas fa-play"></i></div>
+                <span class="art-logo-text">ANIMEX</span>
+            </a>
+
+            <!-- Bottom content -->
+            <div class="art-panel-content">
+                <p class="art-tagline">Your Anime Journey<br>Continues Here</p>
+                <p class="art-sub">Track, discover, and connect with thousands of anime series across every genre.</p>
+                <div class="art-badges">
+                    <span class="art-badge purple"><i class="fas fa-star"></i> 50K+ Anime</span>
+                    <span class="art-badge cyan"><i class="fas fa-users"></i> 1M Otaku</span>
+                    <span class="art-badge pink"><i class="fas fa-heart"></i> Free Forever</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT: Sign In Form Panel -->
+        <div class="auth-form-panel">
+            <div class="auth-form-inner" id="auth-form-inner">
+
+                <!-- Header -->
+                <div class="auth-header">
+                    <p class="auth-greeting">Welcome back, Otaku</p>
+                    <h1 class="auth-title">Sign In</h1>
+                    <p class="auth-subtitle">Enter your credentials to access your watchlist and profile.</p>
+                </div>
+
+                <!-- Backend Error -->
+                <div id="backend-error" class="backend-error" role="alert" aria-live="polite"></div>
+
+                <!-- Form -->
+                <form id="signin-form" class="auth-form-body" novalidate>
+
+                    <!-- Email -->
+                    <div class="form-group" id="group-email">
+                        <input type="email" id="email" name="email" class="auth-input" autocomplete="email" inputmode="email" aria-describedby="email-error" required>
+                        <i class="fas fa-envelope input-icon"></i>
+                        <label for="email" class="floating-label">Email Address</label>
+                        <span class="input-error" id="email-error" aria-live="polite"></span>
+                    </div>
+
+                    <!-- Password -->
+                    <div class="form-group" id="group-password">
+                        <input type="password" id="password" name="password" class="auth-input" autocomplete="current-password" minlength="8" aria-describedby="password-error" required>
+                        <i class="fas fa-lock input-icon"></i>
+                        <label for="password" class="floating-label">Password</label>
+                        <button type="button" class="toggle-password" data-target="password" tabindex="-1"
+                            aria-label="Toggle password visibility" aria-pressed="false">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <span class="input-error" id="password-error" aria-live="polite"></span>
+                    </div>
+
+                    <!-- Remember / Forgot -->
+                    <div class="form-options">
+                        <label class="remember-me">
+                            <input type="checkbox" id="remember" name="remember">
+                            <span>Remember me</span>
+                        </label>
+                        <a href="reset-password.html" class="forgot-link">Forgot password?</a>
+                    </div>
+
+                    <!-- Submit -->
+                    <div class="auth-actions">
+                        <button type="submit" id="signin-btn" class="btn-primary">
+                            <span class="btn-text"><i class="fas fa-arrow-right-to-bracket"></i>&nbsp; Sign In</span>
+                            <div class="spinner"></div>
+                        </button>
+                    </div>
+
+                    <!-- Divider -->
+                    <div class="auth-divider">or continue with</div>
+
+                    <!-- Social Buttons -->
+                    <div class="social-btns">
+                        <button type="button" class="btn-social" id="btn-google" aria-label="Sign in with Google">
+                            <i class="fab fa-google"></i> Google
+                        </button>
+                        <button type="button" class="btn-social" id="btn-discord" aria-label="Sign in with Discord">
+                            <i class="fab fa-discord"></i> Discord
+                        </button>
+                    </div>
+
+                    <!-- Footer -->
+                    <div class="auth-footer">
+                        New to Animex? <a href="signup.html" class="auth-link">Create an account -></a>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+
+    </div>
+    <script src="/env.js"></script>
+    <script type="module" src="../src/features/auth/signinEnhancements.js"></script>
+    <script type="module" src="../src/features/auth/auth.js"></script>
+</body>
+
+</html>
+
+
+
+

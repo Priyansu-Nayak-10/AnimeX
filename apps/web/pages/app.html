@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>Dashboard &mdash; Animex 2.0</title>
+  <link rel="stylesheet" href="../public/css/style.css">
+</head>
+
+<body>
+  <!-- Loading overlay for auth guard &mdash; prevents FOUC -->
+  <div id="auth-loading-overlay">
+    <div class="alo-spinner"></div>
+    <div class="alo-text">Authenticating...</div>
+  </div>
+
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="sidebar-content">
+        <h1 class="brand-title">ANIMEX</h1>
+        <div class="nav-section">
+        <h3 class="nav-section-title">Main</h3>
+        <nav class="nav-list">
+            <a class="nav-item active" href="#" data-target="dashboard-view">
+              <span class="material-icons nav-icon">dashboard</span>
+              <span class="nav-item-text">Dashboard</span>
+            </a>
+            <a class="nav-item" href="#" data-target="search-view">
+              <span class="material-icons nav-icon">search</span>
+              <span class="nav-item-text">Search</span>
+            </a>
+            <a class="nav-item" href="#" data-target="season-view">
+              <span class="material-icons nav-icon">explore</span>
+              <span class="nav-item-text">Seasonal</span>
+            </a>
+            <a class="nav-item" href="#" data-target="watchlist-view">
+              <span class="material-icons nav-icon">bookmarks</span>
+              <span class="nav-item-text">Watchlist</span>
+            </a>
+            <a class="nav-item" href="#" data-target="complete-view">
+              <span class="material-icons nav-icon">check_circle</span>
+              <span class="nav-item-text">Complete</span>
+            </a>
+          </nav>
+        </div>
+        <div class="nav-section">
+          <h3 class="nav-section-title">Insights</h3>
+          <nav class="nav-list">
+            <a class="nav-item" href="#" data-target="insights-view">
+              <span class="material-icons nav-icon">insights</span>
+              <span class="nav-item-text">Insights</span>
+            </a>
+          </nav>
+        </div>
+        <div class="nav-section">
+          <h3 class="nav-section-title">Account</h3>
+          <nav class="nav-list">
+            <a class="nav-item" href="#" data-target="profile-view">
+              <span class="material-icons nav-icon">person</span>
+              <span class="nav-item-text">Profile</span>
+            </a>
+            <a class="nav-item" href="#" data-target="settings-view">
+              <span class="material-icons nav-icon">settings</span>
+              <span class="nav-item-text">Settings</span>
+            </a>
+            <a class="nav-item" href="#" data-target="export-view">
+              <span class="material-icons nav-icon">download</span>
+              <span class="nav-item-text">Export Data</span>
+            </a>
+          </nav>
+        </div>
+        <button class="logout-btn">
+          <span class="material-icons">logout</span>
+          <span>Logout</span>
+        </button>
+      </div>
+    </aside>
+
+
+    <main class="main-viewport">
+      <header class="navbar">
+        <div class="navbar-inner">
+          <div class="search-wrapper" style="position: relative;">
+            <span class="material-icons search-icon">search</span>
+            <input id="global-search-input" class="search-input" placeholder="Search anime, news, or users..."
+              type="text" autocomplete="off" />
+            <div id="search-suggestions" class="search-suggestions-container" style="display: none;"></div>
+          </div>
+          <div class="navbar-controls">
+            <button class="icon-btn">
+              <span class="material-icons">notifications</span>
+              <span class="notification-dot"></span>
+            </button>
+            <div class="user-greeting">
+              <span class="greeting-text">Welcome back,</span>
+              <span id="header-username" class="username">Priya</span>
+            </div>
+            <div class="profile-img-container">
+              <img alt="Profile" class="profile-img" id="header-profile-img"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuCZIUjpzoTljfbNTeGmRQKuBDx6E6cXNLOTQbK6rcfrP_rs28dFFZ75JwW4sHvRfNIXCQc9oUfnfUraGWQWCNuMpLg5D2L37XNwpH3vBzWdVdBQanEdpvD-o464S-lnVRcvaM__u2qTA1s9j87J6fYLrhu7SMz0cf6qEoJ4fnGyjwEAFwueD6Br16uNo4kVoV9Kh9GHeA3UHfbKyQ-0rzPbPXVM609W9FDgusNOamiiZFmIO95W5FQhieq_6J8-_ccpUMoAvbOSgn05" />
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div class="view-container">
+        <!-- Dashboard View -->
+        <div id="dashboard-view" class="view-section active">
+          <div class="dashboard-grid">
+            <div class="main-column">
+              <div id="hero-carousel" class="hero-carousel" aria-label="Top currently airing anime carousel">
+                <div class="hero-slides"></div>
+                <div class="hero-controls">
+                  <button type="button" class="hero-prev" aria-label="Previous slide">
+                    <span class="material-icons" aria-hidden="true">chevron_left</span>
+                  </button>
+                  <button type="button" class="hero-next" aria-label="Next slide">
+                    <span class="material-icons" aria-hidden="true">chevron_right</span>
+                  </button>
+                </div>
+                <div class="hero-indicators" aria-hidden="true"></div>
+              </div>
+
+              <div class="stats-grid">
+                <div class="card clip-placeholder-card group" style="border: 2px dashed var(--text-gray-300);">
+                  <span class="placeholder-text"
+                    style="color: var(--text-gray-500); font-weight: 600; font-size: 0.75rem;">Insert Your Favorite
+                    Clip</span>
+                </div>
+                <!-- My Journey &mdash; Milestones -->
+                <div class="card achievements-container" id="milestones-card">
+                  <div class="achievements-header">
+                    <h3 class="card-title" style="margin-bottom: 0.25rem;">My Journey</h3>
+                    <p class="anime-card-meta">Milestones unlock as you track and collect anime</p>
+                  </div>
+                  <div class="milestone-grid" id="milestone-grid">
+                    <!-- Rendered by initMilestones() -->
+                    <div class="milestone-tile locked">
+                      <span class="milestone-icon">🔍</span>
+                      <span class="milestone-name">Lost &amp; Found</span>
+                      <span class="milestone-desc">Save your first anime</span>
+                    </div>
+                    <div class="milestone-tile locked">
+                      <span class="milestone-icon">📺</span>
+                      <span class="milestone-name">Sequel Hunter</span>
+                      <span class="milestone-desc">Receive a sequel alert</span>
+                    </div>
+                    <div class="milestone-tile locked">
+                      <span class="milestone-icon">🔊</span>
+                      <span class="milestone-name">Dub Scout</span>
+                      <span class="milestone-desc">Get a dub notification</span>
+                    </div>
+                    <div class="milestone-tile locked">
+                      <span class="milestone-icon">✅</span>
+                      <span class="milestone-name">Series Finished</span>
+                      <span class="milestone-desc">Complete your first series</span>
+                    </div>
+                    <div class="milestone-tile locked">
+                      <span class="milestone-icon">🗂️</span>
+                      <span class="milestone-name">The Archivist</span>
+                      <span class="milestone-desc">Save 10+ anime</span>
+                    </div>
+                    <div class="milestone-tile locked">
+                      <span class="milestone-icon">👁️</span>
+                      <span class="milestone-name">Active Tracker</span>
+                      <span class="milestone-desc">Follow 3+ airing anime</span>
+                    </div>
+                  </div>
+                </div>
+                <!-- Genre distribution (unchanged) -->
+
+                <div class="card stats-container">
+                  <h3 class="card-title">Completed Genre Distribution</h3>
+                  <div class="legend">
+                    <div class="legend-item">
+                      <span class="legend-dot bg-accent-blue"></span>
+                      <span class="anime-card-meta" style="margin-bottom: 0;">Action</span>
+                    </div>
+                    <div class="legend-item">
+                      <span class="legend-dot bg-sky-300"></span>
+                      <span class="anime-card-meta" style="margin-bottom: 0;">Adventure</span>
+                    </div>
+                    <div class="legend-item">
+                      <span class="legend-dot bg-accent-green"></span>
+                      <span class="anime-card-meta" style="margin-bottom: 0;">Fantasy</span>
+                    </div>
+                  </div>
+
+                  <div class="relative mx-auto genre-chart-wrapper">
+                    <svg viewBox="0 0 200 200" class="genre-pie" id="completed-genre-pie"
+                      aria-label="Completed genre distribution chart"></svg>
+                  </div>
+                </div>
+
+                <!-- My Tracker Feed -->
+                <div class="card upcoming-releases-container tracker-feed-card" id="tracker-feed-card">
+                  <div class="card-header">
+                    <div>
+                      <h3 class="card-title" style="margin-bottom:0.15rem;">My Tracker Feed</h3>
+                      <p class="anime-card-meta" style="margin-bottom:0;">Your followed anime &mdash; sequels, dubs,
+                        airing
+                        updates</p>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:0.5rem;">
+                      <span class="live-badge" id="tracker-live-badge" hidden>Live</span>
+                      <span id="tracker-count-badge" class="tracker-count-badge" hidden></span>
+                    </div>
+                  </div>
+                  <div id="tracker-feed-list" class="tracker-feed-list custom-scrollbar">
+                    <div class="tracker-empty">
+                      <span style="font-size:2rem;">🎯</span>
+                      <p>Follow anime from the Search page to start tracking sequels, dubs, and airing updates here.</p>
+                    </div>
+                  </div>
+                </div>
+
+
+                <div class="card news-container">
+                  <div class="card-header"
+                    style="padding-bottom: 0.5rem; border-bottom: 1px solid rgba(255,255,255,0.05); margin-bottom: 1rem;">
+                    <div>
+                      <h3 class="card-title"
+                        style="margin-bottom: 0.15rem; display: flex; align-items: center; gap: 0.4rem;">
+                        <span class="material-icons"
+                          style="color: #ffb74d; font-size: 1.1rem;">local_fire_department</span>
+                        Top Upcoming Releases
+                      </h3>
+                      <p class="anime-card-meta" style="margin-bottom: 0;">Most anticipated anime next season</p>
+                    </div>
+                  </div>
+                  <div id="dashboard-upcoming-list" class="news-list custom-scrollbar"
+                    style="max-height: 400px; display: flex; flex-direction: column; gap: 0.8rem;">
+                    <div class="anime-card-meta">Loading upcoming blockbusters...</div>
+                  </div>
+                </div> <!-- End news-container -->
+              </div> <!-- End stats-grid -->
+            </div> <!-- End main-column -->
+
+            <div class="side-column">
+              <div id="premium-watching-container"></div>
+              <div class="card recommendations-container">
+                <h3 class="card-title">Recommended For You</h3>
+                <div id="recommended-list" class="recommendations-list custom-scrollbar" style="max-height: 420px;">
+                </div>
+              </div>
+
+              <div class="card promo-card">
+                <h3 class="text-lg card-title" style="margin-bottom: 0.5rem;">Did You Know?</h3>
+                <p class="promo-description">
+                  Do you know that Naruto is the oldest anime in your active history from 2002?
+                </p>
+                <p class="anime-card-meta stat-header">From your
+                  anime history</p>
+              </div>
+              <div class="card quick-stats-card">
+                <h3 class="card-title">Your quick stats</h3>
+                <div class="quick-stats-list">
+                  <div class="stat-row">
+                    <span class="stat-label">Total watched</span>
+                    <span id="quick-total" class="stat-value">0</span>
+                  </div>
+                  <div class="stat-row border-t">
+                    <span class="stat-label">Plan to watch</span>
+                    <span id="quick-plan" class="stat-value">0</span>
+                  </div>
+                  <div class="stat-row border-t">
+                    <span class="stat-label">Genres Explored</span>
+                    <span id="quick-genres" class="stat-value">0</span>
+                  </div>
+                </div>
+                <div class="personality-divider"></div>
+                <div class="personality-section">
+                  <div class="personality-header">
+                    <span class="personality-emoji">🧠</span>
+                    <span class="personality-title">Your Anime Personality</span>
+                  </div>
+                  <div id="anime-personality-name" class="personality-name">
+                    Calculating...
+                  </div>
+                  <div id="anime-personality-desc" class="personality-desc">
+                    Analyzing your anime journey...
+                  </div>
+                </div>
+                <div class="personality-divider"></div>
+                <div class="genres-container">
+                  <p class="anime-card-meta stat-header mb-3">Top
+                    Genres</p>
+                  <div id="quick-top-genres" class="genres-list"></div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div> <!-- End Dashboard View -->
+
+        <!-- Search View -->
+        <div id="search-view" class="view-section">
+          <div class="dashboard-grid">
+            <div class="main-column" style="grid-column: span 12;">
+              <div class="advanced-search-header">
+                <h2 class="section-title mb-4">Filters</h2>
+                <div class="advanced-filters-grid">
+                  <!-- Row 1 -->
+                  <div class="filter-field">
+                    <span class="filter-label">Select Genre</span>
+                    <select id="search-genre" class="filter-select">
+                      <option value="">Select Genre</option>
+                    </select>
+                  </div>
+                  <div class="filter-field">
+                    <span class="filter-label">Select Tag</span>
+                    <select id="search-tag" class="filter-select">
+                      <option value="">Select Tag</option>
+                    </select>
+                  </div>
+                  <div class="filter-field">
+                    <span class="filter-label">Select Language</span>
+                    <select id="search-language" class="filter-select">
+                      <option value="">Select Language</option>
+                    </select>
+                  </div>
+                  <div class="filter-field">
+                    <span class="filter-label">Select Season</span>
+                    <select id="search-season" class="filter-select">
+                      <option value="">Select Season</option>
+                    </select>
+                  </div>
+                  <div class="filter-field">
+                    <span class="filter-label">Select Year</span>
+                    <select id="search-year" class="filter-select">
+                      <option value="">Select Year</option>
+                    </select>
+                  </div>
+
+                  <!-- Row 2 -->
+                  <div class="filter-field">
+                    <span class="filter-label">Select Status</span>
+                    <select id="search-status" class="filter-select">
+                      <option value="">Select Status</option>
+                    </select>
+                  </div>
+                  <div class="filter-field">
+                    <span class="filter-label">Select Rating</span>
+                    <select id="search-rating" class="filter-select">
+                      <option value="">Select Rating</option>
+                    </select>
+                  </div>
+                  <div class="filter-field">
+                    <span class="filter-label">Select Type</span>
+                    <select id="search-type" class="filter-select">
+                      <option value="">Select Type</option>
+                    </select>
+                  </div>
+
+                  <!-- Buttons -->
+                  <div class="filter-actions">
+                    <button id="search-reset-btn" class="filter-btn reset-btn" type="button">Reset</button>
+                    <button id="search-submit-btn" class="filter-btn search-btn" type="button">Search</button>
+                  </div>
+                </div>
+              </div>
+
+              <div id="search-results" class="search-grid-v2"></div>
+              <div class="search-results-footer">
+                <p id="search-result-count" class="anime-card-meta search-result-count"></p>
+                <div id="search-pagination" class="search-pagination"></div>
+              </div>
+            </div>
+          </div>
+        </div> <!-- End Search View -->
+
+        <!-- Watchlist View -->
+        <div id="watchlist-view" class="view-section">
+          <div class="dashboard-grid">
+            <div class="main-column" style="grid-column: span 12;">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 2rem;">
+                <h2 class="section-title" style="margin-bottom: 0;">Your Watchlist</h2>
+                <select class="filter-select"
+                  style="padding: 0.6rem 1rem; width: auto; font-size: 0.85rem; border-radius: 2rem;">
+                  <option>All Statuses</option>
+                  <option>Watching</option>
+                  <option>Plan to Watch</option>
+                  <option>Dropped</option>
+                </select>
+              </div>
+
+              <div id="watchlist-board" class="watchlist-list watchlist-board"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Completed View -->
+        <div id="complete-view" class="view-section">
+          <div class="dashboard-grid">
+            <div class="main-column" style="grid-column: span 12;">
+              <h2 class="section-title">Completed</h2>
+              <p class="anime-card-meta mb-4">Your completed anime collection.</p>
+
+              <div id="completed-list" class="trophy-grid"></div>
+            </div>
+          </div>
+        </div>
+
+        <div id="insights-view" class="view-section">
+          <div class="insights-container">
+            <h2 class="section-title">Your Anime Insights</h2>
+
+            <div class="insights-kpi-strip">
+              <div class="kpi-card kpi-watch-time">
+                <span class="kpi-label">Watch Time</span>
+                <span id="insight-watch-time" class="kpi-value">0h 0m</span>
+              </div>
+              <div class="kpi-card kpi-episodes">
+                <span class="kpi-label">Episodes Watched</span>
+                <span id="insight-episodes-watched" class="kpi-value">0</span>
+              </div>
+              <div class="kpi-card kpi-rating">
+                <span class="kpi-label">Average Rating</span>
+                <span id="insight-average-rating" class="kpi-value">0.0</span>
+              </div>
+              <div class="kpi-card kpi-completed">
+                <span class="kpi-label">Completed</span>
+                <span id="insight-completed" class="kpi-value">0</span>
+              </div>
+              <div class="kpi-card kpi-watching">
+                <span class="kpi-label">Watching</span>
+                <span id="insight-watching" class="kpi-value">0</span>
+              </div>
+              <div class="kpi-card kpi-plan">
+                <span class="kpi-label">Plan</span>
+                <span id="insight-plan" class="kpi-value">0</span>
+              </div>
+            </div>
+
+            <div class="insights-main-grid">
+              <div class="insight-panel">
+                <h3 class="panel-title">Genre Intelligence</h3>
+                <div class="panel-chart-row">
+                  <div class="chart-large insight-chart-center">
+                    <svg viewBox="0 0 220 220" id="insight-genre-chart" class="insight-genre-pie"
+                      aria-label="Completed genre distribution chart">
+                    </svg>
+                  </div>
+                  <div class="genre-top-list">
+                    <h4>Top Genres</h4>
+                    <div id="insight-top-genres" class="genre-bars"></div>
+                  </div>
+                </div>
+                <div id="insight-genre-analysis-text" class="panel-description">
+                  Complete anime to unlock genre insights.
+                </div>
+              </div>
+
+              <div class="insight-panel">
+                <h3 class="panel-title">Status Intelligence</h3>
+                <div class="panel-chart-row">
+                  <div id="insight-status-chart" class="chart-large insight-chart-wrap"></div>
+                  <div class="status-meta">
+                    <div>
+                      <span class="meta-label">Favorite Studio</span>
+                      <strong id="insight-favorite-studio">No data</strong>
+                    </div>
+                    <div>
+                      <span class="meta-label">Last Completed</span>
+                      <strong id="insight-last-completed">No data</strong>
+                    </div>
+                    <div>
+                      <span class="meta-label">Status Distribution</span>
+                      <strong id="insight-status-distribution">Completed 0 • Watching 0 • Plan 0</strong>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="insight-panel full-width">
+              <h3 class="panel-title">Recent Activity</h3>
+              <div id="insight-recent-activity" class="activity-timeline"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Profile View -->
+        <div id="profile-view" class="view-section">
+          <div class="account-page-grid">
+
+            <!-- Left: Unified Identity + Stats Card -->
+            <div class="profile-identity-col">
+              <div class="profile-hero-card">
+
+                <!-- Banner -->
+                <div class="profile-banner-area" id="profile-banner">
+                  <div class="banner-overlay"></div>
+                  <button class="edit-banner-btn" id="edit-banner-btn" title="Change banner">
+                    <span class="material-icons">photo_camera</span>
+                    <span>Edit Banner</span>
+                  </button>
+                  <input type="file" id="banner-file-input" accept="image/*" hidden />
+                </div>
+
+                <!-- Avatar + Level Badge Row -->
+                <div class="profile-avatar-section">
+                  <div class="profile-avatar-ring">
+                    <!-- Clean SVG Placeholder instead of broken external URL -->
+                    <img id="profile-avatar-img"
+                      src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2364748b'><path d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z'/></svg>"
+                      alt="Profile" class="profile-avatar-img" />
+                    <button class="edit-avatar-btn" id="edit-avatar-btn" title="Change avatar">
+                      <span class="material-icons">edit</span>
+                    </button>
+                    <input type="file" id="avatar-file-input" accept="image/*" hidden />
+                  </div>
+                  <div class="profile-level-badge" id="profile-level-badge">
+                    <span class="level-icon">&#11088;</span>
+                    <span class="level-text" id="profile-level-text">Level 1</span>
+                  </div>
+                </div>
+
+                <!-- Name + Rank + Streak -->
+                <div class="profile-identity-info">
+                  <span class="profile-display-name" id="profile-display-name">Otaku</span>
+                  <div class="profile-rank-streak-row">
+                    <span class="profile-rank-label" id="profile-rank-label">Series Devotee</span>
+                    <span class="profile-streak-badge" id="profile-streak-badge">
+                      &#128293; <span id="profile-streak-count">0</span>d streak
+                    </span>
+                  </div>
+                </div>
+
+                <!-- Stats Strip (inside card, separated by a subtle border) -->
+                <div class="profile-stats-strip">
+                  <div class="pstat-item stat-box">
+                    <span class="pstat-value" id="pstat-watched">0</span>
+                    <span class="pstat-label">Watched</span>
+                  </div>
+                  <div class="pstat-item stat-box">
+                    <span class="pstat-value" id="pstat-hours">0h</span>
+                    <span class="pstat-label">Hours</span>
+                  </div>
+                  <div class="pstat-item stat-box">
+                    <span class="pstat-value" id="pstat-genre">&mdash;</span>
+                    <span class="pstat-label">Top Genre</span>
+                  </div>
+                  <div class="pstat-item stat-box">
+                    <span class="pstat-value" id="pstat-completion">0%</span>
+                    <span class="pstat-label">Completion</span>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- Right: Edit Form Card -->
+            <div class="profile-edit-col">
+              <div class="profile-glass-card">
+
+                <!-- Card Header -->
+                <div class="profile-card-header">
+                  <span class="material-icons profile-card-header-icon">manage_accounts</span>
+                  <div>
+                    <div class="profile-card-header-title">Edit Profile</div>
+                    <div class="profile-card-header-sub">Update your public
+                      identity</div>
+                  </div>
+                </div>
+
+                <!-- Form Body -->
+                <div class="profile-form-body">
+                  <div class="form-group">
+                    <label class="form-label">Display Name</label>
+                    <input type="text" id="profile-name-input" class="profile-input" placeholder="Your display name">
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label">About Me</label>
+                    <textarea id="profile-bio-input" class="profile-input" rows="4"
+                      placeholder="Tell the world about your anime journey...">Anime enthusiast and casual watcher. Always looking for new Fantasy and Action series to binge.</textarea>
+                  </div>
+
+                  <div class="profile-form-section-label">
+                    <span class="material-icons">link</span> Social Links
+                  </div>
+
+                  <div class="social-links-grid">
+                    <div class="social-input-row">
+                      <span class="social-label mal">MAL</span>
+                      <input type="text" id="profile-mal-input" class="profile-input social-input"
+                        placeholder="myanimelist.net/profile/...">
+                    </div>
+                    <div class="social-input-row">
+                      <span class="social-label al">AL</span>
+                      <input type="text" id="profile-al-input" class="profile-input social-input"
+                        placeholder="anilist.co/user/...">
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Anchored Save Footer -->
+                <div class="profile-save-footer">
+                  <span class="profile-save-hint">Changes are securely saved to your cloud account.</span>
+                  <button id="save-profile-btn" class="premium-save-btn">
+                    <span class="material-icons">save</span> Save Profile
+                  </button>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Settings View -->
+        <div id="settings-view" class="view-section">
+          <div class="account-page-single">
+            <h2 class="section-title">App Settings</h2>
+
+            <!-- APPEARANCE -->
+            <div class="settings-section-card">
+              <div class="settings-section-title">
+                <span class="material-icons">palette</span> Appearance
+              </div>
+
+              <div class="setting-row">
+                <div class="setting-info">
+                  <span class="setting-title">Dark Theme</span>
+                  <span class="setting-desc">Use dark mode everywhere.</span>
+                </div>
+                <label class="toggle-switch">
+                  <input type="checkbox" id="setting-dark-theme" checked>
+                  <span class="toggle-slider"></span>
+                </label>
+              </div>
+
+              <div class="setting-row" style="margin-top:1.5rem;">
+                <div class="setting-info">
+                  <span class="setting-title">Accent Color</span>
+                  <span class="setting-desc">Personalize the app's highlight color.</span>
+                </div>
+                <div class="accent-color-picker" id="accent-color-picker">
+                  <button class="accent-swatch active" data-color="#6366f1" style="background:#6366f1;"
+                    title="Indigo"></button>
+                  <button class="accent-swatch" data-color="#a855f7" style="background:#a855f7;"
+                    title="Purple"></button>
+                  <button class="accent-swatch" data-color="#ec4899" style="background:#ec4899;" title="Pink"></button>
+                  <button class="accent-swatch" data-color="#ef4444" style="background:#ef4444;" title="Red"></button>
+                  <button class="accent-swatch" data-color="#f97316" style="background:#f97316;"
+                    title="Orange"></button>
+                  <button class="accent-swatch" data-color="#22c55e" style="background:#22c55e;" title="Green"></button>
+                  <button class="accent-swatch" data-color="#06b6d4" style="background:#06b6d4;" title="Cyan"></button>
+                  <button class="accent-swatch" data-color="#3b82f6" style="background:#3b82f6;" title="Blue"></button>
+                </div>
+              </div>
+
+              <div class="setting-row" style="margin-top:1.5rem;">
+                <div class="setting-info">
+                  <span class="setting-title">Default Title Language</span>
+                  <span class="setting-desc">Preferred language for anime titles.</span>
+                </div>
+                <select id="setting-title-lang" class="settings-select">
+                  <option value="english">English</option>
+                  <option value="romaji">Romaji</option>
+                  <option value="japanese">Japanese</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- PREFERENCES -->
+            <div class="settings-section-card">
+              <div class="settings-section-title">
+                <span class="material-icons">tune</span> Preferences
+              </div>
+
+              <div class="setting-row">
+                <div class="setting-info">
+                  <span class="setting-title">Push Notifications</span>
+                  <span class="setting-desc">Get notified about new episodes and recommendations.</span>
+                </div>
+                <label class="toggle-switch">
+                  <input type="checkbox" id="setting-notifications">
+                  <span class="toggle-slider"></span>
+                </label>
+              </div>
+
+              <div class="setting-row">
+                <div class="setting-info">
+                  <span class="setting-title">Autoplay Videos</span>
+                  <span class="setting-desc">Automatically play videos and trailers on the dashboard.</span>
+                </div>
+                <label class="toggle-switch">
+                  <input type="checkbox" id="setting-autoplay">
+                  <span class="toggle-slider"></span>
+                </label>
+              </div>
+
+              <div class="setting-row">
+                <div class="setting-info">
+                  <span class="setting-title">Data Saver Mode</span>
+                  <span class="setting-desc">Load lower quality images to save bandwidth.</span>
+                </div>
+                <label class="toggle-switch">
+                  <input type="checkbox" id="setting-data-saver">
+                  <span class="toggle-slider"></span>
+                </label>
+              </div>
+
+              <div class="setting-row">
+                <div class="setting-info">
+                  <span class="setting-title">Default Add Status</span>
+                  <span class="setting-desc">Status assigned when adding anime from Search.</span>
+                </div>
+                <select id="setting-default-status" class="settings-select">
+                  <option value="plan">Plan to Watch</option>
+                  <option value="watching">Watching</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- DANGER ZONE -->
+            <div class="settings-section-card danger-zone-card">
+              <div class="settings-section-title danger">
+                <span class="material-icons">warning</span> Danger Zone
+              </div>
+              <div class="setting-row">
+                <div class="setting-info">
+                  <span class="setting-title" style="color:#ef4444;">Clear Entire Library</span>
+                  <span class="setting-desc">Permanently delete all watching, completed, and plan-to-watch data. This
+                    cannot be undone.</span>
+                </div>
+                <button id="clear-library-btn" class="danger-btn">
+                  <span class="material-icons" style="font-size:1rem;">delete_forever</span> Clear
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Export Data View -->
+        <div id="export-view" class="view-section">
+          <div class="account-page-single">
+            <h2 class="section-title">Export Your Data</h2>
+
+            <!-- Stats Preview -->
+            <div class="export-preview-card" id="export-preview-card">
+              <div class="export-preview-icon">📦</div>
+              <div class="export-preview-info">
+                <div class="export-preview-title">Library Snapshot</div>
+                <div class="export-preview-stats">
+                  <span class="epstat"><strong id="export-total">0</strong> total</span>
+                  <span class="epstat-sep">·</span>
+                  <span class="epstat"><strong id="export-completed">0</strong> completed</span>
+                  <span class="epstat-sep">·</span>
+                  <span class="epstat"><strong id="export-watching">0</strong> watching</span>
+                  <span class="epstat-sep">·</span>
+                  <span class="epstat"><strong id="export-plan">0</strong> planned</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="export-main-card">
+              <span class="material-icons"
+                style="font-size: 3.5rem; color: var(--primary); margin-bottom: 1rem; display:block;">download_for_offline</span>
+              <h3 style="font-size: 1.4rem; font-weight: 700; margin-bottom: 0.5rem;">Download Profile Archive</h3>
+              <p style="color: #94a3b8; max-width: 480px; margin: 0 auto 2rem; line-height: 1.6; font-size:0.9rem;">
+                Export a
+                secure copy of your entire watchlist, completed series, ratings, and profile settings.</p>
+
+              <div class="export-format-row">
+                <button id="export-format-json" class="export-format-btn active" data-format="json">
+                  <span class="material-icons">data_object</span>
+                  <span>JSON</span>
+                  <span class="format-sub">Full data, nestable</span>
+                </button>
+                <button id="export-format-csv" class="export-format-btn" data-format="csv">
+                  <span class="material-icons">table_chart</span>
+                  <span>CSV</span>
+                  <span class="format-sub">Spreadsheet-friendly</span>
+                </button>
+              </div>
+
+              <button id="export-generate-btn" class="premium-export-btn">
+                <span class="material-icons">cloud_download</span> Generate Export
+              </button>
+            </div>
+
+            <!-- Import Data Card -->
+            <div class="export-main-card mt-8"
+              style="background: rgba(15, 23, 42, 0.4); border-color: rgba(139, 92, 246, 0.1);">
+              <span class="material-icons"
+                style="font-size: 3.5rem; color: #8b5cf6; margin-bottom: 1rem; display:block;">upload_file</span>
+              <h3 style="font-size: 1.4rem; font-weight: 700; margin-bottom: 0.5rem;">Import MyAnimeList Data</h3>
+              <p style="color: #94a3b8; max-width: 480px; margin: 0 auto 1.5rem; line-height: 1.6; font-size:0.9rem;">
+                Migrating to Animex? Upload your exported MyAnimeList XML file to instantly merge your progress.</p>
+
+              <!-- Drag and Drop Zone -->
+              <div id="mal-drop-zone" class="mal-upload-zone">
+                <div class="mal-upload-content">
+                  <span class="material-icons"
+                    style="font-size: 2.5rem; color: #64748b; margin-bottom: 0.5rem;">note_add</span>
+                  <p class="mal-upload-primary"><strong>Click to upload</strong> or drag and drop</p>
+                  <p class="mal-upload-secondary">Supported format: .xml (Max 10MB)</p>
+                </div>
+                <input type="file" id="mal-file-input" accept=".xml,text/xml,application/xml" style="display:none;" />
+              </div>
+
+              <!-- Upload Status/Progress -->
+              <div id="mal-upload-status" class="mal-upload-status hidden"
+                style="margin-top: 1rem; text-align: left; background: rgba(0,0,0,0.2); padding: 1rem; border-radius: 8px;">
+                <div style="display:flex; justify-content:space-between; margin-bottom: 0.5rem;">
+                  <span id="mal-file-name"
+                    style="font-size:0.9rem; color:#f8fafc; font-weight:500;">animelist.xml</span>
+                  <span id="mal-file-size" style="font-size:0.8rem; color:#94a3b8;">-- KB</span>
+                </div>
+                <!-- Progress Line -->
+                <div style="height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; overflow: hidden;">
+                  <div id="mal-progress-bar"
+                    style="height:100%; width:0%; background: #8b5cf6; transition: width 0.3s ease;"></div>
+                </div>
+                <p id="mal-status-message"
+                  style="margin-top: 0.5rem; font-size: 0.85rem; color: #cbd5e1; margin-bottom: 0;">Ready to upload.</p>
+              </div>
+
+              <div style="margin-top: 1.5rem; display: flex; gap: 1rem; justify-content: center;">
+                <button id="mal-import-btn" class="premium-export-btn"
+                  style="background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);" disabled>
+                  <span class="material-icons">cloud_upload</span> Start Import
+                </button>
+              </div>
+            </div>
+            <!-- End Import Card -->
+
+          </div>
+        </div>
+        <!-- Seasonal Browser View -->
+        <div id="season-view" class="view-section">
+          <div class="premium-season-header">
+            <div class="season-header-top">
+              <div>
+                <p class="season-eyebrow">Seasonal Discovery</p>
+                <h2 class="premium-season-title">Discover <span class="season-gradient-word">Seasonal Anime</span></h2>
+                <p class="season-subtitle">Curated picks from every season — from anticipated premieres to hidden gems worth your time.</p>
+              </div>
+              <div class="season-dropdown" data-season-dropdown-wrapper>
+                <button id="season-dropdown-toggle" class="season-dropdown-toggle" aria-haspopup="true"
+                  aria-expanded="false">
+                  Select Season
+                  <span class="chevron">▾</span>
+                </button>
+                <div class="season-dropdown-menu" id="season-dropdown-menu" role="listbox"></div>
+              </div>
+            </div>
+
+            <div class="season-main-nav" id="season-main-nav">
+              <button class="premium-filter-btn active" data-tab="season">Browse by Season</button>
+              <button class="premium-filter-btn" data-tab="upcoming">Upcoming</button>
+              <button class="premium-filter-btn" data-tab="top">Top Anime</button>
+            </div>
+
+            <!-- Compact seasonal controls injected by JS -->
+            <div id="season-sub-nav" class="season-sub-nav">
+              <div class="season-chip-panel">
+                <div class="season-pill-track" data-season-strip></div>
+              </div>
+            </div>
+          </div>
+
+          <div id="season-anime-grid" class="anime-grid"
+            style="min-height: 400px; position: relative; display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1.5rem;">
+            <!-- Loading skeleton or Anime cards go here -->
+          </div>
+        </div>
+
+      </div> <!-- End View Container -->
+    </main>
+  </div>
+  <!-- Supplemental styles (notifications, toasts, utilities) -->
+  <link rel="stylesheet" href="../src/styles/style.css">
+
+  <!-- Socket.IO client (CDN) -->
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+
+  <!-- Toast notification root -->
+  <div id="toast-root"></div>
+
+  <!-- Notification panel -->
+  <div id="notif-panel">
+    <div
+      style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid rgba(255,255,255,0.07);">
+      <span style="font-weight:700;font-size:0.95rem;">Notifications</span>
+      <button id="notif-mark-all-btn"
+        style="background:none;border:none;color:var(--accent,#6c63ff);font-size:0.78rem;cursor:pointer;">Mark all
+        read</button>
+    </div>
+    <div id="notif-list"></div>
+    <div style="padding:10px 16px;border-top:1px solid rgba(255,255,255,0.07);text-align:center;">
+      <button id="notif-clear-btn"
+        style="background:none;border:none;color:#888;font-size:0.78rem;cursor:pointer;">Clear all</button>
+    </div>
+  </div>
+
+  <!-- Notification badge (added to bell button via JS) -->
+  <div id="chart-tooltip" class="chart-tooltip"></div>
+
+  <!-- Main app module -->
+  <script src="/env.js"></script>
+  <script type="module" src="../src/main.js"></script>
+</body>
+
+</html>

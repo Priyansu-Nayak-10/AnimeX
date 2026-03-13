@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -7,6 +7,10 @@
   <title>Dashboard &mdash; Animex 2.0</title>
   <link rel="icon" href="/images/favicon.png" />
   <link rel="stylesheet" href="/css/style.css">
+
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#111116">
+    <link rel="apple-touch-icon" href="/images/favicon.png">
 </head>
 
 <body>
@@ -148,32 +152,32 @@
                   <div class="milestone-grid" id="milestone-grid">
                     <!-- Rendered by initMilestones() -->
                     <div class="milestone-tile locked">
-                      <span class="milestone-icon">🔍</span>
+                      <span class="milestone-icon">ðŸ”</span>
                       <span class="milestone-name">Lost &amp; Found</span>
                       <span class="milestone-desc">Save your first anime</span>
                     </div>
                     <div class="milestone-tile locked">
-                      <span class="milestone-icon">📺</span>
+                      <span class="milestone-icon">ðŸ“º</span>
                       <span class="milestone-name">Sequel Hunter</span>
                       <span class="milestone-desc">Receive a sequel alert</span>
                     </div>
                     <div class="milestone-tile locked">
-                      <span class="milestone-icon">🔊</span>
+                      <span class="milestone-icon">ðŸ”Š</span>
                       <span class="milestone-name">Dub Scout</span>
                       <span class="milestone-desc">Get a dub notification</span>
                     </div>
                     <div class="milestone-tile locked">
-                      <span class="milestone-icon">✅</span>
+                      <span class="milestone-icon">âœ…</span>
                       <span class="milestone-name">Series Finished</span>
                       <span class="milestone-desc">Complete your first series</span>
                     </div>
                     <div class="milestone-tile locked">
-                      <span class="milestone-icon">🗂️</span>
+                      <span class="milestone-icon">ðŸ—‚ï¸</span>
                       <span class="milestone-name">The Archivist</span>
                       <span class="milestone-desc">Save 10+ anime</span>
                     </div>
                     <div class="milestone-tile locked">
-                      <span class="milestone-icon">👁️</span>
+                      <span class="milestone-icon">ðŸ‘ï¸</span>
                       <span class="milestone-name">Active Tracker</span>
                       <span class="milestone-desc">Follow 3+ airing anime</span>
                     </div>
@@ -220,7 +224,7 @@
                   </div>
                   <div id="tracker-feed-list" class="tracker-feed-list custom-scrollbar">
                     <div class="tracker-empty">
-                      <span style="font-size:2rem;">🎯</span>
+                      <span style="font-size:2rem;">ðŸŽ¯</span>
                       <p>Follow anime from the Search page to start tracking sequels, dubs, and airing updates here.</p>
                     </div>
                   </div>
@@ -283,7 +287,7 @@
                 <div class="personality-divider"></div>
                 <div class="personality-section">
                   <div class="personality-header">
-                    <span class="personality-emoji">🧠</span>
+                    <span class="personality-emoji">ðŸ§ </span>
                     <span class="personality-title">Your Anime Personality</span>
                   </div>
                   <div id="anime-personality-name" class="personality-name">
@@ -478,7 +482,7 @@
                     </div>
                     <div>
                       <span class="meta-label">Status Distribution</span>
-                      <strong id="insight-status-distribution">Completed 0 • Watching 0 • Plan 0</strong>
+                      <strong id="insight-status-distribution">Completed 0 â€¢ Watching 0 â€¢ Plan 0</strong>
                     </div>
                   </div>
                 </div>
@@ -754,16 +758,16 @@
 
             <!-- Stats Preview -->
             <div class="export-preview-card" id="export-preview-card">
-              <div class="export-preview-icon">📦</div>
+              <div class="export-preview-icon">ðŸ“¦</div>
               <div class="export-preview-info">
                 <div class="export-preview-title">Library Snapshot</div>
                 <div class="export-preview-stats">
                   <span class="epstat"><strong id="export-total">0</strong> total</span>
-                  <span class="epstat-sep">·</span>
+                  <span class="epstat-sep">Â·</span>
                   <span class="epstat"><strong id="export-completed">0</strong> completed</span>
-                  <span class="epstat-sep">·</span>
+                  <span class="epstat-sep">Â·</span>
                   <span class="epstat"><strong id="export-watching">0</strong> watching</span>
-                  <span class="epstat-sep">·</span>
+                  <span class="epstat-sep">Â·</span>
                   <span class="epstat"><strong id="export-plan">0</strong> planned</span>
                 </div>
               </div>
@@ -850,13 +854,13 @@
               <div>
                 <p class="season-eyebrow">Seasonal Discovery</p>
                 <h2 class="premium-season-title">Discover <span class="season-gradient-word">Seasonal Anime</span></h2>
-                <p class="season-subtitle">Curated picks from every season — from anticipated premieres to hidden gems worth your time.</p>
+                <p class="season-subtitle">Curated picks from every season â€” from anticipated premieres to hidden gems worth your time.</p>
               </div>
               <div class="season-dropdown" data-season-dropdown-wrapper>
                 <button id="season-dropdown-toggle" class="season-dropdown-toggle" aria-haspopup="true"
                   aria-expanded="false">
                   Select Season
-                  <span class="chevron">▾</span>
+                  <span class="chevron">â–¾</span>
                 </button>
                 <div class="season-dropdown-menu" id="season-dropdown-menu" role="listbox"></div>
               </div>
@@ -919,3 +923,4 @@
 </body>
 
 </html>
+

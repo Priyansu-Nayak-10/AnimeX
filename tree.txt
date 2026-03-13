@@ -1,0 +1,139 @@
+﻿ANIMEX
++-- apps
+∩┐╜   +-- api
+∩┐╜   ∩┐╜   +-- .env.example
+∩┐╜   ∩┐╜   +-- package-lock.json
+∩┐╜   ∩┐╜   +-- package.json
+∩┐╜   ∩┐╜   +-- src
+∩┐╜   ∩┐╜   ∩┐╜   +-- config
+∩┐╜   ∩┐╜   ∩┐╜   ∩┐╜   +-- schema.sql
+∩┐╜   ∩┐╜   ∩┐╜   ∩┐╜   +-- socket.js
+∩┐╜   ∩┐╜   ∩┐╜   ∩┐╜   +-- swagger.js
+∩┐╜   ∩┐╜   ∩┐╜   +-- database
+∩┐╜   ∩┐╜   ∩┐╜   ∩┐╜   +-- functions
+∩┐╜   ∩┐╜   ∩┐╜   ∩┐╜   ∩┐╜   +-- process_anime_event.sql
+∩┐╜   ∩┐╜   ∩┐╜   ∩┐╜   ∩┐╜   +-- user_sync_schema.sql
+∩┐╜   ∩┐╜   ∩┐╜   ∩┐╜   +-- migrate_add_image.js
+∩┐╜   ∩┐╜   ∩┐╜   ∩┐╜   +-- supabase.js
+∩┐╜   ∩┐╜   ∩┐╜   +-- jobs
+∩┐╜   ∩┐╜   ∩┐╜   ∩┐╜   +-- lifecycle.job.js
+∩┐╜   ∩┐╜   ∩┐╜   ∩┐╜   +-- lock.js
+∩┐╜   ∩┐╜   ∩┐╜   ∩┐╜   +-- news.job.js
+∩┐╜   ∩┐╜   ∩┐╜   ∩┐╜   +-- recommendations.job.js
+∩┐╜   ∩┐╜   ∩┐╜   +-- middleware
+∩┐╜   ∩┐╜   ∩┐╜   ∩┐╜   +-- auth.js
+∩┐╜   ∩┐╜   ∩┐╜   ∩┐╜   +-- cache.js
+∩┐╜   ∩┐╜   ∩┐╜   ∩┐╜   +-- rateLimit.js
+∩┐╜   ∩┐╜   ∩┐╜   ∩┐╜   +-- validate.js
+∩┐╜   ∩┐╜   ∩┐╜   +-- routes
+∩┐╜   ∩┐╜   ∩┐╜   ∩┐╜   +-- admin.js
+∩┐╜   ∩┐╜   ∩┐╜   ∩┐╜   +-- anime.js
+∩┐╜   ∩┐╜   ∩┐╜   ∩┐╜   +-- import.js
+∩┐╜   ∩┐╜   ∩┐╜   ∩┐╜   +-- notifications.js
+∩┐╜   ∩┐╜   ∩┐╜   ∩┐╜   +-- push.js
+∩┐╜   ∩┐╜   ∩┐╜   ∩┐╜   +-- user.js
+∩┐╜   ∩┐╜   ∩┐╜   +-- server.js
+∩┐╜   ∩┐╜   ∩┐╜   +-- utils
+∩┐╜   ∩┐╜   ∩┐╜       +-- fetcher.js
+∩┐╜   ∩┐╜   ∩┐╜       +-- helpers.js
+∩┐╜   ∩┐╜   ∩┐╜       +-- httpClient.js
+∩┐╜   ∩┐╜   ∩┐╜       +-- logger.js
+∩┐╜   ∩┐╜   +-- tests
+∩┐╜   ∩┐╜       +-- api
+∩┐╜   ∩┐╜       ∩┐╜   +-- anime.test.js
+∩┐╜   ∩┐╜       ∩┐╜   +-- import.test.js
+∩┐╜   ∩┐╜       ∩┐╜   +-- notifications.test.js
+∩┐╜   ∩┐╜       ∩┐╜   +-- user.test.js
+∩┐╜   ∩┐╜       +-- jobs
+∩┐╜   ∩┐╜       ∩┐╜   +-- lock.test.js
+∩┐╜   ∩┐╜       +-- middleware
+∩┐╜   ∩┐╜       ∩┐╜   +-- auth.test.js
+∩┐╜   ∩┐╜       ∩┐╜   +-- rateLimit.test.js
+∩┐╜   ∩┐╜       ∩┐╜   +-- validate.test.js
+∩┐╜   ∩┐╜       +-- routes
+∩┐╜   ∩┐╜       ∩┐╜   +-- contracts.test.js
+∩┐╜   ∩┐╜       +-- support
+∩┐╜   ∩┐╜           +-- jwt.js
+∩┐╜   +-- web
+∩┐╜       +-- env.js
+∩┐╜       +-- pages
+∩┐╜       ∩┐╜   +-- app.html
+∩┐╜       ∩┐╜   +-- index.html
+∩┐╜       ∩┐╜   +-- reset-password.html
+∩┐╜       ∩┐╜   +-- signin.html
+∩┐╜       ∩┐╜   +-- signup.html
+∩┐╜       +-- public
+∩┐╜       ∩┐╜   +-- css
+∩┐╜       ∩┐╜   ∩┐╜   +-- auth.css
+∩┐╜       ∩┐╜   ∩┐╜   +-- style.css
+∩┐╜       ∩┐╜   +-- images
+∩┐╜       ∩┐╜       +-- signin_anime.png
+∩┐╜       ∩┐╜       +-- signup_anime.png
+∩┐╜       +-- src
+∩┐╜       ∩┐╜   +-- app.js
+∩┐╜       ∩┐╜   +-- components
+∩┐╜       ∩┐╜   ∩┐╜   +-- AnimeCard.js
+∩┐╜       ∩┐╜   ∩┐╜   +-- BaseWebComponent.js
+∩┐╜       ∩┐╜   ∩┐╜   +-- StatBadge.js
+∩┐╜       ∩┐╜   +-- config.js
+∩┐╜       ∩┐╜   +-- core
+∩┐╜       ∩┐╜   ∩┐╜   +-- api.js
+∩┐╜       ∩┐╜   ∩┐╜   +-- cloudSync.js
+∩┐╜       ∩┐╜   ∩┐╜   +-- dataNormalize.js
+∩┐╜       ∩┐╜   ∩┐╜   +-- datastore.js
+∩┐╜       ∩┐╜   ∩┐╜   +-- navigation.js
+∩┐╜       ∩┐╜   ∩┐╜   +-- sectionReveal.js
+∩┐╜       ∩┐╜   ∩┐╜   +-- selectors.js
+∩┐╜       ∩┐╜   ∩┐╜   +-- services.js
+∩┐╜       ∩┐╜   ∩┐╜   +-- socket.js
+∩┐╜       ∩┐╜   ∩┐╜   +-- state.js
+∩┐╜       ∩┐╜   ∩┐╜   +-- supabaseClient.js
+∩┐╜       ∩┐╜   ∩┐╜   +-- syncService.js
+∩┐╜       ∩┐╜   +-- features
+∩┐╜       ∩┐╜   ∩┐╜   +-- auth
+∩┐╜       ∩┐╜   ∩┐╜   ∩┐╜   +-- auth.js
+∩┐╜       ∩┐╜   ∩┐╜   ∩┐╜   +-- resetPassword.js
+∩┐╜       ∩┐╜   ∩┐╜   ∩┐╜   +-- sessionBootstrap.js
+∩┐╜       ∩┐╜   ∩┐╜   ∩┐╜   +-- signinEnhancements.js
+∩┐╜       ∩┐╜   ∩┐╜   ∩┐╜   +-- signupEnhancements.js
+∩┐╜       ∩┐╜   ∩┐╜   +-- dashboard
+∩┐╜       ∩┐╜   ∩┐╜   ∩┐╜   +-- dashboard.js
+∩┐╜       ∩┐╜   ∩┐╜   ∩┐╜   +-- insights.js
+∩┐╜       ∩┐╜   ∩┐╜   +-- library
+∩┐╜       ∩┐╜   ∩┐╜   ∩┐╜   +-- libraryUI.js
+∩┐╜       ∩┐╜   ∩┐╜   +-- notifications
+∩┐╜       ∩┐╜   ∩┐╜   ∩┐╜   +-- notifications.js
+∩┐╜       ∩┐╜   ∩┐╜   +-- search
+∩┐╜       ∩┐╜   ∩┐╜   ∩┐╜   +-- searchAdvanced.js
+∩┐╜       ∩┐╜   ∩┐╜   +-- season
+∩┐╜       ∩┐╜   ∩┐╜   ∩┐╜   +-- animeGrid.js
+∩┐╜       ∩┐╜   ∩┐╜   ∩┐╜   +-- animePreviewCard.js
+∩┐╜       ∩┐╜   ∩┐╜   ∩┐╜   +-- seasonBrowser.js
+∩┐╜       ∩┐╜   ∩┐╜   ∩┐╜   +-- seasonTabs.js
+∩┐╜       ∩┐╜   ∩┐╜   +-- ui
+∩┐╜       ∩┐╜   ∩┐╜   ∩┐╜   +-- ui.js
+∩┐╜       ∩┐╜   ∩┐╜   +-- user
+∩┐╜       ∩┐╜   ∩┐╜       +-- userFeatures.js
+∩┐╜       ∩┐╜   +-- main.js
+∩┐╜       ∩┐╜   +-- store.js
+∩┐╜       ∩┐╜   +-- styles
+∩┐╜       ∩┐╜       +-- style.css
+∩┐╜       +-- sw.js
++-- docs
+∩┐╜   +-- api.md
+∩┐╜   +-- architecture.md
+∩┐╜   +-- deployment.md
++-- migrate_repo.js
++-- package-lock.json
++-- package.json
++-- packages
+∩┐╜   +-- shared-config
+∩┐╜   ∩┐╜   +-- constants.js
+∩┐╜   +-- shared-ui
+∩┐╜   ∩┐╜   +-- animeCard.js
+∩┐╜   +-- shared-utils
+∩┐╜       +-- format.js
++-- scripts
+∩┐╜   +-- fix.js
++-- tree.js
++-- tree.txt

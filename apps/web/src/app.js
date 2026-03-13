@@ -20,7 +20,6 @@ import { initLibraryCloudSync } from './core/cloudSync.js';
 import { createLibraryStore } from './store.js';
 import { initInsights } from './features/dashboard/insights.js';
 import { initSearchAdvanced } from './features/search/searchAdvanced.js';
-import { initLiveActivity } from './features/social/liveActivity.js';
 import { initSeasonBrowser } from './features/season/seasonBrowser.js';
 import { initUI } from './features/ui/ui.js';
 import { initLibraryUI } from './features/library/libraryUI.js';
@@ -155,14 +154,9 @@ const initAuthEvents = async () => {
       onSocketNotification(notification);
       forwardToTrackerFeed(notification);
     });
-
-    // Start Live Community Tracking
-    initLiveActivity(socket);
   } else {
     // No authenticated user — skip socket to avoid subscribing with wrong ID
     console.info('[Animex] No user session — socket not connected.');
-    // Start Live Community Tracking (Read-Only)
-    initLiveActivity(null);
   }
 
   console.log('[Animex] ✅ Ready');

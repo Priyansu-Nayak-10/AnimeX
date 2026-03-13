@@ -1,7 +1,7 @@
 // Prefer window.ENV for production overrides; fall back to legacy __ENV.
 const env = window.ENV || window.__ENV || {};
 
-const API_BASE = String(env.API_BASE || 'https://animex-api.onrender.com').trim();
+const API_BASE = String(env.API_BASE || 'https://animex-api.onrender.com/api').trim();
 const normalizedBackendUrl = API_BASE.endsWith('/') && API_BASE.length > 1 ? API_BASE.slice(0, -1) : API_BASE;
 
 export const CONFIG = Object.freeze({

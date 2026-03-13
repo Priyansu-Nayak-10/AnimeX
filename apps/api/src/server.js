@@ -78,8 +78,13 @@ function createApp() {
   const rawOrigins = String(process.env.ALLOWED_ORIGINS || process.env.CLIENT_ORIGIN || '').trim();
   const allowedOrigins = rawOrigins
     .split(',')
-    .map((s) => s.trim())
+    .map((s) => s.trim().replace(/\/$/, ''))
     .filter(Boolean);
+
+  // Automatically allow the specific Vercel frontend origin
+  if (!allowedOrigins.includes('https://animex-psi.vercel.app')) {
+    allowedOrigins.push('https://animex-psi.vercel.app');
+  }
 
   const isProd = process.env.NODE_ENV === 'production';
 

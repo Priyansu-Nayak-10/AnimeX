@@ -8,8 +8,12 @@ const initSocket = (server) => {
   const rawOrigins = String(process.env.ALLOWED_ORIGINS || process.env.CLIENT_ORIGIN || '').trim();
   const allowedOrigins = rawOrigins
     .split(',')
-    .map((s) => s.trim())
+    .map((s) => s.trim().replace(/\/$/, ''))
     .filter(Boolean);
+
+  if (!allowedOrigins.includes('https://animex-psi.vercel.app')) {
+    allowedOrigins.push('https://animex-psi.vercel.app');
+  }
 
   io = new Server(server, {
     // Allow both transports — WebSocket preferred, polling as fallback

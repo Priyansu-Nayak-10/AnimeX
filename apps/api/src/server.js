@@ -134,7 +134,7 @@ function createApp() {
         },
         referrerPolicy: { policy: 'no-referrer' },
         crossOriginOpenerPolicy: { policy: 'same-origin' },
-        crossOriginResourcePolicy: { policy: 'same-site' }
+        crossOriginResourcePolicy: { policy: 'cross-origin' }
       }
     : {
         contentSecurityPolicy: false,

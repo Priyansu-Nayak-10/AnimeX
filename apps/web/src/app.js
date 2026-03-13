@@ -55,7 +55,7 @@ applyTheme(getState('theme') || 'dark');
 applyAccent(getState('accentColor') || '#6c63ff');
 
 // ── Bootstrap on DOMContentLoaded ─────────────────────────────
-document.addEventListener('DOMContentLoaded', async () => {
+const initAuthEvents = async () => {
   await (window.__ANIMEX_AUTH_READY || Promise.resolve());
   console.log('[Animex] 🚀 Starting...');
 
@@ -144,7 +144,13 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   console.log('[Animex] ✅ Ready');
-});
+};
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initAuthEvents);
+} else {
+  initAuthEvents();
+}
 
 // normalizeAnime, bindNavigation, openView, and initSectionReveal are
 // imported from their respective core modules above.
@@ -618,8 +624,14 @@ async function bootstrap() {
 }
 
 export function startApp() {
-  document.addEventListener("DOMContentLoaded", async () => {
+  const init = async () => {
     await (window.__ANIMEX_AUTH_READY || Promise.resolve());
     await bootstrap();
-  }, { once: true });
+  };
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init, { once: true });
+  } else {
+    init();
+  }
 }

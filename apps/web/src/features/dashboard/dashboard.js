@@ -41,14 +41,12 @@ function escapeHtml(value) {
 
 // Premium palette — rich gradient stops per slice
 const DONUT_PALETTE = [
-  { from: '#60a5fa', to: '#3b82f6' },  // blue
-  { from: '#7dd3fc', to: '#0ea5e9' },  // sky
-  { from: '#4ade80', to: '#16a34a' },  // green
-  { from: '#fb923c', to: '#ea580c' },  // orange
-  { from: '#c084fc', to: '#9333ea' },  // purple
-  { from: '#f87171', to: '#dc2626' },  // red
-  { from: '#34d399', to: '#059669' },  // emerald
-  { from: '#facc15', to: '#d97706' },  // amber
+  { from: 'var(--chart-purple)', to: 'var(--chart-purple)' },
+  { from: 'var(--chart-blue)', to: 'var(--chart-blue)' },
+  { from: 'var(--chart-cyan)', to: 'var(--chart-cyan)' },
+  { from: 'var(--chart-green)', to: 'var(--chart-green)' },
+  { from: 'var(--chart-orange)', to: 'var(--chart-orange)' },
+  { from: 'var(--chart-pink)', to: 'var(--chart-pink)' },
 ];
 
 function polarToCartesian(cx, cy, r, deg) {
@@ -283,11 +281,8 @@ function initRecommendations({ store, libraryStore, selectors, toast = null }) {
 
     if (refs.quickTopGenres) {
       refs.quickTopGenres.innerHTML = genres.length
-        ? genres.map(([genre], index) => {
-          const colorClass = index % 3 === 0
-            ? "bg-red-500-10"
-            : (index % 3 === 1 ? "bg-blue-500-10" : "bg-purple-500-10");
-          return `<span class="genre-tag ${colorClass}">${escapeHtml(genre)}</span>`;
+        ? genres.map(([genre]) => {
+          return `<span class="genre-badge" data-genre="${escapeHtml(genre)}">${escapeHtml(genre)}</span>`;
         }).join("")
         : '<span class="anime-card-meta">No genre data yet</span>';
     }
@@ -299,11 +294,12 @@ function initRecommendations({ store, libraryStore, selectors, toast = null }) {
       } else {
         renderGenreDonut(refs.dashboardGenreSvg, completedGenreEntries);
         const total = completedGenreEntries.reduce((sum, [, count]) => sum + Number(count || 0), 0);
-        const palette = ["#3b82f6", "#7dd3fc", "#22c55e", "#f97316", "#a855f7", "#ef4444"];
-        refs.dashboardGenreLegend.innerHTML = completedGenreEntries.map(([genre, count], index) => {
-          const percent = Math.round((Number(count || 0) / Math.max(1, total)) * 100);
-          return `<div class="legend-item"><span class="legend-dot" style="background-color:${palette[index % palette.length]}"></span><span class="anime-card-meta" style="margin-bottom: 0;">${escapeHtml(genre)} ${percent}%</span></div>`;
-        }).join("");
+        const palette = ["var(--chart-purple)", "var(--chart-blue)", "var(--chart-cyan)", "var(--chart-green)", "var(--chart-orange)", "var(--chart-pink)"];
+        refs.dashboardGenreLegend.innerHTML = completedGenreEntries.map(([name, count], i) => {
+          const pct = Math.round((Number(count || 0) / total) * 100);
+          const c = palette[i % palette.length];
+          return `<div class="legend-item"><span class="legend-dot" style="background: ${c}"></span><div class="legend-label"><span class="anime-card-meta" style="margin-bottom:0;color:var(--text-primary); font-weight:600;">${escapeHtml(name)}</span><span class="anime-card-meta" style="margin-bottom:0;font-size:0.6rem;">${pct}%</span></div></div>`;
+        }).join('');
       }
     }
 
@@ -405,7 +401,7 @@ function initHeroCarousel({
         return st.includes('airing') ? 'Ongoing' : 'Unknown';
       })();
 
-      const genres = (anime?.genres || []).slice(0, 4).map((genre) => `<span class="hero-genre-chip">${escapeHtml(genre)}</span>`).join("");
+      const genres = (anime?.genres || []).slice(0, 4).map((genre) => `<span class="hero-genre-chip" data-genre="${escapeHtml(genre)}">${escapeHtml(genre)}</span>`).join("");
       return `<article class="hero-slide ${i === 0 ? "is-active" : ""}" data-index="${i}">
         <img class="hero-slide-bg" src="${image}" alt="${title}" loading="lazy" decoding="async" />
         <div class="hero-slide-overlay"></div>

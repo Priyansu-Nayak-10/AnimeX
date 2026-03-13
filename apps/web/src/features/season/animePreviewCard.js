@@ -109,7 +109,7 @@ export function bindHoverPreviews(containerElement, getAnimeDataFn) {
     const studio = data.studios?.[0]?.name || 'Unknown Studio';
     const score = data.score ? `⭐ ${data.score}` : 'N/A';
     const synopsis = data.synopsis ? data.synopsis.replace('[Written by MAL Rewrite]', '').trim() : 'No synopsis available.';
-    const tags = (data.genres || []).slice(0, 4).map(g => `<span class="preview-tag">${g.name}</span>`).join('');
+    const tags = (data.genres || []).slice(0, 4).map(g => `<span class="preview-tag" data-genre="${g.name}">${g.name}</span>`).join('');
 
     previewEl.innerHTML = `
       <div class="preview-header">

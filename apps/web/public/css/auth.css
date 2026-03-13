@@ -4,25 +4,7 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Rajdhani:wght@400;500;600;700&display=swap');
 
-:root {
-    --auth-bg: #06080f;
-    --auth-panel-dark: #08101e;
-    --auth-card-bg: rgba(12, 18, 35, 0.82);
-    --auth-card-border: rgba(138, 92, 246, 0.25);
-    --auth-primary: #a855f7;
-    --auth-primary-2: #7c3aed;
-    --auth-accent: #06b6d4;
-    --auth-accent-2: #0ea5e9;
-    --auth-glow: rgba(168, 85, 247, 0.45);
-    --auth-glow-cyan: rgba(6, 182, 212, 0.35);
-    --auth-text: #f1f5f9;
-    --auth-text-muted: #94a3b8;
-    --auth-error: #f87171;
-    --auth-success: #34d399;
-    --auth-input-bg: rgba(8, 16, 30, 0.7);
-    --auth-input-border: rgba(138, 92, 246, 0.2);
-    --auth-divider: rgba(148, 163, 184, 0.12);
-}
+
 
 /* ---- Reset & Base ---- */
 *,
@@ -36,9 +18,9 @@
 body.auth-page {
     min-height: 100vh;
     display: flex;
-    background: var(--auth-bg);
+    background: var(--bg-main);
     font-family: 'Outfit', sans-serif;
-    color: var(--auth-text);
+    color: var(--text-primary);
     overflow-x: hidden;
     overflow-y: auto;
 }
@@ -124,7 +106,7 @@ body.auth-page {
     justify-content: center;
     font-size: 1.2rem;
     color: #fff;
-    box-shadow: 0 0 20px var(--auth-glow);
+    box-shadow: 0 0 20px var(--brand-glow);
 }
 
 .art-logo-text {
@@ -150,7 +132,7 @@ body.auth-page {
 }
 
 .art-sub {
-    color: var(--auth-text-muted);
+    color: var(--text-primary-muted);
     font-size: 0.95rem;
     line-height: 1.6;
     max-width: 320px;
@@ -206,7 +188,7 @@ body.auth-page {
 .auth-form-panel {
     width: 460px;
     flex-shrink: 0;
-    background: var(--auth-panel-dark);
+    background: var(--bg-sidebar);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -311,7 +293,7 @@ body.auth-page {
 }
 
 .auth-subtitle {
-    color: var(--auth-text-muted);
+    color: var(--text-primary-muted);
     font-size: 0.92rem;
     line-height: 1.55;
     margin: 0;
@@ -355,7 +337,7 @@ body.auth-page {
     -webkit-backdrop-filter: blur(12px);
     border: 1px solid rgba(138, 92, 246, 0.15);
     border-radius: 14px;
-    color: var(--auth-text);
+    color: var(--text-primary);
     font-family: 'Outfit', sans-serif;
     font-size: 0.97rem;
     transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
@@ -371,9 +353,9 @@ body.auth-page {
 .auth-input:-webkit-autofill:focus,
 .auth-input:-webkit-autofill:active {
     -webkit-box-shadow: 0 0 0 30px #0c1223 inset !important;
-    -webkit-text-fill-color: var(--auth-text) !important;
+    -webkit-text-fill-color: var(--text-primary) !important;
     transition: background-color 5000s ease-in-out 0s;
-    caret-color: var(--auth-text);
+    caret-color: var(--text-primary);
 }
 
 .auth-input:focus {
@@ -388,7 +370,7 @@ body.auth-page {
 }
 
 .auth-input.error {
-    border-color: var(--auth-error);
+    border-color: var(--genre-action);
 }
 
 .auth-input.error:focus {
@@ -400,7 +382,7 @@ body.auth-page {
     top: 50%;
     left: 16px;
     transform: translateY(-50%);
-    color: var(--auth-text-muted);
+    color: var(--text-primary-muted);
     font-size: 0.9rem;
     transition: color 0.3s ease, transform 0.3s ease;
     pointer-events: none;
@@ -413,7 +395,7 @@ body.auth-page {
 }
 
 .auth-input.error~.input-icon {
-    color: var(--auth-error);
+    color: var(--genre-action);
 }
 
 .floating-label {
@@ -421,7 +403,7 @@ body.auth-page {
     left: 48px;
     top: 50%;
     transform: translateY(-50%);
-    color: var(--auth-text-muted);
+    color: var(--text-primary-muted);
     font-family: 'Outfit', sans-serif;
     font-size: 0.95rem;
     pointer-events: none;
@@ -441,7 +423,7 @@ body.auth-page {
 }
 
 .auth-input.error~.floating-label {
-    color: var(--auth-error);
+    color: var(--genre-action);
 }
 
 .toggle-password {
@@ -451,7 +433,7 @@ body.auth-page {
     transform: translateY(-50%);
     background: none;
     border: none;
-    color: var(--auth-text-muted);
+    color: var(--text-primary-muted);
     cursor: pointer;
     padding: 6px;
     border-radius: 8px;
@@ -460,14 +442,14 @@ body.auth-page {
 }
 
 .toggle-password:hover {
-    color: var(--auth-text);
+    color: var(--text-primary);
     background: rgba(255, 255, 255, 0.06);
 }
 
 .input-error {
     display: block;
     font-size: 0.77rem;
-    color: var(--auth-error);
+    color: var(--genre-action);
     margin-top: 6px;
     padding-left: 4px;
     height: 0;
@@ -503,7 +485,7 @@ body.auth-page {
     flex: 1;
     height: 3px;
     border-radius: 4px;
-    background: rgba(255, 255, 255, 0.08);
+    background: var(--glass-bg);
     transition: background 0.35s ease;
 }
 
@@ -520,12 +502,12 @@ body.auth-page {
 }
 
 .strength-bar span.filled-strong {
-    background: var(--auth-success);
+    background: var(--chart-green);
 }
 
 .strength-label {
     font-size: 0.73rem;
-    color: var(--auth-text-muted);
+    color: var(--text-primary-muted);
     font-weight: 500;
 }
 
@@ -555,7 +537,7 @@ body.auth-page {
 
 .remember-me span {
     font-size: 0.85rem;
-    color: var(--auth-text-muted);
+    color: var(--text-primary-muted);
 }
 
 .forgot-link {
@@ -592,7 +574,7 @@ body.auth-page {
 
 .terms-check span {
     font-size: 0.83rem;
-    color: var(--auth-text-muted);
+    color: var(--text-primary-muted);
     line-height: 1.5;
 }
 
@@ -616,7 +598,7 @@ body.auth-page {
 .btn-primary {
     width: 100%;
     padding: 15px;
-    background: linear-gradient(135deg, var(--auth-primary-2) 0%, var(--auth-primary) 50%, #c084fc 100%);
+    background: linear-gradient(135deg, var(--brand-secondary) 0%, var(--auth-primary) 50%, #c084fc 100%);
     background-size: 200% 100%;
     background-position: left center;
     color: #fff;
@@ -640,7 +622,7 @@ body.auth-page {
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(135deg, transparent 40%, rgba(255, 255, 255, 0.08) 100%);
+    background: linear-gradient(135deg, transparent 40%, var(--glass-bg) 100%);
     opacity: 0;
     transition: opacity 0.3s ease;
 }
@@ -699,7 +681,7 @@ body.auth-page {
     align-items: center;
     gap: 12px;
     margin: 24px 0;
-    color: var(--auth-text-muted);
+    color: var(--text-primary-muted);
     font-size: 0.82rem;
 }
 
@@ -708,7 +690,7 @@ body.auth-page {
     content: '';
     flex: 1;
     height: 1px;
-    background: var(--auth-divider);
+    background: var(--border-glass);
 }
 
 .social-btns {
@@ -726,7 +708,7 @@ body.auth-page {
     border: 1px solid rgba(255, 255, 255, 0.09);
     border-radius: 12px;
     background: rgba(255, 255, 255, 0.04);
-    color: var(--auth-text);
+    color: var(--text-primary);
     font-family: 'Outfit', sans-serif;
     font-size: 0.87rem;
     font-weight: 500;
@@ -761,7 +743,7 @@ body.auth-page {
     margin-top: 28px;
     text-align: center;
     font-size: 0.88rem;
-    color: var(--auth-text-muted);
+    color: var(--text-primary-muted);
 }
 
 .auth-link {
@@ -779,7 +761,7 @@ body.auth-page {
 .backend-error {
     background: rgba(248, 113, 113, 0.08);
     border: 1px solid rgba(248, 113, 113, 0.3);
-    color: var(--auth-error);
+    color: var(--genre-action);
     padding: 12px 16px;
     border-radius: 12px;
     margin-bottom: 20px;

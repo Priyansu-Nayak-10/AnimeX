@@ -68,7 +68,7 @@ const applyAccent = (color) => {
 };
 
 applyTheme(getState('theme') || 'dark');
-applyAccent(getState('accentColor') || '#6c63ff');
+applyAccent(getState('accentColor') || 'var(--brand-primary)');
 
 // ── Bootstrap on DOMContentLoaded ─────────────────────────────
 const initAuthEvents = async () => {
@@ -468,12 +468,12 @@ function initDebugDiagnosticsPanel({ api, store, libraryStore, timers = globalTh
   card.style.maxWidth = "90vw";
   card.style.padding = "10px 12px";
   card.style.borderRadius = "10px";
-  card.style.border = "1px solid rgba(148,163,184,0.35)";
-  card.style.background = "rgba(2,6,23,0.9)";
-  card.style.color = "#e2e8f0";
+  card.style.border = "1px solid var(--border-glass)";
+  card.style.background = "var(--bg-card)";
+  card.style.color = "var(--text-primary)";
   card.style.font = "12px/1.45 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace";
-  card.style.backdropFilter = "blur(8px)";
-  card.style.boxShadow = "0 12px 28px rgba(2,6,23,0.45)";
+  card.style.backdropFilter = "blur(12px)";
+  card.style.boxShadow = "0 12px 28px rgba(0,0,0,0.45)";
   card.style.pointerEvents = "none";
   card.innerHTML = "<strong style='display:block;margin-bottom:6px;'>Debug Diagnostics</strong><pre style='margin:0;white-space:pre-wrap;word-break:break-word;'>Initializing…</pre>";
 

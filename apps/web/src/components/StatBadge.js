@@ -19,7 +19,7 @@ class StatBadge extends HTMLElement {
     render() {
         const icon = this.getAttribute('icon') || 'star';
         const value = this.getAttribute('value') || '';
-        const color = this.getAttribute('color') || '#94a3b8';
+        const color = this.getAttribute('color') || 'var(--text-secondary)';
         const label = this.getAttribute('label') || '';
 
         this.shadowRoot.innerHTML = `
@@ -28,13 +28,13 @@ class StatBadge extends HTMLElement {
           display: inline-flex;
           align-items: center;
           gap: 0.25rem;
-          background: rgba(15, 23, 42, 0.6);
+          background: var(--bg-surface);
           padding: 0.2rem 0.5rem;
           border-radius: 6px;
-          border: 1px solid rgba(255, 255, 255, 0.05);
+          border: 1px solid var(--border-glass);
           font-size: 0.75rem;
           font-weight: 600;
-          color: #e2e8f0;
+          color: var(--text-primary);
           backdrop-filter: blur(4px);
         }
         
@@ -45,7 +45,7 @@ class StatBadge extends HTMLElement {
         }
 
         .label {
-          color: #94a3b8;
+          color: var(--text-muted);
           font-size: 0.65rem;
           margin-left: 2px;
           text-transform: uppercase;

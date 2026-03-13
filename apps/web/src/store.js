@@ -12,7 +12,7 @@ const initialState = {
   // UI
   activeView: 'dashboard',   // 'dashboard' | 'library' | 'search' | 'insights' | 'account'
   theme: 'dark',             // 'dark' | 'light'
-  accentColor: '#6c63ff',
+  accentColor: 'var(--brand-primary)',
   sidebarCollapsed: false,
   modalOpen: null,           // null | 'animeDetail' | 'settings' | ...
 
@@ -119,7 +119,7 @@ window.addEventListener('storage', (e) => {
       if (settings) {
         setState({
           theme: settings.darkTheme ? 'dark' : 'light',
-          accentColor: settings.accentColor || '#6366f1'
+          accentColor: settings.accentColor || 'var(--brand-primary)'
         });
         window.dispatchEvent(new CustomEvent('animex:settings-sync', { detail: settings }));
       }

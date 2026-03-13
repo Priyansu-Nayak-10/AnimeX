@@ -187,9 +187,9 @@ function initWatchlistBoard({ libraryStore, toast = null }) {
             <svg class="pwc-svg" viewBox="0 0 36 36" aria-hidden="true">
               <defs>
                 <linearGradient id="pwc-ring-grad-${malId}" x1="1" y1="0" x2="0" y2="1">
-                  <stop offset="0%"   stop-color="#5bb3ff" />
-                  <stop offset="60%"  stop-color="#a78bfa" />
-                  <stop offset="100%" stop-color="#34d399" />
+                  <stop offset="0%"   stop-color="var(--chart-blue)" />
+                  <stop offset="60%"  stop-color="var(--chart-purple)" />
+                  <stop offset="100%" stop-color="var(--chart-green)" />
                 </linearGradient>
                 <filter id="pwc-ring-glow-${malId}" x="-20%" y="-20%" width="140%" height="140%">
                   <feGaussianBlur in="SourceGraphic" stdDeviation="1.2" result="blur"/>

@@ -27,13 +27,13 @@ function parseDurationMinutes(value) {
 }
 
 const GENRE_COLOR_MAP = Object.freeze({
-  action: "#3b82f6",
-  fantasy: "#7dd3fc",
-  adventure: "#22c55e",
-  suspense: "#f97316",
-  comedy: "#a855f7"
+  action: "var(--genre-action)",
+  fantasy: "var(--genre-fantasy)",
+  adventure: "var(--genre-adventure)",
+  suspense: "var(--genre-mystery)",
+  comedy: "var(--genre-comedy)"
 });
-const GENRE_FALLBACK_COLORS = Object.freeze(["#3b82f6", "#7dd3fc", "#22c55e", "#f97316", "#a855f7", "#ef4444"]);
+const GENRE_FALLBACK_COLORS = Object.freeze(["var(--chart-purple)", "var(--chart-blue)", "var(--chart-cyan)", "var(--chart-green)", "var(--chart-orange)", "var(--chart-pink)"]);
 
 function getGenreColor(genreName, index = 0) {
   const key = String(genreName || "").trim().toLowerCase();
@@ -81,14 +81,12 @@ function calculateCompletionStreak(timestamps) {
 }
 
 const DONUT_PALETTE = [
-  { from: '#60a5fa', to: '#3b82f6' },
-  { from: '#7dd3fc', to: '#0ea5e9' },
-  { from: '#4ade80', to: '#16a34a' },
-  { from: '#fb923c', to: '#ea580c' },
-  { from: '#c084fc', to: '#9333ea' },
-  { from: '#f87171', to: '#dc2626' },
-  { from: '#34d399', to: '#059669' },
-  { from: '#facc15', to: '#d97706' },
+  { from: 'var(--chart-purple)', to: 'var(--chart-purple)' },
+  { from: 'var(--chart-blue)', to: 'var(--chart-blue)' },
+  { from: 'var(--chart-cyan)', to: 'var(--chart-cyan)' },
+  { from: 'var(--chart-green)', to: 'var(--chart-green)' },
+  { from: 'var(--chart-orange)', to: 'var(--chart-orange)' },
+  { from: 'var(--chart-pink)', to: 'var(--chart-pink)' },
 ];
 
 function describeDonutArc(cx, cy, outerR, innerR, startDeg, endDeg) {
@@ -138,9 +136,9 @@ function renderGenreDonut(svgElement, entries) {
   svgElement.innerHTML = `
     <defs>${gradientDefs}${glowFilter}</defs>
     ${slices}
-    <circle cx="${cx}" cy="${cy}" r="${innerR - 5}" fill="rgba(15,23,42,0.75)"/>
-    <text x="${cx}" y="${cy - 6}" text-anchor="middle" font-size="20" font-weight="800" fill="#f1f5f9" font-family="inherit">${total}</text>
-    <text x="${cx}" y="${cy + 13}" text-anchor="middle" font-size="8.5" font-weight="600" fill="#94a3b8" font-family="inherit" letter-spacing="1">ANIME</text>
+    <circle cx="${cx}" cy="${cy}" r="${innerR - 5}" fill="var(--bg-main)"/>
+    <text x="${cx}" y="${cy - 6}" text-anchor="middle" font-size="20" font-weight="800" fill="var(--text-primary)" font-family="inherit">${total}</text>
+    <text x="${cx}" y="${cy + 13}" text-anchor="middle" font-size="8.5" font-weight="600" fill="var(--text-muted)" font-family="inherit" letter-spacing="1">ANIME</text>
   `;
 }
 
@@ -159,7 +157,7 @@ function renderDonutChart(container, segments, total, centerLabel) {
   const segTotal = segments.reduce((s, seg) => s + Number(seg.value || 0), 0) || 1;
 
   const gradientDefs = segments.map((seg, i) => {
-    const c = DONUT_PALETTE[i % DONUT_PALETTE.length];
+    const c = seg.color ? { from: seg.color, to: seg.color } : DONUT_PALETTE[i % DONUT_PALETTE.length];
     return `<linearGradient id="${uid}-sg${i}" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0%" stop-color="${c.from}" stop-opacity="0.9"/>
       <stop offset="100%" stop-color="${c.to}"/>
@@ -187,9 +185,9 @@ function renderDonutChart(container, segments, total, centerLabel) {
   const svgMarkup = `<svg class="insight-donut-svg" viewBox="0 0 120 120" aria-hidden="true">
     <defs>${gradientDefs}${glowFilter}</defs>
     ${slices}
-    <circle cx="${cx}" cy="${cy}" r="${innerR - 4}" fill="rgba(15,23,42,0.8)"/>
-    <text x="${cx}" y="${cy - 5}" text-anchor="middle" font-size="14" font-weight="800" fill="#f1f5f9" font-family="inherit">${total}</text>
-    <text x="${cx}" y="${cy + 11}" text-anchor="middle" font-size="6.5" font-weight="600" fill="#94a3b8" font-family="inherit" letter-spacing="1">${escapeHtml(String(centerLabel || 'TOTAL').toUpperCase())}</text>
+    <circle cx="${cx}" cy="${cy}" r="${innerR - 4}" fill="var(--bg-main)"/>
+    <text x="${cx}" y="${cy - 5}" text-anchor="middle" font-size="14" font-weight="800" fill="var(--text-primary)" font-family="inherit">${total}</text>
+    <text x="${cx}" y="${cy + 11}" text-anchor="middle" font-size="6.5" font-weight="600" fill="var(--text-muted)" font-family="inherit" letter-spacing="1">${escapeHtml(String(centerLabel || 'TOTAL').toUpperCase())}</text>
   </svg>`;
 
   const legend = `<div class="insight-donut-legend">${segments.map((seg, i) => {
@@ -345,9 +343,9 @@ function initInsights({ libraryStore }) {
 
     const statusTotal = insights.statusBreakdown.completed + insights.statusBreakdown.watching + insights.statusBreakdown.plan;
     renderDonutChart(refs.statusChart, [
-      { label: "Completed", value: insights.statusBreakdown.completed, color: "#22c55e" },
-      { label: "Watching", value: insights.statusBreakdown.watching, color: "#60a5fa" },
-      { label: "Plan", value: insights.statusBreakdown.plan, color: "#a78bfa" }
+      { label: "Completed", value: insights.statusBreakdown.completed, color: "var(--chart-green)" },
+      { label: "Watching", value: insights.statusBreakdown.watching, color: "var(--chart-blue)" },
+      { label: "Plan", value: insights.statusBreakdown.plan, color: "var(--chart-purple)" }
     ], statusTotal, `Streak ${insights.completionStreak}`);
 
     renderGenreDonut(refs.genreChart, insights.genreDistribution.sorted);

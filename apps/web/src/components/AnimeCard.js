@@ -144,12 +144,12 @@ class AnimeCard extends HTMLElement {
           display: block;
           position: relative;
           cursor: pointer;
-          border-radius: 0.875rem;
+          border-radius: 16px;
           overflow: hidden;
-          background: linear-gradient(145deg, rgba(30, 41, 59, 0.78), rgba(15, 23, 42, 0.9));
+          background: var(--bg-card, #181A2A);
           transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-          border: 1px solid rgba(255, 255, 255, 0.08);
-          box-shadow: 0 6px 14px -6px rgba(0, 0, 0, 0.35), 0 2px 8px -6px rgba(0, 0, 0, 0.25);
+          border: 1px solid var(--border-glass, rgba(255, 255, 255, 0.06));
+          box-shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
           height: 100%;
           outline: none;
           filter: saturate(1.02);
@@ -158,19 +158,19 @@ class AnimeCard extends HTMLElement {
         :host(:hover), :host(:focus-visible) {
           transform: translateY(-6px);
           box-shadow: 0 16px 32px -10px rgba(0, 0, 0, 0.55), 0 6px 12px -8px rgba(0, 0, 0, 0.35);
-          border-color: rgba(236, 72, 153, 0.4); /* Seasonal accent */
+          border-color: var(--brand-accent, rgba(168, 85, 247, 0.4));
           filter: saturate(1.08);
         }
 
         :host(:focus-visible) {
-            box-shadow: 0 0 0 2px var(--primary, #6366f1);
+            box-shadow: 0 0 0 2px var(--brand-primary, #7C3AED);
         }
 
         .image-container {
           position: relative;
           width: 100%;
           aspect-ratio: 2 / 3;
-          background: #0f172a;
+          background: var(--bg-main);
           overflow: hidden;
         }
 
@@ -193,7 +193,7 @@ class AnimeCard extends HTMLElement {
         .image-overlay {
           position: absolute;
           inset: 0;
-          background: linear-gradient(to top, rgba(15, 23, 42, 0.95) 0%, rgba(15, 23, 42, 0.55) 55%, transparent 100%);
+          background: linear-gradient(to top, var(--bg-main) 0%, rgba(11, 12, 19, 0.55) 55%, transparent 100%);
           opacity: 0.85;
           transition: opacity 0.3s ease;
         }
@@ -206,7 +206,7 @@ class AnimeCard extends HTMLElement {
           position: absolute;
           top: 8px;
           left: 8px;
-          background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
+          background: linear-gradient(135deg, var(--chart-orange) 0%, var(--chart-orange) 100%);
           color: #fff;
           font-size: 0.7rem;
           font-weight: 800;
@@ -237,7 +237,7 @@ class AnimeCard extends HTMLElement {
         .title {
           font-weight: 700;
           font-size: 0.95rem;
-          color: #f8fafc;
+          color: var(--text-primary);
           line-height: 1.35;
           display: -webkit-box;
           -webkit-line-clamp: 2;
@@ -248,11 +248,11 @@ class AnimeCard extends HTMLElement {
         }
 
         :host(:hover) .title {
-            color: var(--accent, #ec4899);
+            color: var(--brand-accent, #A855F7);
         }
 
         .meta {
-          color: #94a3b8;
+          color: var(--text-secondary);
           font-size: 0.75rem;
           display: flex;
           align-items: center;
@@ -264,16 +264,16 @@ class AnimeCard extends HTMLElement {
           width: 3px;
           height: 3px;
           border-radius: 50%;
-          background: #64748b;
+          background: var(--text-muted);
         }
 
         .countdown {
-          color: #fbbf24;
+          color: var(--chart-orange);
           font-weight: 600;
         }
 
         .airing-day {
-          color: #10b981;
+          color: var(--chart-green);
           font-weight: 600;
         }
       </style>
@@ -283,8 +283,8 @@ class AnimeCard extends HTMLElement {
         <img class="card-image" data-src="${image}" alt="${title}" loading="lazy" />
         <div class="image-overlay"></div>
         <div class="stats-overlay">
-          <stat-badge icon="star" value="${scoreDisplay}" color="#fbbf24"></stat-badge>
-          <stat-badge icon="tag" value="${type || 'TV'}" color="#e2e8f0"></stat-badge>
+          <stat-badge icon="star" value="${scoreDisplay}" color="var(--chart-orange)"></stat-badge>
+          <stat-badge icon="tag" value="${type || 'TV'}" color="var(--text-primary)"></stat-badge>
         </div>
       </div>
       

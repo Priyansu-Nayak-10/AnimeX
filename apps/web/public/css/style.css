@@ -7756,3 +7756,23 @@ body:not(.dark) #profile-view .profile-save-hint {
         transform: translateX(-50%) translateY(0);
     }
 }
+
+
+/* --- LIVE ACTIVITY NETWORK CSS --- */
+.live-activity-card { display: flex; flex-direction: column; max-height: 400px; }
+.live-activity-feed { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; padding-top: 10px; padding-right: 5px; }
+.live-activity-feed::-webkit-scrollbar { width: 4px; }
+.live-activity-feed::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
+.live-activity-item { display: flex; align-items: flex-start; gap: 12px; padding: 12px; background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-color); border-radius: 12px; transition: transform 0.2s ease, box-shadow 0.2s ease; }
+.live-activity-item:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); background: rgba(255, 255, 255, 0.05); }
+.activity-avatar { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent-color); }
+.activity-content { flex: 1; min-width: 0; }
+.activity-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+.activity-user { font-size: 0.85rem; font-weight: 600; color: var(--text-gray-100); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.activity-time { font-size: 0.7rem; color: var(--text-gray-500); white-space: nowrap; margin-left: 8px; }
+.activity-action { font-size: 0.8rem; line-height: 1.4; word-break: break-word; }
+.activity-poster { width: 42px; height: 60px; border-radius: 6px; object-fit: cover; border: 1px solid var(--border-color); flex-shrink: 0; }
+.live-pulse { width: 8px; height: 8px; background-color: #ef4444; border-radius: 50%; box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); animation: pulse-red 1.5s infinite; }
+@keyframes pulse-red { 0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); } 70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(239, 68, 68, 0); } 100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); } }
+.animate-slide-down { animation: slideDownIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+@keyframes slideDownIn { from { opacity: 0; transform: translateY(-15px); } to { opacity: 1; transform: translateY(0); } }

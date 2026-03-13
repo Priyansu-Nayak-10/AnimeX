@@ -4,6 +4,7 @@ const { jikanClient } = require('../utils/httpClient');
 const supabase = require('../database/supabase');
 const { apiResponse, apiError } = require('../utils/helpers');
 const { validate } = require('../middleware/validate');
+const { recordActivity, getRecentActivities } = require('../services/presence');
 
 const router = express.Router();
 const JIKAN = process.env.JIKAN_API_URL || 'https://api.jikan.moe/v4';
@@ -103,6 +104,31 @@ router.post('/me/follow', async (req, res) => {
       .select();
 
     if (error) throw error;
+
+    // Trigger Social Presence if status is active
+    if (normalizedStatus === 'watching' || normalizedStatus === 'completed') {
+      try {
+        const { data: profile } = await supabase
+          .from('user_profiles')
+          .select('id, name, avatar')
+          .eq('user_id', req.user.id)
+          .maybeSingle();
+
+        if (profile) {
+          const actionText = normalizedStatus === 'watching' ? 'is watching' : 'completed';
+          const payloadString = JSON.stringify({ 
+            title, 
+            malId: parsedMalId,
+            image: req.body?.image || '' 
+          });
+          
+          recordActivity(profile, actionText, payloadString);
+        }
+      } catch (err) {
+        console.error('Failed to trigger presence activity:', err.message);
+      }
+    }
+
     return apiResponse(res, data?.[0] || null, 201, `Now following "${title}"`);
   } catch (err) {
     return apiError(res, 'Failed to follow anime', 500, err);
@@ -380,6 +406,25 @@ router.get('/me/recommendations', async (req, res) => {
     return apiResponse(res, recs, 200, 'Personalized recommendations');
   } catch (err) {
     return apiError(res, 'Failed to fetch recommendations', 500, err);
+  }
+});
+
+/**
+ * @swagger
+ * /api/users/community/activity:
+ *   get:
+ *     summary: Get recent global community activities
+ *     tags: [Community]
+ *     responses:
+ *       200:
+ *         description: Array of recent activities
+ */
+router.get('/community/activity', async (req, res) => {
+  try {
+    const activities = await getRecentActivities();
+    return apiResponse(res, activities, 200);
+  } catch (err) {
+    return apiError(res, 'Failed to fetch community activity', 500, err);
   }
 });
 

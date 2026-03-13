@@ -3,7 +3,7 @@ const BACKEND_BASE = BACKEND_URL || "/api";
 const API_BASE = "https://api.jikan.moe/v4";
 const CACHE_PREFIX = "animex_v3_cache_";
 const DEFAULT_CACHE_TTL_MS = 10 * 60 * 1000;
-const DEFAULT_LIVE_UPCOMING_ENDPOINT = "/api/upcoming/live";
+const DEFAULT_LIVE_UPCOMING_ENDPOINT = `${BACKEND_BASE}/upcoming/live`;
 
   function createApiClient(options = {}) {
     const baseUrl = options.baseUrl || API_BASE;

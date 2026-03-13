@@ -128,7 +128,6 @@ async function startOAuth(provider, errorContainer) {
 function bindAuxAuthActions({ emailInput, errorContainer }) {
     const forgotLink = document.querySelector('.forgot-link');
     const googleBtn = document.getElementById('btn-google');
-    const discordBtn = document.getElementById('btn-discord');
 
     if (forgotLink) {
         forgotLink.addEventListener('click', async (event) => {
@@ -154,13 +153,6 @@ function bindAuxAuthActions({ emailInput, errorContainer }) {
         googleBtn.addEventListener('click', () => {
             clearBackendError(errorContainer);
             void startOAuth('google', errorContainer);
-        });
-    }
-
-    if (discordBtn) {
-        discordBtn.addEventListener('click', () => {
-            clearBackendError(errorContainer);
-            void startOAuth('discord', errorContainer);
         });
     }
 }

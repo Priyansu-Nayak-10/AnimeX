@@ -8,13 +8,27 @@ const ASSETS = [
 ];
 
 self.addEventListener('install', (e) => {
-  e.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS))
-  );
+  self.skipWaiting();
+});
+
+self.addEventListener('activate', (e) => {
+  e.waitUntil(clients.claim());
 });
 
 self.addEventListener('fetch', (e) => {
+  // Only cache GET requests
+  if (e.request.method !== 'GET') return;
+  
+  // Skip cross-origin and API requests to ensure features work perfectly
+  const url = new URL(e.request.url);
+  if (url.origin !== location.origin || url.pathname.startsWith('/api') || e.request.url.includes('supabase') || e.request.url.includes('jikan')) {
+    return;
+  }
+
   e.respondWith(
-    caches.match(e.request).then((res) => res || fetch(e.request))
+    caches.match(e.request).then((res) => {
+      // Return cached version or fetch from network (and don't cache automatically)
+      return res || fetch(e.request).catch(() => new Response("Network error"));
+    })
   );
 });

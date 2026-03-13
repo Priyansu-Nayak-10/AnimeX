@@ -6,16 +6,7 @@
  */
 import './features/auth/sessionBootstrap.js';
 
-// --- Production Console Cleaner & PWA Setup ---
-if (!window.location.hostname.includes('localhost') && !window.location.hostname.includes('127.0.0.1')) {
-  console.log = function() {};
-  console.info = function() {};
-}
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js').catch(err => console.error('PWA SW Failed:', err));
-  });
-}
+
 
 // ── All imports must be at the top of an ES module ───────────
 import './components/AnimeCard.js';
@@ -38,6 +29,20 @@ import { initProfile, initSettings, initExport, initImport } from './features/us
 import { normalizeAnime, dedupeAnimeList } from './core/dataNormalize.js';
 import { bindNavigation, openView } from './core/navigation.js';
 import { initSectionReveal } from './core/sectionReveal.js';
+
+// --- Production Console Cleaner & PWA Setup ---
+if (!window.location.hostname.includes('localhost') && !window.location.hostname.includes('127.0.0.1')) {
+  console.log = function() {};
+  console.info = function() {};
+}
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').then(reg => {
+      // Force update the service worker immediately on load
+      reg.update();
+    }).catch(err => console.error('PWA SW Failed:', err));
+  });
+}
 
 // ── Restore persisted preferences ────────────────────────────
 restoreKey('currentUser');

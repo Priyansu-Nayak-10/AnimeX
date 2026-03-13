@@ -1,4 +1,6 @@
 const { Server } = require('socket.io');
+const { createAdapter } = require('@socket.io/redis-adapter');
+const Redis = require('ioredis');
 const logger = require('../utils/logger');
 const { authenticateSocket } = require('../middleware/auth');
 
@@ -32,6 +34,20 @@ const initSocket = (server) => {
       credentials: true
     }
   });
+
+  const redisUrl = process.env.REDIS_URL;
+  if (redisUrl) {
+    const pubClient = new Redis(redisUrl);
+    const subClient = pubClient.duplicate();
+
+    pubClient.on('error', (err) => logger.error(`[Socket Redis Pub] ${err.message}`));
+    subClient.on('error', (err) => logger.error(`[Socket Redis Sub] ${err.message}`));
+
+    io.adapter(createAdapter(pubClient, subClient));
+    logger.info('[Socket] Redis adapter enabled for multiple instances');
+  } else {
+    logger.info('[Socket] No REDIS_URL found, running in single-instance memory mode');
+  }
 
   // Auth middleware — non-fatal: unauthenticated sockets get no user room but don't crash
   io.use(async (socket, next) => {

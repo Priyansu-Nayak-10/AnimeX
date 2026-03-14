@@ -509,14 +509,29 @@ function initHeroCarousel({
 function initUpcomingWidget({ fetchImpl = fetch.bind(globalThis), storage = globalThis.localStorage, timers = globalThis }) {
   const CACHE_KEY = "animex_dashboard_upcoming_v1";
   const CACHE_TTL_MS = 12 * 60 * 60 * 1000; // 12 hours
-  const endpoint = apiUrl("/anime/upcoming?limit=6");
+  const JIKAN_ENDPOINT = "https://api.jikan.moe/v4/seasons/upcoming?limit=6";
+  const BACKEND_ENDPOINT = apiUrl("/anime/upcoming?limit=6");
 
   const listEl = document.getElementById("dashboard-upcoming-list");
   if (!listEl) return { render() { }, destroy() { } };
 
   let upcomingTimer = 0;
+  let currentItems = [];
+
+  const SKELETON_COUNT = 6;
+  const SKELETON_MARKUP = Array(SKELETON_COUNT).fill(0).map(() => `
+    <div class="news-item is-skeleton">
+      <div class="news-thumb skeleton-thumb"></div>
+      <div class="news-badge skeleton-badge"></div>
+      <div>
+        <h4 class="anime-card-title skeleton-title"></h4>
+        <div class="flex items-center gap-1 anime-card-meta skeleton-meta"></div>
+      </div>
+    </div>
+  `).join("");
 
   function renderRows(items) {
+    currentItems = items;
     if (!items.length) {
       listEl.innerHTML = '<div class="tracker-empty">No upcoming anime found.</div>';
       return;
@@ -550,45 +565,89 @@ function initUpcomingWidget({ fetchImpl = fetch.bind(globalThis), storage = glob
     }).join("");
   }
 
-  async function loadData({ force = false } = {}) {
-    listEl.innerHTML = '<div class="anime-card-meta">Loading upcoming blockbusters...</div>';
-
+  async function fetchData(url) {
+    const controller = new AbortController();
+    const timeoutId = timers.setTimeout(() => controller.abort(), 10000);
     try {
-      if (!force) {
-        const cachedStr = storage?.getItem?.(CACHE_KEY);
-        if (cachedStr) {
-          const cached = JSON.parse(cachedStr);
-          if (Date.now() - cached.ts < CACHE_TTL_MS && Array.isArray(cached.data)) {
-            renderRows(cached.data);
-            return;
-          }
-        }
-      }
-    } catch (err) { }
-
-    try {
-      const controller = new AbortController();
-      const timeoutId = timers.setTimeout(() => controller.abort(), 10000);
-      const res = await fetchImpl(endpoint, { signal: controller.signal });
-      timers.clearTimeout(timeoutId);
-
-      if (!res.ok) throw new Error("Jikan upcomings fetch failed");
+      const res = await fetchImpl(url, { signal: controller.signal });
+      if (!res.ok) throw new Error(`Fetch failed from ${url}`);
       const payload = await res.json();
-      const items = Array.isArray(payload?.data) ? payload.data : [];
-
-      renderRows(items);
-      try { storage?.setItem?.(CACHE_KEY, JSON.stringify({ ts: Date.now(), data: items })); } catch (e) { }
-
-    } catch (err) {
-      listEl.innerHTML = '<div class="anime-card-meta">Unable to load upcoming anime right now.</div>';
+      return Array.isArray(payload?.data) ? payload.data : [];
+    } finally {
+      timers.clearTimeout(timeoutId);
     }
   }
 
-  void loadData();
-  upcomingTimer = timers.setInterval(() => loadData({ force: true }), CACHE_TTL_MS);
+  async function loadData({ force = false } = {}) {
+    let cachedData = null;
+    let cacheExpired = true;
+
+    try {
+      const cachedStr = storage?.getItem?.(CACHE_KEY);
+      if (cachedStr) {
+        const cached = JSON.parse(cachedStr);
+        if (Array.isArray(cached.data)) {
+          cachedData = cached.data;
+          cacheExpired = (Date.now() - cached.ts >= CACHE_TTL_MS);
+        }
+      }
+    } catch (err) {
+      console.error("Error reading upcoming cache:", err);
+    }
+
+    // Immediately render stale cache if available and not forcing a refresh
+    if (cachedData && !force) {
+      renderRows(cachedData);
+      if (!cacheExpired) return; // No need to refresh if cache is fresh
+    } else {
+      // Show skeleton if no cache or forcing refresh
+      listEl.innerHTML = SKELETON_MARKUP;
+    }
+
+    // Fetch new data in background
+    let items = [];
+    let source = "backend";
+    try {
+      items = await fetchData(BACKEND_ENDPOINT);
+    } catch (backendErr) {
+      console.warn("Backend upcoming fetch failed, falling back to Jikan:", backendErr);
+      source = "jikan";
+      try {
+        items = await fetchData(JIKAN_ENDPOINT);
+      } catch (jikanErr) {
+        console.error("Jikan upcoming fetch also failed:", jikanErr);
+        if (!cachedData) { // Only show error if no cache to fall back on
+          listEl.innerHTML = '<div class="anime-card-meta">Unable to load upcoming anime right now.</div>';
+        }
+        return;
+      }
+    }
+
+    // Only update if new data is different or if we just showed skeletons
+    if (JSON.stringify(items) !== JSON.stringify(currentItems) || listEl.innerHTML === SKELETON_MARKUP) {
+      renderRows(items);
+    }
+
+    try {
+      storage?.setItem?.(CACHE_KEY, JSON.stringify({ ts: Date.now(), data: items, source }));
+    } catch (e) {
+      console.error("Error writing upcoming cache:", e);
+    }
+  }
+
+  void loadData(); // Initial load
+  upcomingTimer = timers.setInterval(() => loadData({ force: true }), CACHE_TTL_MS); // Refresh periodically
 
   return Object.freeze({
-    render() { },
+    render() {
+      // This render is primarily for initial load and internal updates.
+      // External calls to render() might trigger a refresh if needed.
+      if (!currentItems.length) {
+        void loadData();
+      } else {
+        renderRows(currentItems);
+      }
+    },
     destroy() {
       if (upcomingTimer) timers.clearInterval(upcomingTimer);
     }

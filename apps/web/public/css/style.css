@@ -1684,6 +1684,52 @@ body.dark .news-badge-tokyo {
     white-space: nowrap;
 }
 
+/* ── Global Skeleton / Pulse animation ───────────────────────────────── */
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.45; }
+}
+
+.news-item.is-skeleton {
+    pointer-events: none;
+    animation: none;
+}
+
+.news-item.is-skeleton .news-thumb.skeleton-thumb {
+    background: linear-gradient(90deg, rgba(255,255,255,0.04) 25%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.04) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.4s infinite;
+    border-color: transparent;
+}
+
+.news-item.is-skeleton .news-badge.skeleton-badge {
+    background: rgba(255,255,255,0.05);
+    border-color: transparent;
+    animation: pulse 1.4s ease-in-out infinite;
+}
+
+.news-item.is-skeleton .skeleton-title {
+    height: 14px;
+    width: 72%;
+    border-radius: 4px;
+    background: rgba(255,255,255,0.06);
+    animation: pulse 1.4s ease-in-out infinite 0.1s;
+}
+
+.news-item.is-skeleton .skeleton-meta {
+    height: 10px;
+    width: 50%;
+    border-radius: 4px;
+    background: rgba(255,255,255,0.04);
+    animation: pulse 1.4s ease-in-out infinite 0.2s;
+    margin-top: 6px;
+}
+
+@keyframes shimmer {
+    0%   { background-position: -200% 0; }
+    100% { background-position:  200% 0; }
+}
+
 /* Stats */
 .stat-row {
     display: flex;
@@ -7849,4 +7895,5 @@ body:not(.dark) #profile-view .profile-save-hint {
 .anime-card-progress { /* progress bars specifically */
     background: linear-gradient(90deg, #7C3AED, #C084FC) !important;
 }
-\n.wl-progress-fill, progress::-webkit-progress-value { background: linear-gradient(90deg, #7C3AED, #C084FC) !important; }\n
+
+.wl-progress-fill, progress::-webkit-progress-value { background: linear-gradient(90deg, #7C3AED, #C084FC) !important; }

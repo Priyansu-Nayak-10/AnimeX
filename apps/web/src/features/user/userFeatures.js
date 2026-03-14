@@ -1,4 +1,5 @@
 import { apiUrl, authFetch } from '../../config.js';
+import { setState } from '../../store.js';
 const PROFILE_STORAGE_KEY = "animex_profile_v1";
 const SETTINGS_STORAGE_KEY = "animex_settings_v1";
 const DEFAULT_AVATAR_URL =
@@ -162,7 +163,15 @@ function applyBannerToPage(src) {
 }
 
 function applyAccentColor(color) {
-  document.documentElement.style.setProperty("--primary", color);
+  if (!color) return;
+  const root = document.documentElement;
+  root.style.setProperty("--brand-primary", color);
+  root.style.setProperty("--brand-secondary", color); // fallback to same for simplicity
+  root.style.setProperty("--brand-accent", color);
+  root.style.setProperty("--brand-glow", color);
+  root.style.setProperty("--accent", color); // legacy/shared
+  root.style.setProperty("--primary", color); // legacy internal
+  root.style.setProperty("--chart-purple", color); // Make charts follow accent
 }
 
 // ──────────────────────────────────────────────────
@@ -363,7 +372,9 @@ async function writeSettings(storage, data) {
 }
 
 function applyDarkTheme(enabled) {
-  document.body.classList.toggle("dark", Boolean(enabled));
+  const isDark = Boolean(enabled);
+  document.body.classList.toggle("dark", isDark);
+  document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
 }
 
 function applyDataSaver(enabled) {
@@ -410,7 +421,9 @@ function initSettings({ toast, libraryStore, storage = globalThis.localStorage }
 
   function onDarkTheme(e) {
     const enabled = Boolean(e.target.checked);
+    const theme = enabled ? 'dark' : 'light';
     writeSettings(storage, { ...readSettings(storage), darkTheme: enabled });
+    setState({ theme });
     applyDarkTheme(enabled);
     toast?.show?.(enabled ? "Dark mode enabled" : "Light mode enabled");
   }
@@ -504,6 +517,7 @@ function initSettings({ toast, libraryStore, storage = globalThis.localStorage }
     const color = swatch.dataset.color;
     if (!color) return;
     writeSettings(storage, { ...readSettings(storage), accentColor: color });
+    setState({ accentColor: color });
     applyAccentColor(color);
     refs.accentPicker?.querySelectorAll(".accent-swatch").forEach(sw => {
       sw.classList.toggle("active", sw === swatch);

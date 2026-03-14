@@ -44,9 +44,23 @@ if ('serviceWorker' in navigator) {
 }
 
 // ── Restore persisted preferences ────────────────────────────
+// Prioritize unified settings object
+const settingsRaw = localStorage.getItem('animex_settings_v1');
+if (settingsRaw) {
+  try {
+    const s = JSON.parse(settingsRaw);
+    if (s.darkTheme !== undefined) setState({ theme: s.darkTheme ? 'dark' : 'light' });
+    if (s.accentColor) setState({ accentColor: s.accentColor });
+  } catch { }
+} else {
+  // Fallback to individual legacy keys
+  restoreKey('theme');
+  restoreKey('accentColor');
+}
+
 restoreKey('currentUser');
-restoreKey('theme');
-restoreKey('accentColor');
+
+// Ensure changes are persisted back to their respective keys
 persistKey('theme');
 persistKey('accentColor');
 persistKey('currentUser');
@@ -56,19 +70,22 @@ const applyTheme = (theme) => {
   const next = theme === 'light' ? 'light' : 'dark';
   document.documentElement.setAttribute('data-theme', next);
   document.body.classList.toggle('dark', next === 'dark');
+  // Sync with localStorage for legacy / fallback
   try {
     localStorage.setItem('animex_theme', next);
-  } catch {
-    // Ignore storage errors.
-  }
+  } catch { }
 };
 
 const applyAccent = (color) => {
-  if (color) document.documentElement.style.setProperty('--accent', color);
+  if (!color) return;
+  const root = document.documentElement;
+  root.style.setProperty('--brand-primary', color);
+  root.style.setProperty('--accent', color); // legacy fallback
 };
 
+// Initial application from synced state
 applyTheme(getState('theme') || 'dark');
-applyAccent(getState('accentColor') || 'var(--brand-primary)');
+applyAccent(getState('accentColor') || '#7C3AED');
 
 // ── Bootstrap on DOMContentLoaded ─────────────────────────────
 const initAuthEvents = async () => {
@@ -123,18 +140,13 @@ const initAuthEvents = async () => {
     });
   }
 
-  // ── Theme toggle ────────────────────────────────────────────
+  // ── Theme toggle sync ──────────────────────────────────────
   const darkThemeToggle = document.getElementById('setting-dark-theme');
   const syncThemeToggleState = () => {
     if (darkThemeToggle) darkThemeToggle.checked = getState('theme') !== 'light';
   };
   if (darkThemeToggle) {
     syncThemeToggleState();
-    darkThemeToggle.addEventListener('change', () => {
-      const next = darkThemeToggle.checked ? 'dark' : 'light';
-      setState({ theme: next });
-      applyTheme(next);
-    });
   }
 
   // ── User initialisation ─────────────────────────────────────

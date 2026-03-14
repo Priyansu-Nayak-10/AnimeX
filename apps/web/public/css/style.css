@@ -2259,6 +2259,7 @@ body.dark .border-dashed:hover {
     line-height: 1.28;
     display: -webkit-box;
     -webkit-line-clamp: 2;
+    line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
@@ -2802,6 +2803,7 @@ body.dark #dashboard-view .news-list.custom-scrollbar::-webkit-scrollbar-thumb {
     font-weight: 800;
     background: linear-gradient(90deg, #5bb3ff, var(--brand-accent));
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
     margin-bottom: 0.25rem;
 }
@@ -4186,6 +4188,7 @@ body.modal-open {
     line-height: 1.6;
     display: -webkit-box;
     -webkit-line-clamp: 3;
+    line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
     margin: 0;
@@ -4193,6 +4196,7 @@ body.modal-open {
 
 .anime-modal-synopsis.expanded {
     -webkit-line-clamp: unset;
+    line-clamp: unset;
     overflow: visible;
 }
 
@@ -5336,6 +5340,7 @@ body::-webkit-scrollbar,
     padding: 1px;
     background: linear-gradient(180deg, rgba(91, 179, 255, 0.2), transparent 50%, rgba(91, 179, 255, 0.1));
     -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor;
     mask-composite: exclude;
     pointer-events: none;
@@ -5557,6 +5562,7 @@ body::-webkit-scrollbar,
 .pwc-banner-copy {
     display: -webkit-box;
     -webkit-line-clamp: 2;
+    line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
     line-height: 1.3;

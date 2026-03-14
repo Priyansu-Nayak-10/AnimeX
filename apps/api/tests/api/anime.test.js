@@ -10,7 +10,7 @@ const express = require('express');
 const request = require('supertest');
 const axios = require('axios');
 const supabase = require('../../src/database/supabase');
-const animeRoutes = require('../../src/api/anime');
+const animeRoutes = require('../../src/routes/anime');
 
 describe('anime api validation', () => {
   function createApp() {

@@ -358,7 +358,11 @@ router.put('/me/settings', settingsValidator, async (req, res) => {
     const default_status = ['plan', 'watching', 'completed', 'dropped'].includes(String(req.body?.default_status || '').toLowerCase())
       ? String(req.body.default_status).toLowerCase()
       : 'plan';
-    const accent_color = clampText(req.body?.accent_color, 24);
+    // Only allow valid CSS hex colors (#RGB, #RRGGBB, #RRGGBBAA)
+    const rawAccent = String(req.body?.accent_color || '').trim();
+    const accent_color = /^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{4}|[0-9A-Fa-f]{6}|[0-9A-Fa-f]{8})$/.test(rawAccent)
+      ? rawAccent
+      : '';
 
     const { data, error } = await supabase
       .from('user_settings')

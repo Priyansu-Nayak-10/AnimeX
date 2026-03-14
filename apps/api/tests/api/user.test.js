@@ -5,7 +5,7 @@ jest.mock('../../src/database/supabase', () => ({
 const express = require('express');
 const request = require('supertest');
 const supabase = require('../../src/database/supabase');
-const userRoutes = require('../../src/api/user');
+const userRoutes = require('../../src/routes/user');
 
 describe('user api authorization', () => {
   test('uses authenticated user id for profile read', async () => {

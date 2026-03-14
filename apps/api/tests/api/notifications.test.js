@@ -5,7 +5,7 @@ jest.mock('../../src/database/supabase', () => ({
 const express = require('express');
 const request = require('supertest');
 const supabase = require('../../src/database/supabase');
-const notificationRoutes = require('../../src/api/notifications');
+const notificationRoutes = require('../../src/routes/notifications');
 
 describe('notifications api', () => {
   test('returns only current user notifications', async () => {

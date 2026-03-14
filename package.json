@@ -13,7 +13,9 @@
     "dev:api": "npm run dev --workspace=apps/api",
     "dev:web": "npm run dev --workspace=apps/web",
     "build:web": "npm run build --workspace=apps/web",
-    "install:all": "npm install"
+    "install:all": "npm install",
+    "lint": "node apps/api/node_modules/.bin/eslint \"apps/api/src/**/*.js\"",
+    "lint:fix": "node apps/api/node_modules/.bin/eslint \"apps/api/src/**/*.js\" --fix"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.98.0"

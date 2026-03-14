@@ -98,37 +98,51 @@ const DEFAULT_LIVE_UPCOMING_ENDPOINT = `${BACKEND_BASE}/upcoming/live`;
     const promise = (async () => {
       try {
         let attempt = 0;
-      while (attempt <= maxRetries) {
-        try {
-          if (shouldSimulateFailure()) throw new Error("Simulated failure");
-          const requestUrl = /^https?:\/\//i.test(String(endpoint || ""))
-            ? String(endpoint)
-            : (String(endpoint).startsWith('/') ? endpoint : `${baseUrl}${endpoint}`);
-          const requestOptions = { signal: controller.signal };
-          const resolvedUrl = new URL(requestUrl, globalThis.location?.origin || 'http://localhost');
-          if (
-            resolvedUrl.origin === (globalThis.location?.origin || resolvedUrl.origin) ||
-            resolvedUrl.origin === BACKEND_ORIGIN
-          ) {
-            requestOptions.headers = withAuthHeaders();
+        while (attempt <= maxRetries) {
+          try {
+            if (shouldSimulateFailure()) throw new Error("Simulated failure");
+            const requestUrl = /^https?:\/\//i.test(String(endpoint || ""))
+              ? String(endpoint)
+              : (String(endpoint).startsWith('/') ? endpoint : `${baseUrl}${endpoint}`);
+            
+            const requestOptions = { signal: controller.signal };
+            const resolvedUrl = new URL(requestUrl, globalThis.location?.origin || 'http://localhost');
+            
+            const isLocalRequest = resolvedUrl.origin === (globalThis.location?.origin || resolvedUrl.origin);
+            const isBackendRequest = BACKEND_ORIGIN && resolvedUrl.origin === BACKEND_ORIGIN;
+
+            if (isLocalRequest || isBackendRequest) {
+              const headers = withAuthHeaders();
+              if (Object.keys(headers).length > 0) {
+                requestOptions.headers = headers;
+              }
+            }
+
+            const response = await fetchImpl(requestUrl, requestOptions);
+            if (!response.ok) {
+              console.error(`[API] ${requestUrl} failed with status ${response.status}`);
+              throw new Error(`Request failed (${response.status})`);
+            }
+            const data = await response.json();
+            writeCache(endpoint, data);
+            return data;
+          } catch (error) {
+            if (controller.signal.aborted) throw error;
+            console.warn(`[API] Attempt ${attempt + 1} for ${endpoint} failed:`, error.message);
+            if (attempt >= maxRetries) throw error;
+            retryCount += 1;
+            const delayMs = retryBaseDelayMs * (2 ** attempt);
+            await wait(delayMs);
           }
-          const response = await fetchImpl(requestUrl, requestOptions);
-          if (!response.ok) throw new Error(`Request failed (${response.status})`);
-          const data = await response.json();
-          writeCache(endpoint, data);
-          return data;
-        } catch (error) {
-          if (controller.signal.aborted) throw error;
-          if (attempt >= maxRetries) throw error;
-          retryCount += 1;
-          const delayMs = retryBaseDelayMs * (2 ** attempt);
-          await wait(delayMs);
+          attempt += 1;
         }
-        attempt += 1;
-      }
       } catch (error) {
         failureCount += 1;
-        if (cached?.data) return cached.data;
+        console.error(`[API] Global failure for ${endpoint}:`, error.message);
+        if (cached?.data) {
+          console.info(`[API] Returning stale cache for ${endpoint}`);
+          return cached.data;
+        }
         throw error;
       } finally {
         if (activeControllers.get(endpoint) === controller) activeControllers.delete(endpoint);

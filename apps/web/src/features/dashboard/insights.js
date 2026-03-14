@@ -353,25 +353,29 @@ function initInsights({ libraryStore }) {
     if (refs.statusDistribution) refs.statusDistribution.textContent = insights.statusDistributionText;
 
     // Populate new SI panel elements
-    if (refs.siCountCompleted) refs.siCountCompleted.textContent = String(insights.statusBreakdown.completed);
-    if (refs.siCountWatching) refs.siCountWatching.textContent = String(insights.statusBreakdown.watching);
-    if (refs.siCountPlan) refs.siCountPlan.textContent = String(insights.statusBreakdown.plan);
-    if (refs.longestStreak) refs.longestStreak.textContent = `${insights.completionStreak} day${insights.completionStreak !== 1 ? 's' : ''}`;
-    const topGenreName = insights.genreDistribution.sorted[0]?.[0] || 'No data';
+    const breakdown = insights.statusBreakdown || { completed: 0, watching: 0, plan: 0 };
+    if (refs.siCountCompleted) refs.siCountCompleted.textContent = String(breakdown.completed);
+    if (refs.siCountWatching) refs.siCountWatching.textContent = String(breakdown.watching);
+    if (refs.siCountPlan) refs.siCountPlan.textContent = String(breakdown.plan);
+    if (refs.longestStreak) refs.longestStreak.textContent = `${insights.completionStreak || 0} day${insights.completionStreak !== 1 ? 's' : ''}`;
+    
+    const genreData = insights.genreDistribution?.sorted || [];
+    const topGenreName = genreData[0]?.[0] || 'No data';
     if (refs.topGenreStat) refs.topGenreStat.textContent = topGenreName;
-    const totalLib = insights.statusBreakdown.completed + insights.statusBreakdown.watching + insights.statusBreakdown.plan;
-    const completionPct = totalLib > 0 ? Math.round((insights.statusBreakdown.completed / totalLib) * 100) : 0;
-    if (refs.completionRate) refs.completionRate.textContent = `${completionPct}%`;
-    if (refs.avgRatingSi) refs.avgRatingSi.textContent = insights.averageUserRating;
 
-    const statusTotal = insights.statusBreakdown.completed + insights.statusBreakdown.watching + insights.statusBreakdown.plan;
+    const totalLib = (breakdown.completed || 0) + (breakdown.watching || 0) + (breakdown.plan || 0);
+    const completionPct = totalLib > 0 ? Math.round(((breakdown.completed || 0) / totalLib) * 100) : 0;
+    if (refs.completionRate) refs.completionRate.textContent = `${completionPct}%`;
+    if (refs.avgRatingSi) refs.avgRatingSi.textContent = insights.averageUserRating || "0.0";
+
+    const statusTotal = totalLib;
     renderDonutChart(refs.statusChart, [
-      { label: "Completed", value: insights.statusBreakdown.completed, color: "var(--chart-purple)" },
-      { label: "Watching", value: insights.statusBreakdown.watching, color: "var(--chart-blue)" },
-      { label: "Plan", value: insights.statusBreakdown.plan, color: "var(--chart-green)" }
+      { label: "Completed", value: breakdown.completed, color: "var(--chart-purple)" },
+      { label: "Watching", value: breakdown.watching, color: "var(--chart-blue)" },
+      { label: "Plan", value: breakdown.plan, color: "var(--chart-green)" }
     ], statusTotal, `${completionPct}%`, false);
 
-    renderGenreDonut(refs.genreChart, insights.genreDistribution.sorted);
+    renderGenreDonut(refs.genreChart, genreData);
     if (refs.genreAnalysisText) {
       if (!insights.genreDistribution.sorted.length) refs.genreAnalysisText.textContent = "Complete anime to unlock genre insights.";
       else if (insights.genreDistribution.otherCount > 0) refs.genreAnalysisText.textContent = `Other Genres: ${insights.genreDistribution.otherCount} anime`;

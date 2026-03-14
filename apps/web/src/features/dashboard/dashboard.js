@@ -908,24 +908,39 @@ function relativeTime(ts) {
 function renderTrackerItems(container, items) {
   if (!container) return;
   if (!items.length) {
-    container.innerHTML = `<div class="tracker-empty">
-      <span style="font-size:2rem">🎯</span>
-      <p>Follow anime from the Search page to start tracking sequels, dubs, and airing updates here.</p>
+    container.innerHTML = `<div class="tracker-empty" style="text-align: center; padding: 2.5rem 1rem;">
+      <span style="font-size:2.2rem; opacity: 0.5;">🎯</span>
+      <p style="margin-top: 1rem; color: #64748b; font-size: 0.85rem;">No recent activities detected on the HUD.</p>
     </div>`;
     return;
   }
-  container.innerHTML = items.slice(0, 10).map((item) => {
-    const meta = TRACKER_TYPE_META[item.type] || TRACKER_TYPE_META.TRACKING;
+
+  container.innerHTML = items.slice(0, 20).map((item) => {
+    const type = item.type || "TRACKING";
+    const meta = TRACKER_TYPE_META[type] || TRACKER_TYPE_META.TRACKING;
     const time = relativeTime(item.created_at || item.ts);
-    return `<div class="tracker-item">
-      <span class="tracker-badge ${meta.cls}">${meta.icon}</span>
-      <div class="tracker-item-body">
-        <div class="tracker-item-title">${escapeHtml(item.title || item.message || "Update")}</div>
-        <div class="tracker-item-meta">
-          <span class="tracker-type-label ${meta.cls}">${meta.label}</span>
-          ${time ? `<span>${escapeHtml(time)}</span>` : ""}
-        </div>
-      </div>
+    
+    // Determine terminal label
+    let label = meta.label;
+    let labelClass = `label-${type.toLowerCase().replace('_', '-')}`;
+    
+    // Format message for terminal style
+    // Example: [ LIVE ] Tracking Naruto → Episode 12 / 220
+    let message = escapeHtml(item.title || item.message || "Update");
+    if (type === "TRACKING") {
+      const parts = message.split(' — ');
+      if (parts.length > 1) {
+        message = `${parts[0]} <span class="terminal-arrow">→</span> ${parts[1]}`;
+      }
+    } else if (message.includes(' for ')) {
+       const parts = message.split(' for ');
+       message = `${parts[1]} <span class="terminal-arrow">→</span> ${parts[0]}`;
+    }
+
+    return `<div class="terminal-entry">
+      <span class="terminal-label ${labelClass}">[ ${label} ]</span>
+      <div class="terminal-content">${message}</div>
+      <div class="terminal-time">${time}</div>
     </div>`;
   }).join("");
 }
@@ -987,8 +1002,16 @@ function initTrackerFeed({ libraryStore, milestones = null, userId = null }) {
       }
     }
 
-    // Show Live badge if any tracking entry exists
-    if (liveBadge) liveBadge.hidden = localItems.length === 0;
+    // Show Live badge in header if any tracking entry exists
+    if (liveBadge) {
+      if (localItems.length > 0) {
+        liveBadge.innerHTML = `<span class="live-badge-glow"></span>LIVE HUD`;
+        liveBadge.hidden = false;
+        liveBadge.classList.add('label-live');
+      } else {
+        liveBadge.hidden = true;
+      }
+    }
   }
 
   // ── Fetch backend notifications ────────────────────────────────────────

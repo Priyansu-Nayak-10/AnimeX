@@ -457,23 +457,95 @@
                 </div>
               </div>
 
-              <div class="insight-panel">
-                <h3 class="panel-title">Status Intelligence</h3>
-                <div class="panel-chart-row">
-                  <div id="insight-status-chart" class="chart-large insight-chart-wrap"></div>
-                  <div class="status-meta">
-                    <div>
-                      <span class="meta-label">Favorite Studio</span>
-                      <strong id="insight-favorite-studio">No data</strong>
+              <div class="insight-panel si-panel">
+                <div class="si-header">
+                  <h3 class="si-title">
+                    <span class="si-title-icon">📊</span>
+                    Status Intelligence
+                  </h3>
+                  <p class="si-subtitle">A breakdown of your anime library activity</p>
+                </div>
+
+                <div class="si-grid">
+                  <!-- LEFT: Animated Donut Chart -->
+                  <div class="si-col si-col-chart">
+                    <div class="si-donut-wrapper">
+                      <div id="insight-status-chart" class="si-donut-container"></div>
+                      <div class="si-donut-legend">
+                        <div class="si-legend-item">
+                          <span class="si-legend-dot" style="background: var(--chart-purple);"></span>
+                          <span class="si-legend-label">Completed</span>
+                          <span class="si-legend-val" id="si-count-completed">0</span>
+                        </div>
+                        <div class="si-legend-item">
+                          <span class="si-legend-dot" style="background: var(--chart-blue);"></span>
+                          <span class="si-legend-label">Watching</span>
+                          <span class="si-legend-val" id="si-count-watching">0</span>
+                        </div>
+                        <div class="si-legend-item">
+                          <span class="si-legend-dot" style="background: var(--chart-green);"></span>
+                          <span class="si-legend-label">Planned</span>
+                          <span class="si-legend-val" id="si-count-plan">0</span>
+                        </div>
+                      </div>
                     </div>
-                    <div>
-                      <span class="meta-label">Last Completed</span>
-                      <strong id="insight-last-completed">No data</strong>
+                  </div>
+
+                  <!-- CENTER: Glass Stat Cards -->
+                  <div class="si-col si-col-stats">
+                    <p class="si-col-heading">Library Stats</p>
+                    <div class="si-stat-card">
+                      <span class="si-stat-icon">🎬</span>
+                      <div class="si-stat-body">
+                        <span class="si-stat-label">Favorite Studio</span>
+                        <strong class="si-stat-value" id="insight-favorite-studio">No data</strong>
+                      </div>
                     </div>
-                    <div>
-                      <span class="meta-label">Status Distribution</span>
-                      <strong id="insight-status-distribution">Completed 0 • Watching 0 • Plan 0</strong>
+                    <div class="si-stat-card">
+                      <span class="si-stat-icon">✅</span>
+                      <div class="si-stat-body">
+                        <span class="si-stat-label">Last Completed</span>
+                        <strong class="si-stat-value" id="insight-last-completed">No data</strong>
+                      </div>
                     </div>
+                    <div class="si-stat-card">
+                      <span class="si-stat-icon">🔥</span>
+                      <div class="si-stat-body">
+                        <span class="si-stat-label">Longest Streak</span>
+                        <strong class="si-stat-value" id="insight-longest-streak">0 days</strong>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- RIGHT: Analytics Insights -->
+                  <div class="si-col si-col-analytics">
+                    <p class="si-col-heading">Analytics</p>
+                    <div class="si-analytic-card si-analytic-purple">
+                      <span class="si-analytic-icon">🏆</span>
+                      <div class="si-analytic-body">
+                        <span class="si-analytic-label">Most Watched Genre</span>
+                        <strong class="si-analytic-value" id="insight-top-genre-stat">No data</strong>
+                      </div>
+                      <div class="si-analytic-glow"></div>
+                    </div>
+                    <div class="si-analytic-card si-analytic-blue">
+                      <span class="si-analytic-icon">📈</span>
+                      <div class="si-analytic-body">
+                        <span class="si-analytic-label">Completion Rate</span>
+                        <strong class="si-analytic-value" id="insight-completion-rate">0%</strong>
+                      </div>
+                      <div class="si-analytic-glow"></div>
+                    </div>
+                    <div class="si-analytic-card si-analytic-green">
+                      <span class="si-analytic-icon">⭐</span>
+                      <div class="si-analytic-body">
+                        <span class="si-analytic-label">Average Rating</span>
+                        <strong class="si-analytic-value" id="insight-avg-rating-si">0.0</strong>
+                      </div>
+                      <div class="si-analytic-glow"></div>
+                    </div>
+                    <!-- Hidden for JS compatibility -->
+                    <span id="insight-status-distribution" hidden></span>
                   </div>
                 </div>
               </div>

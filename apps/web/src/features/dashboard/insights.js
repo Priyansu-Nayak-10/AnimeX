@@ -142,7 +142,7 @@ function renderGenreDonut(svgElement, entries) {
   `;
 }
 
-function renderDonutChart(container, segments, total, centerLabel) {
+function renderDonutChart(container, segments, total, centerLabel, showLegend = true) {
   if (!container) return;
   if (!total) {
     container.innerHTML = '<p class="anime-card-meta">No anime in library yet.</p>';
@@ -182,7 +182,7 @@ function renderDonutChart(container, segments, total, centerLabel) {
       data-tooltip="${escapeHtml(`${seg.label}: ${seg.value} (${pct}%)`)}" style="animation-delay:${i * 0.08}s"/>`;
   }).join('');
 
-  const svgMarkup = `<svg class="insight-donut-svg" viewBox="0 0 120 120" aria-hidden="true">
+  const svgMarkup = `<svg class="insight-donut-svg" viewBox="0 0 120 120" aria-hidden="true" style="width:100%; height:100%;">
     <defs>${gradientDefs}${glowFilter}</defs>
     ${slices}
     <circle cx="${cx}" cy="${cy}" r="${innerR - 4}" fill="var(--bg-main)"/>
@@ -190,14 +190,17 @@ function renderDonutChart(container, segments, total, centerLabel) {
     <text x="${cx}" y="${cy + 11}" text-anchor="middle" font-size="6.5" font-weight="600" fill="var(--text-muted)" font-family="inherit" letter-spacing="1">${escapeHtml(String(centerLabel || 'TOTAL').toUpperCase())}</text>
   </svg>`;
 
-  const legend = `<div class="insight-donut-legend">${segments.map((seg, i) => {
-    const c = DONUT_PALETTE[i % DONUT_PALETTE.length];
-    return `<div class="insight-legend-item" data-tooltip="${escapeHtml(`${seg.label}: ${seg.value}`)}"
-      style="--legend-color:${c.from}">
-      <span class="insight-legend-dot" style="background:linear-gradient(135deg,${c.from},${c.to});"></span>
-      <span>${escapeHtml(seg.label)}: ${seg.value}</span>
-    </div>`;
-  }).join('')}</div>`;
+  let legend = '';
+  if (showLegend) {
+    legend = `<div class="insight-donut-legend">${segments.map((seg, i) => {
+      const c = DONUT_PALETTE[i % DONUT_PALETTE.length];
+      return `<div class="insight-legend-item" data-tooltip="${escapeHtml(`${seg.label}: ${seg.value}`)}"
+        style="--legend-color:${c.from}">
+        <span class="insight-legend-dot" style="background:linear-gradient(135deg,${c.from},${c.to});"></span>
+        <span>${escapeHtml(seg.label)}: ${seg.value}</span>
+      </div>`;
+    }).join('')}</div>`;
+  }
 
   container.innerHTML = svgMarkup + legend;
 }
@@ -308,7 +311,15 @@ function initInsights({ libraryStore }) {
     genreChart: document.getElementById("insight-genre-chart"),
     genreAnalysisText: document.getElementById("insight-genre-analysis-text"),
     topGenres: document.getElementById("insight-top-genres"),
-    recentActivity: document.getElementById("insight-recent-activity")
+    recentActivity: document.getElementById("insight-recent-activity"),
+    // New SI panel refs
+    siCountCompleted: document.getElementById("si-count-completed"),
+    siCountWatching: document.getElementById("si-count-watching"),
+    siCountPlan: document.getElementById("si-count-plan"),
+    longestStreak: document.getElementById("insight-longest-streak"),
+    topGenreStat: document.getElementById("insight-top-genre-stat"),
+    completionRate: document.getElementById("insight-completion-rate"),
+    avgRatingSi: document.getElementById("insight-avg-rating-si")
   };
 
   function renderInsightsActivity(insights) {
@@ -341,12 +352,24 @@ function initInsights({ libraryStore }) {
     if (refs.lastCompleted) refs.lastCompleted.textContent = insights.lastCompletedAnime;
     if (refs.statusDistribution) refs.statusDistribution.textContent = insights.statusDistributionText;
 
+    // Populate new SI panel elements
+    if (refs.siCountCompleted) refs.siCountCompleted.textContent = String(insights.statusBreakdown.completed);
+    if (refs.siCountWatching) refs.siCountWatching.textContent = String(insights.statusBreakdown.watching);
+    if (refs.siCountPlan) refs.siCountPlan.textContent = String(insights.statusBreakdown.plan);
+    if (refs.longestStreak) refs.longestStreak.textContent = `${insights.completionStreak} day${insights.completionStreak !== 1 ? 's' : ''}`;
+    const topGenreName = insights.genreDistribution.sorted[0]?.[0] || 'No data';
+    if (refs.topGenreStat) refs.topGenreStat.textContent = topGenreName;
+    const totalLib = insights.statusBreakdown.completed + insights.statusBreakdown.watching + insights.statusBreakdown.plan;
+    const completionPct = totalLib > 0 ? Math.round((insights.statusBreakdown.completed / totalLib) * 100) : 0;
+    if (refs.completionRate) refs.completionRate.textContent = `${completionPct}%`;
+    if (refs.avgRatingSi) refs.avgRatingSi.textContent = insights.averageUserRating;
+
     const statusTotal = insights.statusBreakdown.completed + insights.statusBreakdown.watching + insights.statusBreakdown.plan;
     renderDonutChart(refs.statusChart, [
-      { label: "Completed", value: insights.statusBreakdown.completed, color: "var(--chart-green)" },
+      { label: "Completed", value: insights.statusBreakdown.completed, color: "var(--chart-purple)" },
       { label: "Watching", value: insights.statusBreakdown.watching, color: "var(--chart-blue)" },
-      { label: "Plan", value: insights.statusBreakdown.plan, color: "var(--chart-purple)" }
-    ], statusTotal, `Streak ${insights.completionStreak}`);
+      { label: "Plan", value: insights.statusBreakdown.plan, color: "var(--chart-green)" }
+    ], statusTotal, `${completionPct}%`, false);
 
     renderGenreDonut(refs.genreChart, insights.genreDistribution.sorted);
     if (refs.genreAnalysisText) {

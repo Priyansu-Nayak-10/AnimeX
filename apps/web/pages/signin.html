@@ -4,129 +4,94 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign In - Animex 2.0</title>
-  <link rel="icon" href="/images/favicon.png" />
+    <link rel="icon" href="/images/favicon.png" />
     <meta name="description" content="Sign in to Animex 2.0 - Your ultimate anime tracking experience.">
     <!-- Fonts -->
-    <link
-        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Rajdhani:wght@400;500;600;700&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Auth Styles -->
     <link rel="stylesheet" href="/css/auth.css">
-
     <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#0B0C13">
     <link rel="apple-touch-icon" href="/images/favicon.png">
 </head>
 
 <body class="auth-page">
-    <div class="auth-split">
-
-        <!-- LEFT: Anime Art Panel -->
-        <div class="auth-art-panel">
-            <canvas id="auth-particles"></canvas>
-            <img src="/images/signin_anime.png" alt="Anime art" class="art-img">
-
-            <!-- Logo -->
-            <a href="signin.html" class="art-logo" aria-label="Animex sign in home">
-                <img src="/images/favicon.png" alt="Animex Logo" style="width: 48px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
-                <span class="art-logo-text" style="font-size: 1.8rem; letter-spacing: 2px;">ANIMEX</span>
-            </a>
-
-            <!-- Bottom content -->
-            <div class="art-panel-content">
-                <p class="art-tagline">Your Anime Journey<br>Continues Here</p>
-                <p class="art-sub">Track, discover, and connect with thousands of anime series across every genre.</p>
-                <div class="art-badges">
-                    <span class="art-badge purple"><i class="fas fa-star"></i> 50K+ Anime</span>
-                    <span class="art-badge cyan"><i class="fas fa-users"></i> 1M Otaku</span>
-                    <span class="art-badge pink"><i class="fas fa-heart"></i> Free Forever</span>
-                </div>
+    <div class="auth-grid-container">
+        <!-- TOP NAVIGATION -->
+        <nav class="auth-nav">
+            <span class="auth-logo-text-top">Animex.</span>
+            <div class="auth-nav-links">
+                <a href="/">HOME</a>
+                <a href="/gallery">GALLERY</a>
+                <a href="/blog">BLOG</a>
             </div>
-        </div>
+        </nav>
 
-        <!-- RIGHT: Sign In Form Panel -->
-        <div class="auth-form-panel">
-            <div class="auth-form-inner" id="auth-form-inner">
-
-                <!-- Header -->
-                <div class="auth-header">
-                    <p class="auth-greeting">Welcome back, Otaku</p>
-                    <h1 class="auth-title">Sign In</h1>
-                    <p class="auth-subtitle">Enter your credentials to access your watchlist and profile.</p>
+        <div class="auth-main-split">
+            <!-- LEFT: Form Section -->
+            <div class="auth-form-section">
+                <div class="auth-form-header">
+                    <h1 class="auth-welcome">WELCOME BACK!</h1>
+                    <p class="auth-switch">Don’t have a account, <a href="signup.html">Sign up</a></p>
                 </div>
 
                 <!-- Backend Error -->
                 <div id="backend-error" class="backend-error" role="alert" aria-live="polite"></div>
 
-                <!-- Form -->
-                <form id="signin-form" class="auth-form-body" novalidate>
-
-                    <!-- Email -->
-                    <div class="form-group" id="group-email">
-                        <input type="email" id="email" name="email" class="auth-input" autocomplete="email" inputmode="email" aria-describedby="email-error" required>
-                        <i class="fas fa-envelope input-icon"></i>
-                        <label for="email" class="floating-label">Email Address</label>
-                        <span class="input-error" id="email-error" aria-live="polite"></span>
+                <form id="signin-form" class="auth-form-minimal auth-form-body">
+                    <div class="form-group-minimal">
+                        <label for="email">Username/Email</label>
+                        <input type="email" id="email" name="email" class="auth-input" placeholder="example@gmail.com" required title="Email Address">
                     </div>
 
-                    <!-- Password -->
-                    <div class="form-group" id="group-password">
-                        <input type="password" id="password" name="password" class="auth-input" autocomplete="current-password" minlength="8" aria-describedby="password-error" required>
-                        <i class="fas fa-lock input-icon"></i>
-                        <label for="password" class="floating-label">Password</label>
-                        <button type="button" class="toggle-password" data-target="password" tabindex="-1"
-                            aria-label="Toggle password visibility" aria-pressed="false">
-                            <i class="fas fa-eye"></i>
-                        </button>
-                        <span class="input-error" id="password-error" aria-live="polite"></span>
+                    <div class="form-group-minimal">
+                        <label for="password">Password</label>
+                        <div class="password-wrapper">
+                            <input type="password" id="password" name="password" class="auth-input" placeholder="••••••••" required title="Password">
+                            <button type="button" class="toggle-password" data-target="password">
+                                <i class="fas fa-eye-slash"></i>
+                            </button>
+                        </div>
                     </div>
 
-                    <!-- Remember / Forgot -->
-                    <div class="form-options">
-                        <label class="remember-me">
-                            <input type="checkbox" id="remember" name="remember">
-                            <span>Remember me</span>
+                    <div class="form-minimal-options">
+                        <label class="minimal-remember">
+                            <input type="checkbox" id="remember">
+                            <span class="dot"></span>
+                            Remember me
                         </label>
-                        <a href="reset-password.html" class="forgot-link">Forgot password?</a>
+                        <a href="reset-password.html" class="minimal-forgot">Forget password?</a>
                     </div>
 
-                    <!-- Submit -->
-                    <div class="auth-actions">
-                        <button type="submit" id="signin-btn" class="btn-primary">
-                            <span class="btn-text"><i class="fas fa-arrow-right-to-bracket"></i>&nbsp; Sign In</span>
-                            <div class="spinner"></div>
-                        </button>
-                    </div>
-
-                    <!-- Divider -->
-                    <div class="auth-divider">or continue with</div>
-
-                    <!-- Social Buttons -->
-                    <div class="social-btns">
-                        <button type="button" class="btn-social" id="btn-google" aria-label="Sign in with Google">
-                            <i class="fab fa-google"></i> Google
-                        </button>
-                    </div>
-
-                    <!-- Footer -->
-                    <div class="auth-footer">
-                        New to Animex? <a href="signup.html" class="auth-link">Create an account -></a>
-                    </div>
-
+                    <button type="submit" id="signin-btn" class="btn-minimal-submit">
+                        <span class="btn-text">Sign In</span>
+                        <div class="spinner"></div>
+                    </button>
                 </form>
             </div>
-        </div>
 
+            <!-- RIGHT: Mascot Section -->
+            <div class="auth-mascot-section">
+                <div class="mascot-circle">
+                    <img src="/images/animex_mascot.png" alt="Animex Mascot">
+                </div>
+                
+                <!-- SOCIAL LINKS -->
+                <div class="auth-social-sidebar">
+                    <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="#" aria-label="Discord"><i class="fab fa-discord"></i></a>
+                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+                </div>
+            </div>
+        </div>
     </div>
+
     <script src="/env.js"></script>
     <script type="module" src="../src/features/auth/signinEnhancements.js"></script>
     <script type="module" src="../src/features/auth/auth.js"></script>
 </body>
-
 </html>
-
-
-
-

@@ -1,4 +1,4 @@
-﻿@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
 
 :root {
@@ -43,20 +43,36 @@
     --genre-horror: #991B1B;
     --genre-slicelife: #22C55E;
     --genre-sports: #10B981;
+    scroll-behavior: smooth;
 }
 
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
 }
 
-*::-webkit-scrollbar {
-    width: 0;
-    height: 0;
-    display: none;
+/* Performant, subtle scrollbars */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(124, 58, 237, 0.1);
+    border-radius: 10px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+    transition: background 0.3s;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(124, 58, 237, 0.3);
+    background-clip: content-box;
 }
 
 body {
@@ -141,6 +157,7 @@ body.dark {
     display: flex;
     height: 100vh;
     overflow: hidden;
+    transform: translateZ(0); /* Root GPU layer */
 }
 
 .sidebar {
@@ -193,11 +210,16 @@ body.dark .sidebar {
     overflow-y: auto;
     display: flex;
     flex-direction: column;
+    scroll-behavior: smooth;
+    transform: translateZ(0); /* Layer promotion */
+    will-change: transform;
 }
 
 .navbar {
     flex-shrink: 0;
     display: flex;
+    transform: translateZ(0); /* Sticky performance */
+    will-change: transform;
     align-items: center;
     height: 4.5rem;
     padding: 0;

@@ -292,8 +292,70 @@ function calculateInsights(items) {
     },
     recentActivity: recentActivity
       .sort((a, b) => b.timestamp - a.timestamp)
-      .slice(0, 8)
   };
+}
+
+const GENERAL_TRIVIA = [
+  { text: "Did you know that 'Spirited Away' was the first non-English animation to win an Academy Award?", sub: "Anime History" },
+  { text: "The word 'Anime' is simply the Japanese word for 'Animation'!", sub: "Fun Fact" },
+  { text: "Astro Boy (1963) was one of the first anime series to reach a global audience.", sub: "Legendary Series" },
+  { text: "Sazae-san is the world's longest-running animated series, airing since 1969.", sub: "World Record" }
+];
+
+function generateDynamicTrivia(items) {
+  const trivia = [];
+  if (!items || !items.length) return GENERAL_TRIVIA;
+
+  // 1. Oldest
+  const validYears = items.filter(i => i.year > 0).sort((a, b) => a.year - b.year);
+  if (validYears.length) {
+    const oldest = validYears[0];
+    trivia.push({
+      text: `Do you know that ${oldest.title} is the oldest anime in your history from ${oldest.year}?`,
+      sub: "Legacy Discovery"
+    });
+  }
+
+  // 2. Longest
+  const itemsWithEpisodes = items.filter(i => i.episodes > 0).sort((a, b) => b.episodes - a.episodes);
+  if (itemsWithEpisodes.length) {
+    const longest = itemsWithEpisodes[0];
+    trivia.push({
+      text: `${longest.title} is your longest anime with ${longest.episodes} episodes. Quite a journey!`,
+      sub: "Marathon Master"
+    });
+  }
+
+  // 3. Highest Score
+  const topRated = items.filter(i => i.score > 0).sort((a, b) => b.score - a.score);
+  if (topRated.length) {
+    const best = topRated[0];
+    trivia.push({
+      text: `Your collection features ${best.title}, which holds a high score of ${best.score.toFixed(1)}!`,
+      sub: "Top Quality"
+    });
+  }
+
+  // 4. Genre Diversity
+  const genres = new Set();
+  items.forEach(i => (i.genres || []).forEach(g => genres.add(g)));
+  if (genres.size > 5) {
+    trivia.push({
+      text: `You've explored ${genres.size} different genres. You're becoming a versatile viewer!`,
+      sub: "Genre Explorer"
+    });
+  }
+
+  // 5. Total Watch Time Milestone
+  const stats = calculateInsights(items);
+  if (stats.totalEpisodesWatched > 100) {
+    trivia.push({
+      text: `Impressive! You've watched over ${stats.totalEpisodesWatched} episodes in total.`,
+      sub: "Elite Fan"
+    });
+  }
+
+  return trivia.length > 0 ? trivia : GENERAL_TRIVIA;
 }
 
 function initInsights({ libraryStore }) {
@@ -319,7 +381,10 @@ function initInsights({ libraryStore }) {
     longestStreak: document.getElementById("insight-longest-streak"),
     topGenreStat: document.getElementById("insight-top-genre-stat"),
     completionRate: document.getElementById("insight-completion-rate"),
-    avgRatingSi: document.getElementById("insight-avg-rating-si")
+    avgRatingSi: document.getElementById("insight-avg-rating-si"),
+    // Trivia refs
+    triviaText: document.getElementById("promo-trivia-text"),
+    triviaSub: document.getElementById("promo-trivia-sub")
   };
 
   function renderInsightsActivity(insights) {
@@ -341,6 +406,15 @@ function initInsights({ libraryStore }) {
   function render() {
     const items = libraryStore.getAll();
     const insights = calculateInsights(items);
+    const triviaPool = generateDynamicTrivia(items);
+
+    if (triviaPool.length && refs.triviaText) {
+      // Pick a random fact based on the day to keep it consistent but fresh
+      const dayHash = new Date().getUTCDate() + new Date().getUTCMonth();
+      const fact = triviaPool[dayHash % triviaPool.length];
+      refs.triviaText.textContent = fact.text;
+      if (refs.triviaSub) refs.triviaSub.textContent = fact.sub;
+    }
 
     if (refs.watchTime) refs.watchTime.textContent = insights.estimatedWatchTime;
     if (refs.averageRating) refs.averageRating.textContent = insights.averageUserRating;

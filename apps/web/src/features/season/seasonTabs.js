@@ -56,7 +56,7 @@ export function initSeasonTabs(mainNavContainer, subNavContainer, onTabChange) {
     requestAnimationFrame(() => stripEl.classList.remove('animate-shift'));
     seasons.forEach((season) => {
       const btn = document.createElement('button');
-      btn.className = 'season-pill';
+      btn.className = `season-pill season-${season}`;
       btn.textContent = `${season.charAt(0).toUpperCase() + season.slice(1)} ${selectedYear}`;
       if (season === selectedSeason) btn.classList.add('active');
       btn.addEventListener('click', () => {

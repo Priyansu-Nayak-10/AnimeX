@@ -222,6 +222,7 @@
     margin-bottom: 22px;
     position: relative;
     isolation: isolate;
+    z-index: 50;
 }
 
 .season-header-top {
@@ -378,13 +379,36 @@
 }
 
 .season-pill.active {
-    color: #0b1021;
-    background: linear-gradient(135deg, #b36bff, #4dd0ff);
+    color: #fff;
     border-color: transparent;
-    box-shadow: 0 14px 38px rgba(77, 208, 255, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.12);
-    filter: drop-shadow(0 0 14px rgba(109, 195, 255, 0.42));
     transform: scale(1.06);
+    filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.2));
 }
+
+.season-pill.season-winter.active {
+    background: linear-gradient(135deg, #0ea5e9, #e0f2fe);
+    color: #0c4a6e;
+    box-shadow: 0 14px 38px rgba(14, 165, 233, 0.35), 0 0 20px rgba(56, 189, 248, 0.4);
+}
+
+.season-pill.season-spring.active {
+    background: linear-gradient(135deg, #10b981, #d1fae5);
+    color: #064e3b;
+    box-shadow: 0 14px 38px rgba(16, 185, 129, 0.35), 0 0 20px rgba(52, 211, 153, 0.4);
+}
+
+.season-pill.season-summer.active {
+    background: linear-gradient(135deg, #f59e0b, #fef3c7);
+    color: #78350f;
+    box-shadow: 0 14px 38px rgba(245, 158, 11, 0.35), 0 0 20px rgba(251, 191, 36, 0.4);
+}
+
+.season-pill.season-fall.active {
+    background: linear-gradient(135deg, #ef4444, #fee2e2);
+    color: #7f1d1d;
+    box-shadow: 0 14px 38px rgba(239, 68, 68, 0.35), 0 0 20px rgba(248, 113, 113, 0.4);
+}
+
 
 .season-history-bar {
     display: none;

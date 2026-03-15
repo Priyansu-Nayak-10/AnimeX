@@ -7,9 +7,10 @@ const logger = require('../utils/logger');
 
 const redisUrl = process.env.REDIS_URL;
 const cacheNamespace = process.env.CACHE_NAMESPACE || 'animex:v1';
+const isTestEnv = process.env.NODE_ENV === 'test';
 let redis = null;
 
-if (redisUrl) {
+if (redisUrl && !isTestEnv) {
     const isTls = redisUrl.startsWith('rediss://');
     redis = new Redis(redisUrl, { 
         enableReadyCheck: true,
@@ -18,7 +19,7 @@ if (redisUrl) {
     });
     redis.on('error', (err) => logger.error(`[Redis] ${err.message}`));
     redis.on('connect', () => logger.info('[Redis] connected'));
-} else {
+} else if (!isTestEnv) {
     logger.warn('[Cache] REDIS_URL not set; falling back to in-memory cache');
 }
 

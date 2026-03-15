@@ -10,7 +10,7 @@
  */
 function normalizeViewTarget(viewId) {
     const targetId = String(viewId || "");
-    if (targetId === "complete-view" || targetId === "library-view") return "watchlist-view";
+    if (targetId === "library-view") return "watchlist-view";
     return targetId;
 }
 

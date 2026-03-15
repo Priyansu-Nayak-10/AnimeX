@@ -1135,3 +1135,96 @@ body {
     padding-right: 1rem;
   }
 }
+
+/* -- Border Consistency Overrides -------------------------- */
+#notif-panel,
+.toast-notif,
+.card,
+.kpi-card,
+.insight-panel,
+.advanced-search-header,
+.premium-season-header,
+.settings-section-card,
+.export-main-card,
+.profile-hero-card,
+.profile-glass-card,
+.anime-card-v2,
+.watchlist-item,
+.trophy-card,
+.live-activity-item,
+.si-stat-card,
+.si-analytic-card,
+.mal-upload-zone {
+  border-color: var(--surface-border);
+}
+
+#notif-panel,
+.toast-notif,
+.card,
+.kpi-card,
+.insight-panel,
+.advanced-search-header,
+.settings-section-card,
+.export-main-card,
+.profile-hero-card,
+.profile-glass-card,
+.anime-card-v2,
+.watchlist-item,
+.trophy-card,
+.live-activity-item,
+.si-stat-card,
+.si-analytic-card {
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+}
+
+.premium-season-header {
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-overlay), 0 0 0 1px rgba(139, 92, 246, 0.08);
+}
+
+.mal-upload-zone {
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card-soft);
+}
+
+.si-stat-card,
+.si-analytic-card,
+.live-activity-item,
+.watchlist-item,
+.anime-card-v2,
+.trophy-card {
+  box-shadow: var(--shadow-card-soft);
+}
+
+.filter-select,
+.settings-select,
+.profile-input {
+  border-color: var(--surface-border);
+  border-radius: var(--radius-md);
+}
+
+.filter-select:hover,
+.filter-select:focus,
+.settings-select:focus,
+.profile-input:focus {
+  border-color: var(--surface-border-strong);
+}
+
+.profile-input:focus,
+.settings-select:focus {
+  box-shadow: var(--focus-ring);
+}
+
+.border-t {
+  border-top-color: var(--surface-border) !important;
+}
+
+.genre-badge,
+.hero-genre-chip,
+.preview-tag,
+.notif-read-btn,
+.sidebar-toggle-btn,
+.sidebar-close-btn {
+  border-radius: var(--radius-pill);
+}

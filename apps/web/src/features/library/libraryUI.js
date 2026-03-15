@@ -7,6 +7,12 @@ const TYPE_FILTERS = Object.freeze({
   SERIES: "series"
 });
 const STATUS_DROPPED = STATUS.DROPPED || "dropped";
+const STATUS_FILTERS = Object.freeze({
+  ALL: "all",
+  WATCHING: STATUS.WATCHING,
+  PLAN: STATUS.PLAN,
+  DROPPED: STATUS_DROPPED
+});
 const WATCHLIST_LARGE_LIST_THRESHOLD = 100;
 const WATCHLIST_RENDER_CHUNK_SIZE = 40;
 const COMPLETED_LARGE_LIST_THRESHOLD = 100;
@@ -49,15 +55,17 @@ function initWatchlistBoard({ libraryStore, toast = null }) {
   if (!watchlistBoard) return { render() { }, destroy() { } };
   const sectionRoot = watchlistBoard.parentElement || watchlistBoard;
 
-  const uiState = { typeFilter: TYPE_FILTERS.ALL, sortAsc: true };
+  const uiState = { typeFilter: TYPE_FILTERS.ALL, statusFilter: STATUS_FILTERS.ALL, sortAsc: true };
   let watchlistStatusMemory = new Map();
   let renderSeq = 0;
   let chunkFrameId = 0;
 
   function getWatchlistCandidates() {
-    return libraryStore
+    const rows = libraryStore
       .getAll()
       .filter((item) => item?.malId && [STATUS.PLAN, STATUS.WATCHING, STATUS_DROPPED].includes(item.status));
+    if (uiState.statusFilter === STATUS_FILTERS.ALL) return rows;
+    return rows.filter((item) => String(item?.status || "").toLowerCase() === uiState.statusFilter);
   }
 
   function getRows() {
@@ -77,9 +85,10 @@ function initWatchlistBoard({ libraryStore, toast = null }) {
         <button class="wl-control-btn" data-watchlist-action="random-pick">Pick Something For Me</button>
       </div>
       <div class="watchlist-controls-group">
-        <button class="watchlist-chip" data-drop-status="${STATUS.WATCHING}">Watching</button>
-        <button class="watchlist-chip" data-drop-status="${STATUS.PLAN}">Plan</button>
-        <button class="watchlist-chip" data-drop-status="${STATUS_DROPPED}">Dropped</button>
+        <button class="watchlist-chip ${uiState.statusFilter === STATUS_FILTERS.WATCHING ? "active" : ""}" data-watchlist-action="set-status-filter" data-status-filter="${STATUS_FILTERS.WATCHING}" data-drop-status="${STATUS.WATCHING}">Watching</button>
+        <button class="watchlist-chip ${uiState.statusFilter === STATUS_FILTERS.PLAN ? "active" : ""}" data-watchlist-action="set-status-filter" data-status-filter="${STATUS_FILTERS.PLAN}" data-drop-status="${STATUS.PLAN}">Plan</button>
+        <button class="watchlist-chip ${uiState.statusFilter === STATUS_FILTERS.DROPPED ? "active" : ""}" data-watchlist-action="set-status-filter" data-status-filter="${STATUS_FILTERS.DROPPED}" data-drop-status="${STATUS_DROPPED}">Dropped</button>
+        <button class="watchlist-chip ${uiState.statusFilter === STATUS_FILTERS.ALL ? "active" : ""}" data-watchlist-action="set-status-filter" data-status-filter="${STATUS_FILTERS.ALL}">All</button>
       </div>
     </div>`;
   }
@@ -230,7 +239,7 @@ function initWatchlistBoard({ libraryStore, toast = null }) {
     const host = watchlistBoard.parentElement;
     if (!host) return;
     const existingToolbar = host.querySelector("[data-watchlist-toolbar='1']");
-    const toolbarSig = `${uiState.typeFilter}|${uiState.sortAsc}`;
+    const toolbarSig = `${uiState.typeFilter}|${uiState.statusFilter}|${uiState.sortAsc}`;
     if (!existingToolbar || existingToolbar.getAttribute("data-sig") !== toolbarSig) {
       if (existingToolbar) existingToolbar.remove();
       watchlistBoard.insertAdjacentHTML("beforebegin", buildToolbar());
@@ -245,7 +254,10 @@ function initWatchlistBoard({ libraryStore, toast = null }) {
         chunkFrameId = 0;
       }
       renderSeq += 1;
-      watchlistBoard.innerHTML = '<div class="empty-column">No titles in your watchlist yet.</div>';
+      const emptyText = uiState.statusFilter === STATUS_FILTERS.ALL
+        ? "No titles in your watchlist yet."
+        : `No ${uiState.statusFilter} titles right now.`;
+      watchlistBoard.innerHTML = `<div class="empty-column">${escapeHtml(emptyText)}</div>`;
       renderPremiumWatchingCard();
       return;
     }
@@ -301,6 +313,14 @@ function initWatchlistBoard({ libraryStore, toast = null }) {
     if (action === "toggle-az") {
       uiState.sortAsc = !uiState.sortAsc;
       render();
+      return;
+    }
+    if (action === "set-status-filter") {
+      const nextFilter = String(actionBtn.getAttribute("data-status-filter") || STATUS_FILTERS.ALL).toLowerCase();
+      if ([STATUS_FILTERS.ALL, STATUS_FILTERS.WATCHING, STATUS_FILTERS.PLAN, STATUS_FILTERS.DROPPED].includes(nextFilter)) {
+        uiState.statusFilter = nextFilter;
+        render();
+      }
       return;
     }
     if (action === "random-pick") {

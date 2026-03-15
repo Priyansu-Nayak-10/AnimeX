@@ -120,7 +120,7 @@ async function startOAuth(provider, errorContainer) {
     const { error } = await supabase.auth.signInWithOAuth({
         provider,
         options: {
-            redirectTo: `${window.location.origin}/app.html`
+            redirectTo: `${window.location.origin}/pages/app.html`
         }
     });
     if (error) showBackendError(errorContainer, error.message || 'OAuth sign-in failed');
@@ -140,7 +140,7 @@ function bindAuxAuthActions({ emailInput, errorContainer }) {
                 return;
             }
             const { error } = await supabase.auth.resetPasswordForEmail(email, {
-                redirectTo: `${window.location.origin}/reset-password.html`
+                redirectTo: `${window.location.origin}/pages/reset-password.html`
             });
             if (error) {
                 showBackendError(errorContainer, error.message || 'Failed to send reset email');

@@ -278,30 +278,6 @@ function createDataController({ api, store }) {
     }
   }
 
-  async function runSync({ force = false } = {}) {
-    if (destroyed || syncing) return;
-    if (!getAccessToken()) return;
-
-    const current = libraryStore.getAll();
-    const sig = signature(current);
-    if (!force && sig === lastSyncedSig) return;
-
-    syncing = true;
-    try {
-      await pushLibrary(current);
-      lastSyncedSig = signature(libraryStore.getAll());
-    } catch (error) {
-      console.warn('[CloudSync] Push failed:', error?.message || error);
-    } finally {
-      syncing = false;
-    }
-  }
-
-  // Handle incoming real-time library updates by marking them as "already synced"
-  window.addEventListener('animex:library-sync-received', (e) => {
-    lastSyncedSig = signature(libraryStore.getAll());
-  });
-
   async function loadTop(limit = 24) {
     store.setLoading("top", true);
     store.setError("top", "");

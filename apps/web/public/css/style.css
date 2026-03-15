@@ -8182,11 +8182,11 @@ body:not(.dark) #profile-view .profile-save-hint {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    padding: 6px 14px;
+    padding: 4px 10px;
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 20px;
-    font-size: 0.85rem;
+    font-size: 0.72rem;
     font-weight: 600;
     color: #f1f5f9;
     white-space: nowrap;

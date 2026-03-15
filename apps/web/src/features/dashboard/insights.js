@@ -6,6 +6,9 @@ function parseDurationMinutes(value) { if (typeof value === "number" && Number.i
 function toDateKey(timestamp) { const date = new Date(Number(timestamp || 0)); if (Number.isNaN(date.getTime())) return ""; return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`; }
 function calculateCompletionStreak(timestamps) { const uniqueDays = [...new Set((timestamps || []).map(toDateKey).filter(Boolean))].sort().reverse(); if (!uniqueDays.length) return 0; let streak = 1; let cursor = new Date(uniqueDays[0]).getTime(); for (let i = 1; i < uniqueDays.length; i += 1) { const current = new Date(uniqueDays[i]).getTime(); if ((cursor - current) === (24 * 60 * 60 * 1000)) { streak += 1; cursor = current; } else break; } return streak; }
 function describeDonutArc(cx, cy, outerR, innerR, startDeg, endDeg) { const toRad = (d) => ((d - 90) * Math.PI) / 180; const pt = (r, d) => ({ x: cx + r * Math.cos(toRad(d)), y: cy + r * Math.sin(toRad(d)) }); const o1 = pt(outerR, startDeg), o2 = pt(outerR, endDeg); const i1 = pt(innerR, endDeg), i2 = pt(innerR, startDeg); const large = endDeg - startDeg > 180 ? 1 : 0; return `M ${o1.x} ${o1.y} A ${outerR} ${outerR} 0 ${large} 1 ${o2.x} ${o2.y} L ${i1.x} ${i1.y} A ${innerR} ${innerR} 0 ${large} 0 ${i2.x} ${i2.y} Z`; }
+function normalizeGenreNames(value) { return (Array.isArray(value) ? value : []).map((genre) => (typeof genre === "string" ? genre : genre?.name)).map((genre) => String(genre || "").trim()).filter(Boolean); }
+function normalizeStudioName(item) { if (typeof item?.studio === "string" && item.studio.trim()) return item.studio.trim(); const studios = Array.isArray(item?.studios) ? item.studios : []; const firstStudio = studios.find((studio) => (typeof studio === "string" ? studio.trim() : studio?.name)); const studioName = typeof firstStudio === "string" ? firstStudio : firstStudio?.name; return String(studioName || "").trim(); }
+function humanizeStatus(value) { const raw = String(value || "").trim().toLowerCase(); if (!raw) return "Updated"; return raw.charAt(0).toUpperCase() + raw.slice(1); }
 
 const GENRE_COLOR_MAP = Object.freeze({ action: "var(--genre-action)", fantasy: "var(--genre-fantasy)", adventure: "var(--genre-adventure)", suspense: "var(--genre-mystery)", comedy: "var(--genre-comedy)" });
 const GENRE_FALLBACK_COLORS = Object.freeze(["var(--chart-purple)", "var(--chart-blue)", "var(--chart-cyan)", "var(--chart-green)", "var(--chart-orange)", "var(--chart-pink)"]);
@@ -267,7 +270,11 @@ function renderDonutChart(container, segments, total, centerLabel, showLegend = 
 }
 
 function calculateInsights(items) {
-  const rows = (items || []).map((item) => ({ ...item }));
+  const rows = (items || []).map((item) => ({
+    ...item,
+    genres: normalizeGenreNames(item?.genres),
+    studio: normalizeStudioName(item)
+  }));
   let totalEpisodesWatched = 0;
   let totalWatchMinutes = 0;
   const ratingValues = [];
@@ -291,7 +298,7 @@ function calculateInsights(items) {
 
     if (item?.status === STATUS.COMPLETED) {
       completedRows.push(item);
-      (item?.genres || []).forEach((genre) => {
+      item.genres.forEach((genre) => {
         const key = String(genre || "").trim();
         if (!key) return;
         genreCount[key] = (genreCount[key] || 0) + 1;
@@ -308,7 +315,7 @@ function calculateInsights(items) {
     if (eventTime > 0) {
       recentActivity.push({
         title: String(item?.title || "Unknown"),
-        status: String(item?.status || ""),
+        status: humanizeStatus(item?.status),
         timestamp: eventTime
       });
     }
@@ -321,6 +328,14 @@ function calculateInsights(items) {
     ? (ratingValues.reduce((sum, value) => sum + value, 0) / ratingValues.length)
     : 0;
   const completionStreak = calculateCompletionStreak(completedRows.map((item) => Number(item?.completedAt || 0)));
+
+  if (!Object.keys(genreCount).length) {
+    rows.forEach((item) => {
+      item.genres.forEach((genre) => {
+        genreCount[genre] = (genreCount[genre] || 0) + 1;
+      });
+    });
+  }
 
   const sortedGenres = Object.entries(genreCount).sort((a, b) => b[1] - a[1]);
   const topGenres = sortedGenres.slice(0, 3);
@@ -359,8 +374,8 @@ function renderDiscoveryIntelligence(refs, genreDistribution) {
   const missingGenres = allGenres.filter(g => !watchedGenres.includes(g));
 
   if (missingGenres.length > 0) {
-    const randomGaps = missingGenres.sort(() => 0.5 - Math.random()).slice(0, 2);
-    refs.gapsText.textContent = `You haven't explored ${randomGaps.join(" or ")} much. Try diving into these for a fresh experience!`;
+    const genreGaps = missingGenres.slice(0, 2);
+    refs.gapsText.textContent = `You haven't explored ${genreGaps.join(" or ")} much. Try diving into these for a fresh experience!`;
   } else {
     refs.gapsText.textContent = "You're a versatile viewer! You've explored almost every major genre.";
   }
@@ -412,6 +427,8 @@ function initInsights({ libraryStore }) {
     heatmap: document.getElementById("insight-heatmap"),
     radarSvg: document.getElementById("insight-persona-radar"),
     studioList: document.getElementById("insight-studio-list"),
+    favoriteStudio: document.getElementById("insight-favorite-studio"),
+    lastCompletedAnime: document.getElementById("insight-last-completed"),
     gapsText: document.getElementById("insight-gaps-text"),
     suggestedGenre: document.getElementById("insight-suggested-genre")
   };
@@ -434,6 +451,8 @@ function initInsights({ libraryStore }) {
     if (refs.xpCurrent) refs.xpCurrent.textContent = String(ps.xp);
     if (refs.xpNext) refs.xpNext.textContent = String(ps.nextLevelXp);
     if (refs.xpBar) refs.xpBar.style.width = `${ps.progress}%`;
+    if (refs.favoriteStudio) refs.favoriteStudio.textContent = insights.favoriteStudio || "No data";
+    if (refs.lastCompletedAnime) refs.lastCompletedAnime.textContent = insights.lastCompletedAnime || "No data";
 
     // Activity Heatmap
     renderHeatmap(refs.heatmap, items);

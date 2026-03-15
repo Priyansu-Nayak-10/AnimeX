@@ -9,6 +9,13 @@ function normalizeStatus(value) {
   return 'plan';
 }
 
+function normalizeGenreNames(value) {
+  return (Array.isArray(value) ? value : [])
+    .map((genre) => (typeof genre === 'string' ? genre : genre?.name))
+    .map((genre) => String(genre || '').trim())
+    .filter(Boolean);
+}
+
 function toLibraryItem(row) {
   const malId = Number(row?.mal_id || 0);
   const progress = Math.max(0, Number(row?.next_episode || 0));
@@ -20,7 +27,13 @@ function toLibraryItem(row) {
     progress,
     watchedEpisodes: progress,
     episodes: Math.max(0, Number(row?.total_episodes || 0)),
-    updatedAt: Date.parse(row?.last_checked || row?.created_at || '') || Date.now()
+    updatedAt: Date.parse(row?.last_checked || row?.created_at || '') || Date.now(),
+    genres: normalizeGenreNames(row?.genres),
+    studio: String(row?.studio || '').trim(),
+    duration: String(row?.duration || '').trim(),
+    year: Number(row?.year || 0) || 0,
+    score: Number(row?.score || 0) || 0,
+    userRating: Number(row?.user_rating || row?.userRating || 0) || null
   };
 }
 
@@ -56,7 +69,10 @@ async function backfillMissingImages(store) {
       
       if (imageUrl) {
         item.image = imageUrl;
-        item.genres = data.genres || [];
+        item.genres = normalizeGenreNames(data.genres);
+        item.studio = String(data?.studios?.[0]?.name || item?.studio || '').trim();
+        item.duration = String(data?.duration || item?.duration || '').trim();
+        item.score = Number(data?.score || item?.score || 0) || 0;
         item.year = data.year || 0;
         
         // Update local store silently to prevent loops, then just persist

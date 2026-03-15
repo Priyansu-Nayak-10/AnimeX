@@ -66,4 +66,34 @@ describe('anime api validation', () => {
     expect(res.status).toBe(200);
     expect(res.body.data).toMatchObject({ mal_id: 1, title: 'A' });
   });
+
+  test('passes through bounded limit for top anime', async () => {
+    axios.get.mockResolvedValueOnce({ data: { data: [] } });
+    const app = createApp();
+
+    const res = await request(app).get('/api/anime/top?limit=12');
+
+    expect(res.status).toBe(200);
+    expect(axios.get).toHaveBeenCalledWith(
+      expect.stringContaining('/top/anime'),
+      expect.objectContaining({
+        params: expect.objectContaining({ page: 1, limit: 12 })
+      })
+    );
+  });
+
+  test('clamps seasonal limit to the supported Jikan maximum', async () => {
+    axios.get.mockResolvedValueOnce({ data: { data: [] } });
+    const app = createApp();
+
+    const res = await request(app).get('/api/anime/season/2026/spring?limit=200');
+
+    expect(res.status).toBe(200);
+    expect(axios.get).toHaveBeenCalledWith(
+      expect.stringContaining('/seasons/2026/spring'),
+      expect.objectContaining({
+        params: expect.objectContaining({ page: 1, limit: 25 })
+      })
+    );
+  });
 });

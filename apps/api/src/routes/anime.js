@@ -30,6 +30,10 @@ function toPositiveInt(value, fallback = 1) {
     return parsed;
 }
 
+function toBoundedLimit(value, fallback = 25, max = 25) {
+    return Math.max(1, Math.min(max, toPositiveInt(value, fallback)));
+}
+
 /**
  * @swagger
  * /api/anime/top:
@@ -47,7 +51,8 @@ function toPositiveInt(value, fallback = 1) {
 router.get('/top', checkCache(TTL_24H), async (req, res) => {
     try {
         const page = Math.min(200, toPositiveInt(req.query.page, 1));
-        const data = await jikanClient.get(`${JIKAN}/top/anime`, { params: { page, limit: 25 } });
+        const limit = toBoundedLimit(req.query.limit, 25);
+        const data = await jikanClient.get(`${JIKAN}/top/anime`, { params: { page, limit } });
         const processedData = processAnimeList(data.data);
         return apiResponse(res, processedData, 200, 'Top anime');
     } catch (err) {
@@ -67,7 +72,8 @@ router.get('/top', checkCache(TTL_24H), async (req, res) => {
  */
 router.get('/airing', async (req, res) => {
     try {
-        const data = await jikanClient.get(`${JIKAN}/seasons/now`, { params: { limit: 25 } });
+        const limit = toBoundedLimit(req.query.limit, 25);
+        const data = await jikanClient.get(`${JIKAN}/seasons/now`, { params: { limit } });
         const processedData = processAnimeList(data.data);
         return apiResponse(res, processedData, 200, 'Currently airing');
     } catch (err) {
@@ -320,18 +326,19 @@ router.get('/season/:year/:season', async (req, res) => {
         const year = Number.parseInt(req.params.year, 10);
         const season = String(req.params.season || '').toLowerCase();
         const page = Math.min(200, toPositiveInt(req.query.page, 1));
+        const limit = toBoundedLimit(req.query.limit, 25);
 
         if (!year || !['winter', 'spring', 'summer', 'fall'].includes(season)) {
             return apiError(res, 'Invalid year or season', 400);
         }
 
-        const cacheKey = `season_${year}_${season}_page_${page}`;
+        const cacheKey = `season_${year}_${season}_page_${page}_limit_${limit}`;
         const cached = seasonalCache.get(cacheKey);
         if (cached) {
             return apiResponse(res, cached.data, 200, 'Seasonal anime (cached)', { pagination: cached.pagination });
         }
 
-        const data = await jikanClient.get(`${JIKAN}/seasons/${year}/${season}`, { params: { page, limit: 25 } });
+        const data = await jikanClient.get(`${JIKAN}/seasons/${year}/${season}`, { params: { page, limit } });
         const processedData = processAnimeList(data.data);
 
         seasonalCache.set(cacheKey, {
@@ -362,14 +369,15 @@ router.get('/season/:year/:season', async (req, res) => {
 router.get('/upcoming', async (req, res) => {
     try {
         const page = Math.min(200, toPositiveInt(req.query.page, 1));
-        const cacheKey = `upcoming_page_${page}`;
+        const limit = toBoundedLimit(req.query.limit, 25);
+        const cacheKey = `upcoming_page_${page}_limit_${limit}`;
 
         const cached = seasonalCache.get(cacheKey);
         if (cached) {
             return apiResponse(res, cached.data, 200, 'Upcoming anime (cached)', { pagination: cached.pagination });
         }
 
-        const data = await jikanClient.get(`${JIKAN}/seasons/upcoming`, { params: { page, limit: 25 } });
+        const data = await jikanClient.get(`${JIKAN}/seasons/upcoming`, { params: { page, limit } });
         const processedData = processAnimeList(data.data);
 
         seasonalCache.set(cacheKey, {

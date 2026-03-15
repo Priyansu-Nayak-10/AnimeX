@@ -313,8 +313,24 @@ const DEFAULT_SETTINGS = Object.freeze({
   dataSaver: false,
   titleLang: "english",
   defaultStatus: "plan",
-  accentColor: "#6366f1"
+  accentColor: "#8b5cf6"
 });
+
+const PURPLE_ACCENT_SWATCHES = Object.freeze([
+  "#8b5cf6",
+  "#7c3aed",
+  "#6d28d9",
+  "#a78bfa",
+  "#c4b5fd",
+  "#9333ea",
+  "#7e22ce",
+  "#581c87"
+]);
+
+function normalizeAccentColor(color) {
+  const normalized = String(color || "").trim().toLowerCase();
+  return PURPLE_ACCENT_SWATCHES.find((swatch) => swatch === normalized) || DEFAULT_SETTINGS.accentColor;
+}
 
 async function fetchCloudSettings(storage) {
   const uid = getUserId();
@@ -343,7 +359,8 @@ async function fetchCloudSettings(storage) {
 function readSettings(storage) {
   try {
     const raw = storage?.getItem?.(SETTINGS_STORAGE_KEY);
-    return raw ? { ...DEFAULT_SETTINGS, ...JSON.parse(raw) } : { ...DEFAULT_SETTINGS };
+    const parsed = raw ? { ...DEFAULT_SETTINGS, ...JSON.parse(raw) } : { ...DEFAULT_SETTINGS };
+    return { ...parsed, accentColor: normalizeAccentColor(parsed.accentColor) };
   } catch { return { ...DEFAULT_SETTINGS }; }
 }
 
@@ -361,7 +378,7 @@ async function writeSettings(storage, data) {
       data_saver: data.dataSaver,
       title_lang: data.titleLang,
       default_status: data.defaultStatus,
-      accent_color: data.accentColor
+      accent_color: normalizeAccentColor(data.accentColor)
     };
     await authFetch(apiUrl('/users/me/settings'), {
       method: 'PUT',
@@ -404,10 +421,11 @@ function initSettings({ toast, libraryStore, storage = globalThis.localStorage }
     if (refs.defaultStatus) refs.defaultStatus.value = s.defaultStatus || "plan";
     applyDarkTheme(s.darkTheme);
     applyDataSaver(s.dataSaver);
-    applyAccentColor(s.accentColor || DEFAULT_SETTINGS.accentColor);
+    const accentColor = normalizeAccentColor(s.accentColor);
+    applyAccentColor(accentColor);
     // Reflect active swatch
     refs.accentPicker?.querySelectorAll(".accent-swatch").forEach(sw => {
-      sw.classList.toggle("active", sw.dataset.color === (s.accentColor || DEFAULT_SETTINGS.accentColor));
+      sw.classList.toggle("active", sw.dataset.color === accentColor);
     });
   }
 
@@ -514,7 +532,7 @@ function initSettings({ toast, libraryStore, storage = globalThis.localStorage }
   function onSwatchClick(e) {
     const swatch = e.target.closest(".accent-swatch");
     if (!swatch) return;
-    const color = swatch.dataset.color;
+    const color = normalizeAccentColor(swatch.dataset.color);
     if (!color) return;
     writeSettings(storage, { ...readSettings(storage), accentColor: color });
     setState({ accentColor: color });

@@ -77,15 +77,16 @@ const applyTheme = (theme) => {
 };
 
 const applyAccent = (color) => {
-  if (!color) return;
+  const allowedAccents = new Set(['#8b5cf6', '#7c3aed', '#6d28d9', '#a78bfa', '#c4b5fd', '#9333ea', '#7e22ce', '#581c87']);
+  const nextColor = allowedAccents.has(String(color || '').toLowerCase()) ? String(color).toLowerCase() : '#8b5cf6';
   const root = document.documentElement;
-  root.style.setProperty('--brand-primary', color);
-  root.style.setProperty('--accent', color); // legacy fallback
+  root.style.setProperty('--brand-primary', nextColor);
+  root.style.setProperty('--accent', nextColor); // legacy fallback
 };
 
 // Initial application from synced state
 applyTheme(getState('theme') || 'dark');
-applyAccent(getState('accentColor') || '#7C3AED');
+applyAccent(getState('accentColor') || '#8b5cf6');
 
 // ── Bootstrap on DOMContentLoaded ─────────────────────────────
 const initAuthEvents = async () => {

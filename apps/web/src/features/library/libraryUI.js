@@ -448,8 +448,8 @@ function initCompletedBoard({ libraryStore, toast = null }) {
             <img class="cover-img" src="${escapeHtml(item?.image || "")}" alt="${escapeHtml(normalizeTitle(item))}">
             <span class="cover-badge">★ ${currentRating > 0 ? currentRating.toFixed(1) : '--'}</span>
             <div class="cover-gradient"></div>
-            <div class="trophy-stamp" style="position: absolute; top: 10px; right: 10px; z-index: 10; background: #fbbf24; color: #000; font-size: 0.65rem; font-weight: 800; padding: 2px 6px; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.5); pointer-events: none;">COMPLETED</div>
-            ${currentRating > 0 ? `<div class="rating-overlay" style="position: absolute; top: 35px; right: 10px; z-index: 10; font-size: 0.8rem; color: #fbbf24; text-shadow: 0 1px 2px rgba(0,0,0,0.8); pointer-events: none;">${overlayStars}</div>` : ""}
+            <div class="trophy-stamp" style="position: absolute; top: 10px; right: 10px; z-index: 10; background: linear-gradient(135deg, #a78bfa, #7c3aed); color: #fff; font-size: 0.65rem; font-weight: 800; padding: 2px 6px; border-radius: 4px; box-shadow: 0 2px 8px rgba(76,29,149,0.5); pointer-events: none;">COMPLETED</div>
+            ${currentRating > 0 ? `<div class="rating-overlay" style="position: absolute; top: 35px; right: 10px; z-index: 10; font-size: 0.8rem; color: #d8b4fe; text-shadow: 0 1px 2px rgba(0,0,0,0.8); pointer-events: none;">${overlayStars}</div>` : ""}
           </div>
           <div class="cover-info" data-action="open-anime-modal" data-id="${malId}">
             <h4 class="cover-title" title="${escapeHtml(normalizeTitle(item))}">${escapeHtml(normalizeTitle(item))}</h4>

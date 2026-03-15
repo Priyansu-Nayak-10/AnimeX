@@ -741,7 +741,7 @@ function initImport({ libraryStore, toast } = {}) {
     }
     if (refs.statusMsg) {
       refs.statusMsg.textContent = "Ready to upload.";
-      refs.statusMsg.style.color = "#cbd5e1"; // normal text
+      refs.statusMsg.style.color = "var(--text-muted)";
     }
     if (refs.importBtn) {
       refs.importBtn.disabled = false;

@@ -41,11 +41,7 @@
             </a>
             <a class="nav-item" href="#" data-target="watchlist-view">
               <span class="material-icons nav-icon">bookmarks</span>
-              <span class="nav-item-text">Watchlist</span>
-            </a>
-            <a class="nav-item" href="#" data-target="complete-view">
-              <span class="material-icons nav-icon">check_circle</span>
-              <span class="nav-item-text">Complete</span>
+              <span class="nav-item-text">Library</span>
             </a>
           </nav>
         </div>
@@ -375,34 +371,36 @@
           </div>
         </div> <!-- End Search View -->
 
-        <!-- Watchlist View -->
+        <!-- Library View -->
         <div id="watchlist-view" class="view-section">
           <div class="dashboard-grid">
             <div class="main-column" style="grid-column: span 12;">
               <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 2rem;">
-                <h2 class="section-title" style="margin-bottom: 0;">Your Watchlist</h2>
-                <select class="filter-select"
-                  style="padding: 0.6rem 1rem; width: auto; font-size: 0.85rem; border-radius: 2rem;">
-                  <option>All Statuses</option>
-                  <option>Watching</option>
-                  <option>Plan to Watch</option>
-                  <option>Dropped</option>
-                </select>
+                <div>
+                  <h2 class="section-title" style="margin-bottom: 0.35rem;">Your Library</h2>
+                  <p class="anime-card-meta" style="margin: 0;">Track your active queue and completed collection in one place.</p>
+                </div>
               </div>
 
-              <div id="watchlist-board" class="watchlist-list watchlist-board"></div>
-            </div>
-          </div>
-        </div>
+              <div style="margin-bottom: 2.5rem;">
+                <div style="display: flex; align-items: end; justify-content: space-between; gap: 1rem; margin-bottom: 1rem;">
+                  <div>
+                    <h3 class="section-title" style="margin-bottom: 0.35rem; font-size: 1.15rem;">Active Queue</h3>
+                    <p class="anime-card-meta" style="margin: 0;">Everything you're watching, planning, or paused.</p>
+                  </div>
+                </div>
+                <div id="watchlist-board" class="watchlist-list watchlist-board"></div>
+              </div>
 
-        <!-- Completed View -->
-        <div id="complete-view" class="view-section">
-          <div class="dashboard-grid">
-            <div class="main-column" style="grid-column: span 12;">
-              <h2 class="section-title">Completed</h2>
-              <p class="anime-card-meta mb-4">Your completed anime collection.</p>
-
-              <div id="completed-list" class="trophy-grid"></div>
+              <div>
+                <div style="display: flex; align-items: end; justify-content: space-between; gap: 1rem; margin-bottom: 1rem;">
+                  <div>
+                    <h3 class="section-title" style="margin-bottom: 0.35rem; font-size: 1.15rem;">Completed Collection</h3>
+                    <p class="anime-card-meta" style="margin: 0;">Finished titles ready for rating and rewatching.</p>
+                  </div>
+                </div>
+                <div id="completed-list" class="trophy-grid"></div>
+              </div>
             </div>
           </div>
         </div>

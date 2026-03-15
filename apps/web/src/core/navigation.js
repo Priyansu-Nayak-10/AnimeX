@@ -8,13 +8,19 @@
 /**
  * Bind click handlers to all .nav-item elements to show/hide .view-section elements.
  */
+function normalizeViewTarget(viewId) {
+    const targetId = String(viewId || "");
+    if (targetId === "complete-view" || targetId === "library-view") return "watchlist-view";
+    return targetId;
+}
+
 export function bindNavigation() {
     const navItems = document.querySelectorAll(".nav-item");
     const sections = document.querySelectorAll(".view-section");
     navItems.forEach((item) => {
         item.addEventListener("click", (event) => {
             event.preventDefault();
-            const targetId = item.getAttribute("data-target");
+            const targetId = normalizeViewTarget(item.getAttribute("data-target"));
             if (!targetId) return;
             navItems.forEach((entry) => entry.classList.remove("active"));
             item.classList.add("active");
@@ -28,7 +34,7 @@ export function bindNavigation() {
  * @param {string} viewId - The `id` of the target `.view-section` element.
  */
 export function openView(viewId) {
-    const targetId = String(viewId || "");
+    const targetId = normalizeViewTarget(viewId);
     if (!targetId) return;
     const navItems = document.querySelectorAll(".nav-item");
     const sections = document.querySelectorAll(".view-section");

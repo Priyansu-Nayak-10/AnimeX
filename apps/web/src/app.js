@@ -587,6 +587,7 @@ async function bootstrap() {
   const modules = [
     toast,
     theme,
+    ui.chartTooltips,
     libraryUI,
     dashboardModules,
     initInsights({ libraryStore }),

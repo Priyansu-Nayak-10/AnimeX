@@ -115,19 +115,70 @@ function initTheme({
   });
 }
 
+function initChartTooltips({ tooltipId = "chart-tooltip" } = {}) {
+  const tooltip = document.getElementById(tooltipId);
+  if (!tooltip) return { destroy() {} };
+
+  function onMouseMove(e) {
+    const target = e.target.closest(".donut-slice, .genre-bar-item, .insight-legend-item, .si-legend-item, .legend-item");
+    if (!target) {
+      tooltip.classList.remove("active");
+      return;
+    }
+
+    const text = target.getAttribute("data-tooltip");
+    if (!text) {
+      tooltip.classList.remove("active");
+      return;
+    }
+
+    tooltip.textContent = text;
+    tooltip.classList.add("active");
+
+    const x = e.clientX + 15;
+    const y = e.clientY - 35;
+
+    const width = tooltip.offsetWidth;
+    const height = tooltip.offsetHeight;
+    const maxX = window.innerWidth - width - 20;
+    const minY = 20;
+
+    tooltip.style.left = `${Math.min(x, maxX)}px`;
+    tooltip.style.top = `${Math.max(y, minY)}px`;
+  }
+
+  function onMouseLeave() {
+    tooltip.classList.remove("active");
+  }
+
+  document.addEventListener("mousemove", onMouseMove);
+  document.addEventListener("mouseleave", onMouseLeave);
+
+  return Object.freeze({
+    destroy() {
+      document.removeEventListener("mousemove", onMouseMove);
+      document.removeEventListener("mouseleave", onMouseLeave);
+      tooltip.classList.remove("active");
+    }
+  });
+}
+
 function initUI({
   toastOptions = {},
   themeOptions = {}
 } = {}) {
   const toast = initToast(toastOptions);
   const theme = initTheme({ ...themeOptions, toast });
+  const chartTooltips = initChartTooltips();
 
   return Object.freeze({
     toast,
     theme,
+    chartTooltips,
     destroy() {
       theme?.destroy?.();
       toast?.destroy?.();
+      chartTooltips?.destroy?.();
     }
   });
 }

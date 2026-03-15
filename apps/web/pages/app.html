@@ -185,25 +185,24 @@
                 <!-- Genre distribution (unchanged) -->
 
                 <div class="card stats-container">
-                  <div class="card-header"
-                    style="padding-bottom: 0.5rem; border-bottom: 1px solid rgba(196,181,253,0.08); margin-bottom: 1rem;">
+                  <div class="card-header card-header-divider">
                     <div>
                       <h3 class="card-title" style="margin-bottom: 0.15rem;">Genre Snapshot</h3>
-                      <p class="anime-card-meta" style="margin-bottom: 0;">A quick preview of your completed anime taste.</p>
+                      <p class="anime-card-meta meta-tight">A quick preview of your completed anime taste.</p>
                     </div>
                   </div>
                   <div class="legend">
                     <div class="legend-item">
                       <span class="legend-dot bg-accent-blue"></span>
-                      <span class="anime-card-meta" style="margin-bottom: 0;">Action</span>
+                      <span class="anime-card-meta meta-tight">Action</span>
                     </div>
                     <div class="legend-item">
                       <span class="legend-dot bg-sky-300"></span>
-                      <span class="anime-card-meta" style="margin-bottom: 0;">Adventure</span>
+                      <span class="anime-card-meta meta-tight">Adventure</span>
                     </div>
                     <div class="legend-item">
                       <span class="legend-dot bg-accent-green"></span>
-                      <span class="anime-card-meta" style="margin-bottom: 0;">Fantasy</span>
+                      <span class="anime-card-meta meta-tight">Fantasy</span>
                     </div>
                   </div>
 
@@ -211,7 +210,7 @@
                     <svg viewBox="0 0 200 200" class="genre-pie" id="completed-genre-pie"
                       aria-label="Completed genre distribution chart"></svg>
                   </div>
-                  <p class="anime-card-meta" style="margin: 1rem 0 0; text-align: center;">See your full genre intelligence, studio trends, and activity history in Insights.</p>
+                  <p class="anime-card-meta meta-note-centered">See your full genre intelligence, studio trends, and activity history in Insights.</p>
                 </div>
 
                 <!-- My Tracker Feed -->
@@ -238,8 +237,7 @@
 
 
                 <div class="card news-container">
-                  <div class="card-header"
-                    style="padding-bottom: 0.5rem; border-bottom: 1px solid rgba(196,181,253,0.08); margin-bottom: 1rem;">
+                  <div class="card-header card-header-divider">
                     <div>
                       <h3 class="card-title"
                         style="margin-bottom: 0.15rem; display: flex; align-items: center; gap: 0.4rem;">
@@ -247,7 +245,7 @@
                           style="color: var(--accent); font-size: 1.1rem;">local_fire_department</span>
                         Top Upcoming Releases
                       </h3>
-                      <p class="anime-card-meta" style="margin-bottom: 0;">Most anticipated anime next season</p>
+                      <p class="anime-card-meta meta-tight">Most anticipated anime next season</p>
                     </div>
                   </div>
                   <div id="dashboard-upcoming-list" class="news-list custom-scrollbar"
@@ -966,8 +964,7 @@
             </div>
 
             <!-- Import Data Card -->
-            <div class="export-main-card mt-8"
-              style="background: rgba(20, 15, 38, 0.55); border-color: rgba(196,181,253,0.14);">
+            <div class="export-main-card mt-8 export-import-card">
               <span class="material-icons"
                 style="font-size: 3.5rem; color: var(--accent); margin-bottom: 1rem; display:block;">upload_file</span>
               <h3 style="font-size: 1.4rem; font-weight: 700; margin-bottom: 0.5rem;">Import MyAnimeList Data</h3>
@@ -986,15 +983,14 @@
               </div>
 
               <!-- Upload Status/Progress -->
-              <div id="mal-upload-status" class="mal-upload-status hidden"
-                style="margin-top: 1rem; text-align: left; background: rgba(20,15,38,0.42); padding: 1rem; border-radius: 8px;">
-                <div style="display:flex; justify-content:space-between; margin-bottom: 0.5rem;">
+              <div id="mal-upload-status" class="mal-upload-status hidden upload-status-panel">
+                <div class="upload-status-meta-row">
                   <span id="mal-file-name"
                     style="font-size:0.9rem; color:var(--text-primary); font-weight:500;">animelist.xml</span>
                   <span id="mal-file-size" style="font-size:0.8rem; color:var(--text-muted);">-- KB</span>
                 </div>
                 <!-- Progress Line -->
-                <div style="height: 4px; background: rgba(196,181,253,0.14); border-radius: 2px; overflow: hidden;">
+                <div class="upload-status-progress-track">
                   <div id="mal-progress-bar"
                     style="height:100%; width:0%; background: #8b5cf6; transition: width 0.3s ease;"></div>
                 </div>
@@ -1066,17 +1062,16 @@
 
   <!-- Notification panel -->
   <div id="notif-panel">
-    <div
-      style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid rgba(196,181,253,0.08);">
-      <span style="font-weight:700;font-size:0.95rem;">Notifications</span>
+    <div class="notif-panel-header">
+      <span class="notif-panel-title">Notifications</span>
       <button id="notif-mark-all-btn"
-        style="background:none;border:none;color:var(--accent,#6c63ff);font-size:0.78rem;cursor:pointer;">Mark all
+        class="notif-panel-action">Mark all
         read</button>
     </div>
     <div id="notif-list"></div>
-    <div style="padding:10px 16px;border-top:1px solid rgba(196,181,253,0.08);text-align:center;">
+    <div class="notif-panel-footer">
       <button id="notif-clear-btn"
-        style="background:none;border:none;color:var(--text-muted);font-size:0.78rem;cursor:pointer;">Clear all</button>
+        class="notif-panel-action notif-panel-action-muted">Clear all</button>
     </div>
   </div>
 

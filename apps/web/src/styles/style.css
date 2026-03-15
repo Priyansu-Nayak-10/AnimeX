@@ -1228,3 +1228,82 @@ body {
 .sidebar-close-btn {
   border-radius: var(--radius-pill);
 }
+
+/* -- Inline Border Cleanup Utilities ----------------------- */
+.card-header-divider {
+  padding-bottom: 0.5rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.meta-tight {
+  margin-bottom: 0;
+}
+
+.meta-note-centered {
+  margin: 1rem 0 0;
+  text-align: center;
+}
+
+.export-import-card {
+  background: rgba(20, 15, 38, 0.55);
+  border-color: var(--surface-border);
+}
+
+.upload-status-panel {
+  margin-top: 1rem;
+  padding: 1rem;
+  text-align: left;
+  border-radius: var(--radius-sm);
+  background: rgba(20, 15, 38, 0.42);
+  border: 1px solid var(--border-soft);
+}
+
+.upload-status-meta-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.upload-status-progress-track {
+  height: 4px;
+  overflow: hidden;
+  border-radius: 2px;
+  background: var(--surface-border);
+}
+
+.notif-panel-header,
+.notif-panel-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+}
+
+.notif-panel-header {
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.notif-panel-footer {
+  justify-content: center;
+  padding: 10px 16px;
+  text-align: center;
+  border-top: 1px solid var(--border-soft);
+}
+
+.notif-panel-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.notif-panel-action {
+  border: none;
+  background: none;
+  color: var(--accent, #6c63ff);
+  font-size: 0.78rem;
+  cursor: pointer;
+}
+
+.notif-panel-action-muted {
+  color: var(--text-muted);
+}

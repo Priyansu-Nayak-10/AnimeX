@@ -33,7 +33,7 @@
             </a>
             <a class="nav-item" href="#" data-target="search-view">
               <span class="material-icons nav-icon">search</span>
-              <span class="nav-item-text">Search</span>
+              <span class="nav-item-text">Discover</span>
             </a>
             <a class="nav-item" href="#" data-target="season-view">
               <span class="material-icons nav-icon">explore</span>
@@ -310,12 +310,20 @@
           </div>
         </div> <!-- End Dashboard View -->
 
-        <!-- Search View -->
+        <!-- Discover View -->
         <div id="search-view" class="view-section">
           <div class="dashboard-grid">
             <div class="main-column" style="grid-column: span 12;">
+              <div class="card-header" style="margin-bottom: 1.5rem;">
+                <div>
+                  <p class="anime-card-meta" style="margin-bottom: 0.35rem;">Discovery Hub</p>
+                  <h2 class="section-title" style="margin-bottom: 0.35rem;">Discover Anime</h2>
+                  <p class="anime-card-meta" style="margin-bottom: 0;">Use filters to search across genres, years, formats, and seasonal metadata.</p>
+                </div>
+                <button type="button" class="wl-control-btn" data-open-view="season-view">Browse Seasonal Picks</button>
+              </div>
               <div class="advanced-search-header">
-                <h2 class="section-title mb-4">Filters</h2>
+                <h2 class="section-title mb-4">Discovery Filters</h2>
                 <div class="advanced-filters-grid">
                   <!-- Row 1 -->
                   <div class="filter-field">
@@ -987,17 +995,20 @@
           <div class="premium-season-header">
             <div class="season-header-top">
               <div>
-                <p class="season-eyebrow">Seasonal Discovery</p>
+                <p class="season-eyebrow">Curated Seasonal Discovery</p>
                 <h2 class="premium-season-title">Discover <span class="season-gradient-word">Seasonal Anime</span></h2>
                 <p class="season-subtitle">Curated picks from every season — from anticipated premieres to hidden gems worth your time.</p>
               </div>
-              <div class="season-dropdown" data-season-dropdown-wrapper>
+              <div style="display: flex; align-items: center; gap: 0.85rem; flex-wrap: wrap; justify-content: flex-end;">
+                <button type="button" class="wl-control-btn" data-open-view="search-view">Open Discover</button>
+                <div class="season-dropdown" data-season-dropdown-wrapper>
                 <button id="season-dropdown-toggle" class="season-dropdown-toggle" aria-haspopup="true"
                   aria-expanded="false">
                   Select Season
                   <span class="chevron">▾</span>
                 </button>
-                <div class="season-dropdown-menu" id="season-dropdown-menu" role="listbox"></div>
+                  <div class="season-dropdown-menu" id="season-dropdown-menu" role="listbox"></div>
+                </div>
               </div>
             </div>
 

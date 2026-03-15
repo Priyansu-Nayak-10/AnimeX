@@ -797,6 +797,46 @@ html, body {
     color: var(--text);
 }
 
+/* -- Border System Tokens --------------------------------- */
+:root {
+  --border-soft: rgba(196, 181, 253, 0.08);
+  --border-medium: rgba(196, 181, 253, 0.14);
+  --border-strong: rgba(196, 181, 253, 0.22);
+  --surface-border: var(--border-medium);
+  --surface-border-strong: var(--border-strong);
+  --shadow-card-soft: 0 10px 24px rgba(8, 5, 20, 0.24);
+  --shadow-card: 0 10px 40px rgba(0, 0, 0, 0.35);
+  --shadow-overlay: 0 24px 60px rgba(8, 5, 20, 0.58);
+  --focus-ring: 0 0 0 2px rgba(139, 92, 246, 0.34);
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 22px;
+  --radius-pill: 999px;
+
+  /* Legacy aliases kept for compatibility */
+  --border-color: var(--surface-border);
+  --accent-color: var(--accent);
+  --primary: var(--accent);
+  --radius-default: var(--radius-lg);
+  --text-gray-100: var(--text-primary);
+  --text-gray-300: rgba(196, 181, 253, 0.34);
+  --text-gray-400: var(--text-muted);
+  --text-gray-500: var(--text-muted);
+  --text-gray-600: color-mix(in srgb, var(--text-muted) 82%, #000 18%);
+}
+
+:root[data-theme="light"] {
+  --border-soft: rgba(109, 40, 217, 0.08);
+  --border-medium: rgba(109, 40, 217, 0.14);
+  --border-strong: rgba(109, 40, 217, 0.22);
+  --surface-border: var(--border-medium);
+  --surface-border-strong: var(--border-strong);
+  --text-gray-300: rgba(109, 40, 217, 0.26);
+  --text-gray-600: color-mix(in srgb, var(--text-muted) 88%, #1f1247 12%);
+}
+
 /* -- Final Layout Overrides -------------------------------- */
 html,
 body {

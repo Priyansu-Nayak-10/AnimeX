@@ -584,7 +584,7 @@ function initUpcomingWidget({ fetchImpl = fetch.bind(globalThis), storage = glob
         <div class="news-thumb">
           ${img ? `<img class="news-thumb-img" src="${escapeHtml(img)}" alt="${escapeHtml(title)}" loading="lazy" />` : '<div class="news-thumb-fallback">🎬</div>'}
         </div>
-        <div class="news-badge news-badge-mal" style="background: rgba(139, 92, 246, 0.16); color: var(--accent); border: 1px solid rgba(139, 92, 246, 0.3);">Trending</div>
+        <div class="news-badge news-badge-mal">Trending</div>
         <div>
           <h4 class="anime-card-title" style="font-size: 14px; font-weight: 700; line-height: 1.4; margin-bottom: 0.35rem;">${escapeHtml(title)}</h4>
           <div class="flex items-center gap-1 anime-card-meta" style="margin-top: 0.4rem; font-size: 0.7rem;">

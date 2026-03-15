@@ -411,6 +411,22 @@
           <div class="insights-container">
             <h2 class="section-title">Your Anime Insights</h2>
 
+            <!-- Leveling System -->
+            <div class="insight-level-card">
+              <div class="level-header">
+                <div class="level-info">
+                  <span id="insight-level-title" class="level-title">Rookie Otaku</span>
+                  <span id="insight-level-number" class="level-number">Level 1</span>
+                </div>
+                <div class="level-xp-text">
+                  <span id="insight-xp-current">0</span> / <span id="insight-xp-next">1000</span> XP
+                </div>
+              </div>
+              <div class="level-progress-track">
+                <div id="insight-xp-bar" class="level-progress-fill" style="width: 0%"></div>
+              </div>
+            </div>
+
             <div class="insights-kpi-strip">
               <div class="kpi-card kpi-watch-time">
                 <span class="kpi-label">Watch Time</span>
@@ -523,6 +539,47 @@
                     <span id="insight-status-distribution" hidden></span>
                   </div>
                 </div>
+              </div>
+            </div>
+
+            <!-- Activity Heatmap -->
+            <div class="insight-panel full-width heatmap-panel">
+              <div class="panel-header-row">
+                <h3 class="panel-title">Activity Heatmap</h3>
+                <div class="heatmap-legend">
+                  <span>Less</span>
+                  <div class="heatmap-cells-preview">
+                    <div class="heatmap-cell level-0"></div>
+                    <div class="heatmap-cell level-1"></div>
+                    <div class="heatmap-cell level-2"></div>
+                    <div class="heatmap-cell level-3"></div>
+                    <div class="heatmap-cell level-4"></div>
+                  </div>
+                  <span>More</span>
+                </div>
+              </div>
+              <div id="insight-heatmap" class="heatmap-grid custom-scrollbar">
+                <!-- Days rendered by JS -->
+              </div>
+              <p class="panel-description">Your library updates and completions over the past year.</p>
+            </div>
+
+            <!-- Persona & Spotlight Row -->
+            <div class="insights-secondary-grid">
+              <div class="insight-panel">
+                <h3 class="panel-title">Anime Persona</h3>
+                <div class="persona-radar-container">
+                  <svg viewBox="0 0 200 200" id="insight-persona-radar" class="persona-radar-svg"></svg>
+                </div>
+                <p id="insight-persona-type" class="panel-description text-center">Analyzing your viewing patterns...</p>
+              </div>
+
+              <div class="insight-panel">
+                <h3 class="panel-title">Studio Spotlight</h3>
+                <div id="insight-studio-list" class="studio-spotlight-list">
+                  <!-- Studios rendered by JS -->
+                </div>
+                <p class="panel-description">Top animation studios by your interaction and ratings.</p>
               </div>
             </div>
 

@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="/css/style.css">
 
     <link rel="manifest" href="/manifest.json">
-    <meta name="theme-color" content="#0B0C13">
+    <meta name="theme-color" content="#140f26">
     <link rel="apple-touch-icon" href="/images/favicon.png">
 </head>
 
@@ -235,7 +235,7 @@
                       <h3 class="card-title"
                         style="margin-bottom: 0.15rem; display: flex; align-items: center; gap: 0.4rem;">
                         <span class="material-icons"
-                          style="color: #ffb74d; font-size: 1.1rem;">local_fire_department</span>
+                          style="color: var(--accent); font-size: 1.1rem;">local_fire_department</span>
                         Top Upcoming Releases
                       </h3>
                       <p class="anime-card-meta" style="margin-bottom: 0;">Most anticipated anime next season</p>
@@ -934,7 +934,7 @@
               <span class="material-icons"
                 style="font-size: 3.5rem; color: var(--primary); margin-bottom: 1rem; display:block;">download_for_offline</span>
               <h3 style="font-size: 1.4rem; font-weight: 700; margin-bottom: 0.5rem;">Download Library Archive</h3>
-              <p style="color: #94a3b8; max-width: 480px; margin: 0 auto 2rem; line-height: 1.6; font-size:0.9rem;">
+              <p style="color: var(--text-muted); max-width: 480px; margin: 0 auto 2rem; line-height: 1.6; font-size:0.9rem;">
                 Export a
                 secure copy of your entire watchlist, completed series, ratings, and profile settings.</p>
 
@@ -962,14 +962,14 @@
               <span class="material-icons"
                 style="font-size: 3.5rem; color: #8b5cf6; margin-bottom: 1rem; display:block;">upload_file</span>
               <h3 style="font-size: 1.4rem; font-weight: 700; margin-bottom: 0.5rem;">Import MyAnimeList Data</h3>
-              <p style="color: #94a3b8; max-width: 480px; margin: 0 auto 1.5rem; line-height: 1.6; font-size:0.9rem;">
+              <p style="color: var(--text-muted); max-width: 480px; margin: 0 auto 1.5rem; line-height: 1.6; font-size:0.9rem;">
                 Migrating to Animex? Upload your exported MyAnimeList XML file to instantly merge your progress.</p>
 
               <!-- Drag and Drop Zone -->
               <div id="mal-drop-zone" class="mal-upload-zone">
                 <div class="mal-upload-content">
                   <span class="material-icons"
-                    style="font-size: 2.5rem; color: #64748b; margin-bottom: 0.5rem;">note_add</span>
+                    style="font-size: 2.5rem; color: var(--text-muted); margin-bottom: 0.5rem;">note_add</span>
                   <p class="mal-upload-primary"><strong>Click to upload</strong> or drag and drop</p>
                   <p class="mal-upload-secondary">Supported format: .xml (Max 10MB)</p>
                 </div>
@@ -981,8 +981,8 @@
                 style="margin-top: 1rem; text-align: left; background: rgba(0,0,0,0.2); padding: 1rem; border-radius: 8px;">
                 <div style="display:flex; justify-content:space-between; margin-bottom: 0.5rem;">
                   <span id="mal-file-name"
-                    style="font-size:0.9rem; color:#f8fafc; font-weight:500;">animelist.xml</span>
-                  <span id="mal-file-size" style="font-size:0.8rem; color:#94a3b8;">-- KB</span>
+                    style="font-size:0.9rem; color:var(--text-primary); font-weight:500;">animelist.xml</span>
+                  <span id="mal-file-size" style="font-size:0.8rem; color:var(--text-muted);">-- KB</span>
                 </div>
                 <!-- Progress Line -->
                 <div style="height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; overflow: hidden;">
@@ -990,7 +990,7 @@
                     style="height:100%; width:0%; background: #8b5cf6; transition: width 0.3s ease;"></div>
                 </div>
                 <p id="mal-status-message"
-                  style="margin-top: 0.5rem; font-size: 0.85rem; color: #cbd5e1; margin-bottom: 0;">Ready to upload.</p>
+                  style="margin-top: 0.5rem; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0;">Ready to upload.</p>
               </div>
 
               <div style="margin-top: 1.5rem; display: flex; gap: 1rem; justify-content: center;">
@@ -1067,7 +1067,7 @@
     <div id="notif-list"></div>
     <div style="padding:10px 16px;border-top:1px solid rgba(255,255,255,0.07);text-align:center;">
       <button id="notif-clear-btn"
-        style="background:none;border:none;color:#888;font-size:0.78rem;cursor:pointer;">Clear all</button>
+        style="background:none;border:none;color:var(--text-muted);font-size:0.78rem;cursor:pointer;">Clear all</button>
     </div>
   </div>
 

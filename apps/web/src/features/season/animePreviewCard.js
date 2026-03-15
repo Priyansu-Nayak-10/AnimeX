@@ -11,19 +11,19 @@ export function bindHoverPreviews(containerElement, getAnimeDataFn) {
       #global-anime-preview {
         position: absolute;
         width: 320px;
-        background: rgba(15, 23, 42, 0.95);
+        background: rgba(20, 15, 38, 0.96);
         backdrop-filter: blur(16px);
         -webkit-backdrop-filter: blur(16px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(196, 181, 253, 0.18);
         border-radius: 12px;
-        box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+        box-shadow: 0 20px 40px rgba(8,5,20,0.6), 0 0 24px rgba(139,92,246,0.12);
         padding: 16px;
         z-index: 99999;
         opacity: 0;
         pointer-events: none;
         transform: translateY(10px) scale(0.95);
         transition: opacity 0.2s ease, transform 0.2s ease;
-        color: #f1f5f9;
+        color: var(--text-primary, #f5f3ff);
         font-family: 'Outfit', sans-serif;
       }
       #global-anime-preview.active {
@@ -43,23 +43,23 @@ export function bindHoverPreviews(containerElement, getAnimeDataFn) {
         font-weight: 700;
         margin: 0;
         line-height: 1.3;
-        color: #fff;
+        color: var(--text-primary, #f5f3ff);
       }
       .preview-year {
         font-size: 0.85rem;
-        color: #a855f7;
+        color: var(--accent, #8b5cf6);
         font-weight: 600;
         white-space: nowrap;
       }
       .preview-meta {
         font-size: 0.8rem;
-        color: #94a3b8;
+        color: var(--text-muted, #b7abd9);
         margin-bottom: 12px;
         font-weight: 500;
       }
       .preview-synopsis {
         font-size: 0.85rem;
-        color: #cbd5e1;
+        color: rgba(239, 233, 255, 0.84);
         line-height: 1.5;
         margin-bottom: 12px;
         display: -webkit-box;
@@ -73,12 +73,12 @@ export function bindHoverPreviews(containerElement, getAnimeDataFn) {
         gap: 6px;
       }
       .preview-tag {
-        background: rgba(255,255,255,0.05);
-        border: 1px solid rgba(255,255,255,0.1);
+        background: rgba(167,139,250,0.08);
+        border: 1px solid rgba(196,181,253,0.14);
         padding: 2px 8px;
         border-radius: 4px;
         font-size: 0.7rem;
-        color: #e2e8f0;
+        color: var(--text-primary, #f5f3ff);
         font-weight: 500;
       }
     `;

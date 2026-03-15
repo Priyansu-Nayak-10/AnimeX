@@ -2,7 +2,7 @@ export function renderAnimeGrid(container, animeList, loading = false) {
   if (loading) {
     container.innerHTML = Array.from({ length: 12 })
       .map(() => `
-        <div class="anime-card skeleton" style="height: 320px; border-radius: 8px; background: rgba(255,255,255,0.05); animation: pulse 1.5s infinite;"></div>
+        <div class="anime-card skeleton" style="height: 320px; border-radius: 8px; background: rgba(167,139,250,0.08); animation: pulse 1.5s infinite;"></div>
       `)
       .join("");
     return;
@@ -10,9 +10,9 @@ export function renderAnimeGrid(container, animeList, loading = false) {
 
   if (!animeList || animeList.length === 0) {
     container.innerHTML = `
-      <div class="empty-state" style="text-align:center; padding: 60px 20px; color: #94a3b8; width: 100%; grid-column: 1 / -1;">
+      <div class="empty-state" style="text-align:center; padding: 60px 20px; color: var(--text-muted); width: 100%; grid-column: 1 / -1;">
         <span class="material-icons" style="font-size: 3.5rem; margin-bottom: 16px; display:inline-block; opacity: 0.5;">explore_off</span>
-        <h3 style="font-size: 1.2rem; margin: 0 0 8px 0; color: #cbd5e1;">Something's empty here...</h3>
+        <h3 style="font-size: 1.2rem; margin: 0 0 8px 0; color: var(--text-primary);">Something's empty here...</h3>
         <p style="margin: 0;">No anime found for this specific criteria.</p>
       </div>
     `;
@@ -28,7 +28,7 @@ export function renderAnimeGrid(container, animeList, loading = false) {
       .anime-grid-cell .add-hover-cover {
         position: absolute;
         inset: 0;
-        background: linear-gradient(to top, rgba(0,0,0,0.8), transparent 60%);
+        background: linear-gradient(to top, rgba(46,16,101,0.88), transparent 60%);
         opacity: 0;
         transition: opacity 0.2s ease;
         display: flex;
@@ -41,7 +41,7 @@ export function renderAnimeGrid(container, animeList, loading = false) {
       }
       .anime-grid-cell:hover .add-hover-cover { opacity: 1; }
       .grid-add-btn {
-        background: var(--accent, #6366f1);
+        background: linear-gradient(135deg, var(--purple-500), var(--purple-700));
         color: white;
         border: none;
         padding: 8px;

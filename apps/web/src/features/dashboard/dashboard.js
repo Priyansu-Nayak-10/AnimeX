@@ -128,11 +128,11 @@ function renderGenreDonut(svgElement, entries, opts = {}) {
   // Center label
   const center = showCenter ? `
     <circle cx="${cx}" cy="${cy}" r="${innerR - 4}"
-      fill="rgba(15,23,42,0.7)" />
+      fill="rgba(39,23,74,0.7)" />
     <text x="${cx}" y="${cy - 8}" text-anchor="middle" font-size="22"
-      font-weight="800" fill="#f1f5f9" font-family="inherit">${total}</text>
+      font-weight="800" fill="var(--text-primary)" font-family="inherit">${total}</text>
     <text x="${cx}" y="${cy + 12}" text-anchor="middle" font-size="9"
-      font-weight="600" fill="#94a3b8" font-family="inherit" letter-spacing="1">ANIME</text>
+      font-weight="600" fill="var(--text-muted)" font-family="inherit" letter-spacing="1">ANIME</text>
   ` : '';
 
   svgElement.innerHTML = `
@@ -265,21 +265,21 @@ function initRecommendations({ store, libraryStore, selectors, toast = null }) {
   }
 
   const GENRE_META = {
-    action: { icon: "local_fire_department", color: "#ef4444" },
-    adventure: { icon: "explore", color: "#f59e0b" },
-    comedy: { icon: "sentiment_very_satisfied", color: "#eab308" },
-    drama: { icon: "theater_comedy", color: "#8b5cf6" },
-    fantasy: { icon: "auto_fix_high", color: "#10b981" },
-    romance: { icon: "favorite", color: "#ec4899" },
-    "sci-fi": { icon: "rocket_launch", color: "#06b6d4" },
-    slice: { icon: "local_cafe", color: "#14b8a6" },
-    mystery: { icon: "search", color: "#6366f1" },
-    thriller: { icon: "bolt", color: "#dc2626" },
-    horror: { icon: "psychology", color: "#7f1d1d" },
-    sports: { icon: "sports_baseball", color: "#f97316" },
+    action: { icon: "local_fire_department", color: "#8b5cf6" },
+    adventure: { icon: "explore", color: "#a78bfa" },
+    comedy: { icon: "sentiment_very_satisfied", color: "#c4b5fd" },
+    drama: { icon: "theater_comedy", color: "#7c3aed" },
+    fantasy: { icon: "auto_fix_high", color: "#9333ea" },
+    romance: { icon: "favorite", color: "#d8b4fe" },
+    "sci-fi": { icon: "rocket_launch", color: "#a78bfa" },
+    slice: { icon: "local_cafe", color: "#c4b5fd" },
+    mystery: { icon: "search", color: "#6d28d9" },
+    thriller: { icon: "bolt", color: "#7e22ce" },
+    horror: { icon: "psychology", color: "#581c87" },
+    sports: { icon: "sports_baseball", color: "#9333ea" },
     supernatural: { icon: "visibility", color: "#8b5cf6" },
-    isekai: { icon: "vpn_key", color: "#34d399" },
-    mecha: { icon: "smart_toy", color: "#94a3b8" }
+    isekai: { icon: "vpn_key", color: "#a78bfa" },
+    mecha: { icon: "smart_toy", color: "#b7abd9" }
   };
 
   function getGenreConfig(genreName) {
@@ -319,7 +319,7 @@ function initRecommendations({ store, libraryStore, selectors, toast = null }) {
 
     if (refs.dashboardGenreSvg && refs.dashboardGenreLegend) {
       if (!completedGenreEntries.length) {
-        refs.dashboardGenreSvg.innerHTML = `<g transform="translate(100,100)"><circle r="95" fill="none" stroke="rgba(148, 163, 184, 0.1)" stroke-width="20" stroke-dasharray="10 10"></circle><text x="0" y="5" text-anchor="middle" fill="#64748b" font-size="0.8rem">No Data</text></g>`;
+        refs.dashboardGenreSvg.innerHTML = `<g transform="translate(100,100)"><circle r="95" fill="none" stroke="rgba(167, 139, 250, 0.14)" stroke-width="20" stroke-dasharray="10 10"></circle><text x="0" y="5" text-anchor="middle" fill="var(--text-muted)" font-size="0.8rem">No Data</text></g>`;
         refs.dashboardGenreLegend.innerHTML = '<div class="anime-card-meta" style="margin-bottom:0; text-align: center; width: 100%;">Complete anime to see distribution.</div>';
       } else {
         renderGenreDonut(refs.dashboardGenreSvg, completedGenreEntries);
@@ -584,7 +584,7 @@ function initUpcomingWidget({ fetchImpl = fetch.bind(globalThis), storage = glob
         <div class="news-thumb">
           ${img ? `<img class="news-thumb-img" src="${escapeHtml(img)}" alt="${escapeHtml(title)}" loading="lazy" />` : '<div class="news-thumb-fallback">🎬</div>'}
         </div>
-        <div class="news-badge news-badge-mal" style="background: rgba(249, 115, 22, 0.15); color: #f97316; border: 1px solid rgba(249, 115, 22, 0.3);">🔥 Trending</div>
+        <div class="news-badge news-badge-mal" style="background: rgba(139, 92, 246, 0.16); color: var(--accent); border: 1px solid rgba(139, 92, 246, 0.3);">Trending</div>
         <div>
           <h4 class="anime-card-title" style="font-size: 14px; font-weight: 700; line-height: 1.4; margin-bottom: 0.35rem;">${escapeHtml(title)}</h4>
           <div class="flex items-center gap-1 anime-card-meta" style="margin-top: 0.4rem; font-size: 0.7rem;">
@@ -954,7 +954,7 @@ function renderTrackerItems(container, items) {
   if (!items.length) {
     container.innerHTML = `<div class="tracker-empty" style="text-align: center; padding: 2.5rem 1rem;">
       <span style="font-size:2.2rem; opacity: 0.5;">🎯</span>
-      <p style="margin-top: 1rem; color: #64748b; font-size: 0.85rem;">No recent activities detected on the HUD.</p>
+      <p style="margin-top: 1rem; color: var(--text-muted); font-size: 0.85rem;">No recent activities detected on the HUD.</p>
     </div>`;
     return;
   }

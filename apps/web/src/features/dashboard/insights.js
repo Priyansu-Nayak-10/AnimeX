@@ -41,6 +41,11 @@ function renderHeatmap(container, items) {
   if (!container) return;
   const now = new Date();
   const oneYearAgo = new Date(now.getTime() - 365 * 24 * 60 * 60 * 1000);
+  const startDate = new Date(oneYearAgo);
+  startDate.setHours(0, 0, 0, 0);
+  startDate.setDate(startDate.getDate() - startDate.getDay());
+  const endDate = new Date(now);
+  endDate.setHours(0, 0, 0, 0);
 
   const activityMap = {};
   items.forEach(item => {
@@ -51,16 +56,79 @@ function renderHeatmap(container, items) {
     });
   });
 
-  let html = "";
-  for (let i = 0; i <= 365; i++) {
-    const d = new Date(oneYearAgo.getTime() + i * 24 * 60 * 60 * 1000);
-    const key = toDateKey(d.getTime());
-    const count = activityMap[key] || 0;
-    const level = count === 0 ? 0 : (count < 3 ? 1 : (count < 6 ? 2 : (count < 10 ? 3 : 4)));
-    const dateLabel = d.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
-    html += `<div class="heatmap-cell level-${level}" data-tooltip="${escapeHtml(`${dateLabel}: ${count} updates`)}"></div>`;
+  const dates = [];
+  for (let cursor = new Date(startDate); cursor <= endDate; cursor.setDate(cursor.getDate() + 1)) {
+    dates.push(new Date(cursor));
   }
-  container.innerHTML = html;
+
+  const weeks = [];
+  dates.forEach((date, index) => {
+    const weekIndex = Math.floor(index / 7);
+    if (!weeks[weekIndex]) weeks[weekIndex] = [];
+    weeks[weekIndex].push(date);
+  });
+
+  let totalUpdates = 0;
+  let busiestCount = 0;
+  let busiestLabel = "No activity yet";
+
+  const weekColumns = weeks.map((week) => {
+    const cells = week.map((date) => {
+      const key = toDateKey(date.getTime());
+      const count = activityMap[key] || 0;
+      totalUpdates += count;
+      if (count > busiestCount) {
+        busiestCount = count;
+        busiestLabel = date.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+      }
+      const level = count === 0 ? 0 : (count < 3 ? 1 : (count < 6 ? 2 : (count < 10 ? 3 : 4)));
+      const dateLabel = date.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+      const isFuture = date > now;
+      return `<div class="heatmap-cell level-${level}${isFuture ? ' is-future' : ''}" data-tooltip="${escapeHtml(`${dateLabel}: ${count} updates`)}"></div>`;
+    }).join("");
+
+    return `<div class="heatmap-week-column">${cells}</div>`;
+  }).join("");
+
+  let previousMonth = "";
+  const monthLabels = weeks.map((week, index) => {
+    const monthAnchor = week.find((date) => date.getDate() <= 7) || week[0];
+    const monthLabel = monthAnchor.toLocaleDateString(undefined, { month: 'short' });
+    if (index !== 0 && monthLabel === previousMonth) {
+      return '<span class="heatmap-month-label is-empty"></span>';
+    }
+    previousMonth = monthLabel;
+    return `<span class="heatmap-month-label">${monthLabel}</span>`;
+  }).join("");
+
+  const summaryText = totalUpdates > 0
+    ? `${totalUpdates} activity updates in the last year`
+    : "No activity recorded in the last year yet";
+  const busiestText = busiestCount > 0
+    ? `Busiest day: ${busiestLabel} (${busiestCount})`
+    : "Busiest day will appear once you start updating your library";
+
+  container.innerHTML = `
+    <div class="heatmap-shell">
+      <div class="heatmap-month-row" aria-hidden="true">${monthLabels}</div>
+      <div class="heatmap-body">
+        <div class="heatmap-weekday-rail" aria-hidden="true">
+          <span>Mon</span>
+          <span>Wed</span>
+          <span>Fri</span>
+        </div>
+        <div class="heatmap-scroll custom-scrollbar">
+          <div class="heatmap-grid" role="img" aria-label="${escapeHtml(summaryText)}">
+            ${weekColumns}
+          </div>
+        </div>
+      </div>
+      <div class="heatmap-summary">
+        <span>${escapeHtml(summaryText)}</span>
+        <span>${escapeHtml(busiestText)}</span>
+      </div>
+    </div>
+  `;
 }
 
 function renderPersonaRadar(svg, genreCount) {

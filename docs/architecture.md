@@ -7,8 +7,6 @@ Animex is a JavaScript monorepo with two active applications:
 - `apps/web`: a Vite-powered multi-page frontend using plain ES modules
 - `apps/api`: an Express 5 backend that proxies anime data, manages user data, and drives notifications
 
-There are also `packages/*` workspace entries, but they are currently placeholders and are not part of the live app runtime.
-
 ## Monorepo layout
 
 - `apps/web`
@@ -186,4 +184,4 @@ Jobs use DB-backed locks to avoid overlapping execution.
 
 - backend tests are in much better shape than frontend verification
 - the frontend is feature-rich but centered around a very large bootstrap module
-- `docs/*` and `packages/*` were originally placeholders and should keep evolving to match the real codebase
+- `docs/*` now track the real codebase, but the frontend still has a very large bootstrap module that would benefit from future slimming

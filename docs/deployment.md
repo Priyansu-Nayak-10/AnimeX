@@ -178,4 +178,4 @@ After deployment, verify:
 
 - the frontend build could not be fully validated in this environment because `vite build` hit an `esbuild` spawn permission issue here
 - backend tests are passing and are the strongest deployment confidence signal right now
-- `packages/*` workspace packages are placeholders and do not need independent deployment
+- only the `apps/web` and `apps/api` workspaces are part of the current deployment surface

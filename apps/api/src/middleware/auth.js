@@ -92,7 +92,9 @@ async function authenticate(req, res, next) {
     req.user = await verifyToken(token);
     return next();
   } catch (err) {
-    logger.error('Authentication failed', { error: err.message, route: req.originalUrl });
+    if (process.env.NODE_ENV !== 'test') {
+      logger.error('Authentication failed', { error: err.message, route: req.originalUrl });
+    }
     return apiError(res, 'Unauthorized', 401);
   }
 }

@@ -29,7 +29,7 @@
       }
     },
     {
-      "files": ["apps/web/src/**/*.js", "packages/**/*.js"],
+      "files": ["apps/web/src/**/*.js"],
       "env": {
         "browser": true,
         "es2022": true

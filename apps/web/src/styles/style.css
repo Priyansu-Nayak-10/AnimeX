@@ -605,6 +605,8 @@
     align-items: center;
     gap: 8px;
     overflow: hidden;
+    padding-top: 5px;
+    margin-top: -5px;
 }
 
 .genre-chip {

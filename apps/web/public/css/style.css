@@ -8171,6 +8171,8 @@ body:not(.dark) #profile-view .profile-save-hint {
     align-items: center;
     gap: 8px;
     overflow-x: auto;
+    padding-top: 5px;
+    margin-top: -5px;
     padding-bottom: 4px;
     scrollbar-width: none;
 }
@@ -8190,4 +8192,23 @@ body:not(.dark) #profile-view .profile-save-hint {
     font-weight: 600;
     color: #f1f5f9;
     white-space: nowrap;
+    transition: all 0.25s ease;
+}
+
+.genre-chip:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--accent, #8b5cf6);
+    box-shadow: 0 0 15px var(--accent, rgba(139, 92, 246, 0.2));
+    transform: translateY(-2px);
+    color: #fff;
+}
+
+.genre-chip .material-icons {
+    font-size: 1.1rem;
+    color: var(--accent, #8b5cf6);
+    transition: transform 0.25s ease;
+}
+
+.genre-chip:hover .material-icons {
+    transform: scale(1.1);
 }

@@ -27,6 +27,13 @@ export function bindNavigation() {
             sections.forEach((section) => section.classList.toggle("active", section.id === targetId));
         });
     });
+
+    document.addEventListener("click", (event) => {
+        const trigger = event.target.closest("[data-open-view]");
+        if (!trigger) return;
+        event.preventDefault();
+        openView(trigger.getAttribute("data-open-view"));
+    });
 }
 
 /**

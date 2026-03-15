@@ -172,7 +172,14 @@
                 <!-- Genre distribution (unchanged) -->
 
                 <div class="card stats-container">
-                  <h3 class="card-title">Completed Genre Distribution</h3>
+                  <div class="card-header"
+                    style="padding-bottom: 0.5rem; border-bottom: 1px solid rgba(255,255,255,0.05); margin-bottom: 1rem;">
+                    <div>
+                      <h3 class="card-title" style="margin-bottom: 0.15rem;">Genre Snapshot</h3>
+                      <p class="anime-card-meta" style="margin-bottom: 0;">A quick preview of your completed anime taste.</p>
+                    </div>
+                    <button type="button" class="wl-control-btn" data-open-view="insights-view">Open Insights</button>
+                  </div>
                   <div class="legend">
                     <div class="legend-item">
                       <span class="legend-dot bg-accent-blue"></span>
@@ -192,6 +199,7 @@
                     <svg viewBox="0 0 200 200" class="genre-pie" id="completed-genre-pie"
                       aria-label="Completed genre distribution chart"></svg>
                   </div>
+                  <p class="anime-card-meta" style="margin: 1rem 0 0; text-align: center;">See your full genre intelligence, studio trends, and activity history in Insights.</p>
                 </div>
 
                 <!-- My Tracker Feed -->
@@ -255,7 +263,13 @@
                   anime history</p>
               </div>
               <div class="card quick-stats-card">
-                <h3 class="card-title">Your quick stats</h3>
+                <div class="card-header" style="margin-bottom: 1rem;">
+                  <div>
+                    <h3 class="card-title" style="margin-bottom: 0.15rem;">Insights Snapshot</h3>
+                    <p class="anime-card-meta" style="margin-bottom: 0;">A compact preview of your full analytics profile.</p>
+                  </div>
+                  <button type="button" class="wl-control-btn" data-open-view="insights-view">Open Insights</button>
+                </div>
                 <div class="quick-stats-list">
                   <div class="stat-row">
                     <span class="stat-label">Total watched</span>
@@ -274,7 +288,7 @@
                 <div class="personality-section">
                   <div class="personality-header">
                     <span class="personality-emoji">🧠</span>
-                    <span class="personality-title">Your Anime Personality</span>
+                    <span class="personality-title">Personality Preview</span>
                   </div>
                   <div id="anime-personality-name" class="personality-name">
                     Calculating...
@@ -289,6 +303,7 @@
                     Genres</p>
                   <div id="quick-top-genres" class="genres-list"></div>
                 </div>
+                <p class="anime-card-meta" style="margin: 1rem 0 0;">For heatmaps, streaks, studio spotlight, and deeper breakdowns, open Insights.</p>
               </div>
             </div>
 

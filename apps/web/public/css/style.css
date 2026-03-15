@@ -8162,3 +8162,32 @@ body:not(.dark) #profile-view .profile-save-hint {
 }
 
 .wl-progress-fill, progress::-webkit-progress-value { background: linear-gradient(90deg, #7C3AED, #C084FC) !important; }
+
+/* Genre Chips Layout Fix */
+.genres-list {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    scrollbar-width: none;
+}
+.genres-list::-webkit-scrollbar {
+    display: none;
+}
+.genre-chip {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #f1f5f9;
+    white-space: nowrap;
+}

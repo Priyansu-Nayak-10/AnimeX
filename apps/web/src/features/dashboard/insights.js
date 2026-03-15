@@ -1,3 +1,19 @@
+import { STATUS } from "../../store.js";
+
+function escapeHtml(value) { return String(value || "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#39;"); }
+function formatWatchTime(totalMinutes) { const mins = Math.max(0, Math.floor(Number(totalMinutes || 0))); const hours = Math.floor(mins / 60); const rest = mins % 60; return `${hours}h ${rest}m`; }
+function parseDurationMinutes(value) { if (typeof value === "number" && Number.isFinite(value)) return value; const text = String(value || "").toLowerCase(); const minutes = text.match(/(\d+)\s*min/); if (minutes) return Number(minutes[1]) || 24; const hours = text.match(/(\d+)\s*hr/); if (hours) return (Number(hours[1]) || 0) * 60; return 24; }
+function toDateKey(timestamp) { const date = new Date(Number(timestamp || 0)); if (Number.isNaN(date.getTime())) return ""; return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`; }
+function calculateCompletionStreak(timestamps) { const uniqueDays = [...new Set((timestamps || []).map(toDateKey).filter(Boolean))].sort().reverse(); if (!uniqueDays.length) return 0; let streak = 1; let cursor = new Date(uniqueDays[0]).getTime(); for (let i = 1; i < uniqueDays.length; i += 1) { const current = new Date(uniqueDays[i]).getTime(); if ((cursor - current) === (24 * 60 * 60 * 1000)) { streak += 1; cursor = current; } else break; } return streak; }
+function describeDonutArc(cx, cy, outerR, innerR, startDeg, endDeg) { const toRad = (d) => ((d - 90) * Math.PI) / 180; const pt = (r, d) => ({ x: cx + r * Math.cos(toRad(d)), y: cy + r * Math.sin(toRad(d)) }); const o1 = pt(outerR, startDeg), o2 = pt(outerR, endDeg); const i1 = pt(innerR, endDeg), i2 = pt(innerR, startDeg); const large = endDeg - startDeg > 180 ? 1 : 0; return `M ${o1.x} ${o1.y} A ${outerR} ${outerR} 0 ${large} 1 ${o2.x} ${o2.y} L ${i1.x} ${i1.y} A ${innerR} ${innerR} 0 ${large} 0 ${i2.x} ${i2.y} Z`; }
+
+const GENRE_COLOR_MAP = Object.freeze({ action: "var(--genre-action)", fantasy: "var(--genre-fantasy)", adventure: "var(--genre-adventure)", suspense: "var(--genre-mystery)", comedy: "var(--genre-comedy)" });
+const GENRE_FALLBACK_COLORS = Object.freeze(["var(--chart-purple)", "var(--chart-blue)", "var(--chart-cyan)", "var(--chart-green)", "var(--chart-orange)", "var(--chart-pink)"]);
+function getGenreColor(genreName, index = 0) { const key = String(genreName || "").trim().toLowerCase(); if (GENRE_COLOR_MAP[key]) return GENRE_COLOR_MAP[key]; return GENRE_FALLBACK_COLORS[index % GENRE_FALLBACK_COLORS.length]; }
+function getEntryRating(item) { const candidates = [Number(item?.userRating), Number(item?.rating), Number(item?.score)]; return candidates.find((value) => Number.isFinite(value) && value > 0) || 0; }
+function pickTopCount(map) { const rows = Object.entries(map || {}); if (!rows.length) return "No data"; rows.sort((a, b) => b[1] - a[1]); return rows[0]?.[0] || "No data"; }
+const DONUT_PALETTE = [{ from: 'var(--chart-purple)', to: 'var(--chart-purple)' }, { from: 'var(--chart-blue)', to: 'var(--chart-blue)' }, { from: 'var(--chart-cyan)', to: 'var(--chart-cyan)' }, { from: 'var(--chart-green)', to: 'var(--chart-green)' }, { from: 'var(--chart-orange)', to: 'var(--chart-orange)' }, { from: 'var(--chart-pink)', to: 'var(--chart-pink)' }];
+
 const LEVEL_TITLES = [
   { threshold: 50, title: "Sage of Six Paths" },
   { threshold: 30, title: "Anime Legend" },
@@ -492,19 +508,5 @@ function initInsights({ libraryStore }) {
     }
   });
 }
-
-import { STATUS as _STATUS } from "../../store.js";
-function escapeHtml(value) { return String(value || "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#39;"); }
-function formatWatchTime(totalMinutes) { const mins = Math.max(0, Math.floor(Number(totalMinutes || 0))); const hours = Math.floor(mins / 60); const rest = mins % 60; return `${hours}h ${rest}m`; }
-function parseDurationMinutes(value) { if (typeof value === "number" && Number.isFinite(value)) return value; const text = String(value || "").toLowerCase(); const minutes = text.match(/(\d+)\s*min/); if (minutes) return Number(minutes[1]) || 24; const hours = text.match(/(\d+)\s*hr/); if (hours) return (Number(hours[1]) || 0) * 60; return 24; }
-const GENRE_COLOR_MAP = Object.freeze({ action: "var(--genre-action)", fantasy: "var(--genre-fantasy)", adventure: "var(--genre-adventure)", suspense: "var(--genre-mystery)", comedy: "var(--genre-comedy)" });
-const GENRE_FALLBACK_COLORS = Object.freeze(["var(--chart-purple)", "var(--chart-blue)", "var(--chart-cyan)", "var(--chart-green)", "var(--chart-orange)", "var(--chart-pink)"]);
-function getGenreColor(genreName, index = 0) { const key = String(genreName || "").trim().toLowerCase(); if (GENRE_COLOR_MAP[key]) return GENRE_COLOR_MAP[key]; return GENRE_FALLBACK_COLORS[index % GENRE_FALLBACK_COLORS.length]; }
-function getEntryRating(item) { const candidates = [Number(item?.userRating), Number(item?.rating), Number(item?.score)]; return candidates.find((value) => Number.isFinite(value) && value > 0) || 0; }
-function pickTopCount(map) { const rows = Object.entries(map || {}); if (!rows.length) return "No data"; rows.sort((a, b) => b[1] - a[1]); return rows[0]?.[0] || "No data"; }
-function toDateKey(timestamp) { const date = new Date(Number(timestamp || 0)); if (Number.isNaN(date.getTime())) return ""; return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`; }
-function calculateCompletionStreak(timestamps) { const uniqueDays = [...new Set((timestamps || []).map(toDateKey).filter(Boolean))].sort().reverse(); if (!uniqueDays.length) return 0; let streak = 1; let cursor = new Date(uniqueDays[0]).getTime(); for (let i = 1; i < uniqueDays.length; i += 1) { const current = new Date(uniqueDays[i]).getTime(); if ((cursor - current) === (24 * 60 * 60 * 1000)) { streak += 1; cursor = current; } else break; } return streak; }
-const DONUT_PALETTE = [{ from: 'var(--chart-purple)', to: 'var(--chart-purple)' }, { from: 'var(--chart-blue)', to: 'var(--chart-blue)' }, { from: 'var(--chart-cyan)', to: 'var(--chart-cyan)' }, { from: 'var(--chart-green)', to: 'var(--chart-green)' }, { from: 'var(--chart-orange)', to: 'var(--chart-orange)' }, { from: 'var(--chart-pink)', to: 'var(--chart-pink)' }];
-function describeDonutArc(cx, cy, outerR, innerR, startDeg, endDeg) { const toRad = (d) => ((d - 90) * Math.PI) / 180; const pt = (r, d) => ({ x: cx + r * Math.cos(toRad(d)), y: cy + r * Math.sin(toRad(d)) }); const o1 = pt(outerR, startDeg), o2 = pt(outerR, endDeg); const i1 = pt(innerR, endDeg), i2 = pt(innerR, startDeg); const large = endDeg - startDeg > 180 ? 1 : 0; return `M ${o1.x} ${o1.y} A ${outerR} ${outerR} 0 ${large} 1 ${o2.x} ${o2.y} L ${i1.x} ${i1.y} A ${innerR} ${innerR} 0 ${large} 0 ${i2.x} ${i2.y} Z`; }
 
 export { initInsights };

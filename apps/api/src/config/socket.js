@@ -37,11 +37,20 @@ const initSocket = (server) => {
 
   const redisUrl = process.env.REDIS_URL;
   if (redisUrl) {
-    const pubClient = new Redis(redisUrl);
+    const isTls = redisUrl.startsWith('rediss://');
+    const redisOptions = {
+      maxRetriesPerRequest: null,
+      ...(isTls ? { tls: { rejectUnauthorized: false } } : {})
+    };
+    const pubClient = new Redis(redisUrl, redisOptions);
     const subClient = pubClient.duplicate();
 
     pubClient.on('error', (err) => logger.error(`[Socket Redis Pub] ${err.message}`));
     subClient.on('error', (err) => logger.error(`[Socket Redis Sub] ${err.message}`));
+
+    // Prevent ioredis unhandled 'error' events from crashing the process
+    pubClient.on('end', () => logger.warn('[Socket Redis Pub] connection closed'));
+    subClient.on('end', () => logger.warn('[Socket Redis Sub] connection closed'));
 
     io.adapter(createAdapter(pubClient, subClient));
     logger.info('[Socket] Redis adapter enabled for multiple instances');

@@ -10,7 +10,12 @@ const cacheNamespace = process.env.CACHE_NAMESPACE || 'animex:v1';
 let redis = null;
 
 if (redisUrl) {
-    redis = new Redis(redisUrl, { enableReadyCheck: true });
+    const isTls = redisUrl.startsWith('rediss://');
+    redis = new Redis(redisUrl, { 
+        enableReadyCheck: true,
+        maxRetriesPerRequest: null,
+        ...(isTls ? { tls: { rejectUnauthorized: false } } : {})
+    });
     redis.on('error', (err) => logger.error(`[Redis] ${err.message}`));
     redis.on('connect', () => logger.info('[Redis] connected'));
 } else {

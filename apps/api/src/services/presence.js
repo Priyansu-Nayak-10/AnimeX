@@ -6,7 +6,11 @@ const REDIS_URL = process.env.REDIS_URL;
 let redis = null;
 if (REDIS_URL) {
   try {
-    redis = new Redis(REDIS_URL);
+    const isTls = REDIS_URL.startsWith('rediss://');
+    redis = new Redis(REDIS_URL, {
+      maxRetriesPerRequest: null,
+      ...(isTls ? { tls: { rejectUnauthorized: false } } : {})
+    });
   } catch (err) {
     logger.error('Failed to init Redis for presence data', { error: err.message });
   }

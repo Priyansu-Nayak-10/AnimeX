@@ -10,12 +10,36 @@ function normalizeGenreNames(value) { return (Array.isArray(value) ? value : [])
 function normalizeStudioName(item) { if (typeof item?.studio === "string" && item.studio.trim()) return item.studio.trim(); const studios = Array.isArray(item?.studios) ? item.studios : []; const firstStudio = studios.find((studio) => (typeof studio === "string" ? studio.trim() : studio?.name)); const studioName = typeof firstStudio === "string" ? firstStudio : firstStudio?.name; return String(studioName || "").trim(); }
 function humanizeStatus(value) { const raw = String(value || "").trim().toLowerCase(); if (!raw) return "Updated"; return raw.charAt(0).toUpperCase() + raw.slice(1); }
 
-const GENRE_COLOR_MAP = Object.freeze({ action: "var(--genre-action)", fantasy: "var(--genre-fantasy)", adventure: "var(--genre-adventure)", suspense: "var(--genre-mystery)", comedy: "var(--genre-comedy)" });
-const GENRE_FALLBACK_COLORS = Object.freeze(["var(--chart-purple)", "var(--chart-blue)", "var(--chart-cyan)", "var(--chart-green)", "var(--chart-orange)", "var(--chart-pink)"]);
+const GENRE_COLOR_MAP = Object.freeze({
+  action: "var(--insight-rose)",
+  fantasy: "var(--insight-purple)",
+  adventure: "var(--insight-cyan)",
+  suspense: "var(--insight-violet)",
+  comedy: "var(--insight-amber)",
+  romance: "var(--insight-pink)",
+  "sci-fi": "var(--insight-cyan)",
+  mystery: "var(--insight-violet)",
+  drama: "var(--insight-orchid)"
+});
+const GENRE_FALLBACK_COLORS = Object.freeze([
+  "var(--insight-purple)",
+  "var(--insight-cyan)",
+  "var(--insight-pink)",
+  "var(--insight-lavender)",
+  "var(--insight-rose)",
+  "var(--insight-amber)"
+]);
 function getGenreColor(genreName, index = 0) { const key = String(genreName || "").trim().toLowerCase(); if (GENRE_COLOR_MAP[key]) return GENRE_COLOR_MAP[key]; return GENRE_FALLBACK_COLORS[index % GENRE_FALLBACK_COLORS.length]; }
 function getEntryRating(item) { const candidates = [Number(item?.userRating), Number(item?.rating), Number(item?.score)]; return candidates.find((value) => Number.isFinite(value) && value > 0) || 0; }
 function pickTopCount(map) { const rows = Object.entries(map || {}); if (!rows.length) return "No data"; rows.sort((a, b) => b[1] - a[1]); return rows[0]?.[0] || "No data"; }
-const DONUT_PALETTE = [{ from: 'var(--chart-purple)', to: 'var(--chart-purple)' }, { from: 'var(--chart-blue)', to: 'var(--chart-blue)' }, { from: 'var(--chart-cyan)', to: 'var(--chart-cyan)' }, { from: 'var(--chart-green)', to: 'var(--chart-green)' }, { from: 'var(--chart-orange)', to: 'var(--chart-orange)' }, { from: 'var(--chart-pink)', to: 'var(--chart-pink)' }];
+const DONUT_PALETTE = [
+  { from: 'var(--insight-purple)', to: 'var(--insight-orchid)' },
+  { from: 'var(--insight-cyan)', to: '#a5f3fc' },
+  { from: 'var(--insight-pink)', to: '#f9a8d4' },
+  { from: 'var(--insight-lavender)', to: '#ddd6fe' },
+  { from: 'var(--insight-rose)', to: '#fda4af' },
+  { from: 'var(--insight-amber)', to: '#fde68a' }
+];
 
 const LEVEL_TITLES = [
   { threshold: 50, title: "Sage of Six Paths" },
@@ -549,9 +573,9 @@ function initInsights({ libraryStore }) {
     if (refs.avgRatingSi) refs.avgRatingSi.textContent = insights.averageUserRating || "0.0";
 
     renderDonutChart(refs.statusChart, [
-      { label: "Completed", value: breakdown.completed, color: "var(--chart-purple)" },
-      { label: "Watching", value: breakdown.watching, color: "var(--chart-blue)" },
-      { label: "Plan", value: breakdown.plan, color: "var(--chart-green)" }
+      { label: "Completed", value: breakdown.completed, color: "var(--insight-purple)" },
+      { label: "Watching", value: breakdown.watching, color: "var(--insight-cyan)" },
+      { label: "Plan", value: breakdown.plan, color: "var(--insight-lavender)" }
     ], totalLib, `${completionPct}%`, false);
 
     renderGenreDonut(refs.genreChart, genreData);

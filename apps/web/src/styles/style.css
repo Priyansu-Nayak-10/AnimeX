@@ -1594,3 +1594,103 @@ body {
 .kpi-plan::before {
   background: linear-gradient(90deg, #a78bfa, #ddd6fe);
 }
+
+.insight-panel {
+  background:
+    linear-gradient(180deg, rgba(30, 17, 58, 0.9), rgba(16, 10, 31, 0.96));
+}
+
+#insight-genre-chart {
+  filter: drop-shadow(0 0 24px rgba(139, 92, 246, 0.16));
+}
+
+.genre-bars {
+  gap: 1rem;
+}
+
+.genre-bar-item {
+  padding: 0.8rem 0.9rem;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(196, 181, 253, 0.08);
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(139,92,246,0.04));
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.genre-bar-item:hover {
+  transform: translateY(-2px);
+  border-color: rgba(196, 181, 253, 0.18);
+  box-shadow: 0 12px 24px rgba(8, 5, 20, 0.22);
+}
+
+.genre-label {
+  color: rgba(245, 243, 255, 0.92);
+}
+
+.genre-track {
+  height: 10px;
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.05);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.28);
+}
+
+.genre-fill {
+  border-radius: var(--radius-pill);
+  box-shadow: 0 0 14px color-mix(in srgb, currentColor 18%, transparent);
+}
+
+.genre-count {
+  color: rgba(245, 243, 255, 0.82);
+}
+
+.si-donut-container .insight-donut-svg {
+  filter: drop-shadow(0 0 24px rgba(139, 92, 246, 0.22));
+}
+
+.si-legend-dot {
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.12);
+}
+
+.si-legend-val {
+  color: rgba(245, 243, 255, 0.96);
+}
+
+.si-analytic-purple {
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.18), rgba(168, 85, 247, 0.1));
+  border-color: rgba(139, 92, 246, 0.28);
+}
+
+.si-analytic-purple .si-analytic-icon,
+.si-analytic-purple .si-analytic-value {
+  color: var(--insight-lavender);
+}
+
+.si-analytic-blue {
+  background: linear-gradient(135deg, rgba(103, 232, 249, 0.14), rgba(59, 130, 246, 0.1));
+  border-color: rgba(103, 232, 249, 0.26);
+}
+
+.si-analytic-blue .si-analytic-icon,
+.si-analytic-blue .si-analytic-value {
+  color: var(--insight-cyan);
+}
+
+.si-analytic-green {
+  background: linear-gradient(135deg, rgba(196, 181, 253, 0.16), rgba(167, 139, 250, 0.1));
+  border-color: rgba(196, 181, 253, 0.26);
+}
+
+.si-analytic-green .si-analytic-icon,
+.si-analytic-green .si-analytic-value {
+  color: var(--insight-lavender);
+}
+
+.insight-donut-legend {
+  gap: 0.65rem;
+}
+
+.insight-legend-item {
+  padding: 0.5rem 0.65rem;
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(196, 181, 253, 0.08);
+}

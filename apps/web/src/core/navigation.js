@@ -34,7 +34,8 @@ function activateView(targetId) {
     const sections = document.querySelectorAll(".view-section");
     navItems.forEach((item) => item.classList.toggle("active", item.getAttribute("data-target") === targetId));
     sections.forEach((section) => section.classList.toggle("active", section.id === targetId));
-    document.querySelector(".main-viewport")?.scrollTo({ top: 0, behavior: "smooth" });
+    const scrollContainer = document.querySelector(".page-content") || document.querySelector(".view-container") || document.querySelector(".main-viewport");
+    scrollContainer?.scrollTo({ top: 0, behavior: "smooth" });
 }
 
 export function bindNavigation() {

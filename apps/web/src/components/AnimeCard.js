@@ -193,7 +193,7 @@ class AnimeCard extends HTMLElement {
         .image-overlay {
           position: absolute;
           inset: 0;
-          background: linear-gradient(to top, var(--bg-main) 0%, rgba(11, 12, 19, 0.55) 55%, transparent 100%);
+          background: linear-gradient(to top, var(--bg-main) 0%, rgba(46, 16, 101, 0.5) 55%, transparent 100%);
           opacity: 0.85;
           transition: opacity 0.3s ease;
         }
@@ -206,7 +206,7 @@ class AnimeCard extends HTMLElement {
           position: absolute;
           top: 8px;
           left: 8px;
-          background: linear-gradient(135deg, var(--chart-orange) 0%, var(--chart-orange) 100%);
+          background: linear-gradient(135deg, var(--chart-purple) 0%, var(--chart-orange) 100%);
           color: #fff;
           font-size: 0.7rem;
           font-weight: 800;
@@ -268,12 +268,12 @@ class AnimeCard extends HTMLElement {
         }
 
         .countdown {
-          color: var(--chart-orange);
+          color: var(--chart-purple);
           font-weight: 600;
         }
 
         .airing-day {
-          color: var(--chart-green);
+          color: var(--chart-blue);
           font-weight: 600;
         }
       </style>
@@ -283,7 +283,7 @@ class AnimeCard extends HTMLElement {
         <img class="card-image" data-src="${image}" alt="${title}" loading="lazy" />
         <div class="image-overlay"></div>
         <div class="stats-overlay">
-          <stat-badge icon="star" value="${scoreDisplay}" color="var(--chart-orange)"></stat-badge>
+          <stat-badge icon="star" value="${scoreDisplay}" color="var(--chart-purple)"></stat-badge>
           <stat-badge icon="tag" value="${type || 'TV'}" color="var(--text-primary)"></stat-badge>
         </div>
       </div>

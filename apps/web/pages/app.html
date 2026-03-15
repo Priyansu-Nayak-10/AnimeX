@@ -67,7 +67,7 @@
             </a>
             <a class="nav-item" href="#" data-target="export-view">
               <span class="material-icons nav-icon">download</span>
-              <span class="nav-item-text">Export Data</span>
+              <span class="nav-item-text">Data</span>
             </a>
           </nav>
         </div>
@@ -713,6 +713,18 @@
             <div class="profile-edit-col">
               <div class="profile-glass-card">
 
+                <div class="card-header" style="margin-bottom: 1.5rem;">
+                  <div>
+                    <p class="anime-card-meta" style="margin-bottom: 0.35rem;">Identity Center</p>
+                    <h2 class="section-title" style="margin-bottom: 0.35rem;">Profile</h2>
+                    <p class="anime-card-meta" style="margin-bottom: 0;">Manage your public identity, avatar, banner, and social profile links.</p>
+                  </div>
+                  <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+                    <button type="button" class="wl-control-btn" data-open-view="settings-view">Open Settings</button>
+                    <button type="button" class="wl-control-btn" data-open-view="export-view">Open Data</button>
+                  </div>
+                </div>
+
                 <!-- Card Header -->
                 <div class="profile-card-header">
                   <span class="material-icons profile-card-header-icon">manage_accounts</span>
@@ -771,7 +783,17 @@
         <!-- Settings View -->
         <div id="settings-view" class="view-section">
           <div class="account-page-single">
-            <h2 class="section-title">App Settings</h2>
+            <div class="card-header" style="margin-bottom: 1.5rem;">
+              <div>
+                <p class="anime-card-meta" style="margin-bottom: 0.35rem;">Preferences Center</p>
+                <h2 class="section-title" style="margin-bottom: 0.35rem;">Settings</h2>
+                <p class="anime-card-meta" style="margin-bottom: 0;">Control app appearance, notifications, playback behavior, and default library actions.</p>
+              </div>
+              <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+                <button type="button" class="wl-control-btn" data-open-view="profile-view">Open Profile</button>
+                <button type="button" class="wl-control-btn" data-open-view="export-view">Open Data</button>
+              </div>
+            </div>
 
             <!-- APPEARANCE -->
             <div class="settings-section-card">
@@ -894,10 +916,20 @@
           </div>
         </div>
 
-        <!-- Export Data View -->
+        <!-- Data View -->
         <div id="export-view" class="view-section">
           <div class="account-page-single">
-            <h2 class="section-title">Export Your Data</h2>
+            <div class="card-header" style="margin-bottom: 1.5rem;">
+              <div>
+                <p class="anime-card-meta" style="margin-bottom: 0.35rem;">Data Center</p>
+                <h2 class="section-title" style="margin-bottom: 0.35rem;">Import & Export</h2>
+                <p class="anime-card-meta" style="margin-bottom: 0;">Back up your library, download account data, and import MyAnimeList XML safely.</p>
+              </div>
+              <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+                <button type="button" class="wl-control-btn" data-open-view="profile-view">Open Profile</button>
+                <button type="button" class="wl-control-btn" data-open-view="settings-view">Open Settings</button>
+              </div>
+            </div>
 
             <!-- Stats Preview -->
             <div class="export-preview-card" id="export-preview-card">
@@ -919,7 +951,7 @@
             <div class="export-main-card">
               <span class="material-icons"
                 style="font-size: 3.5rem; color: var(--primary); margin-bottom: 1rem; display:block;">download_for_offline</span>
-              <h3 style="font-size: 1.4rem; font-weight: 700; margin-bottom: 0.5rem;">Download Profile Archive</h3>
+              <h3 style="font-size: 1.4rem; font-weight: 700; margin-bottom: 0.5rem;">Download Library Archive</h3>
               <p style="color: #94a3b8; max-width: 480px; margin: 0 auto 2rem; line-height: 1.6; font-size:0.9rem;">
                 Export a
                 secure copy of your entire watchlist, completed series, ratings, and profile settings.</p>

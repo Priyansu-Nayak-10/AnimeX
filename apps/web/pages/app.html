@@ -178,7 +178,6 @@
                       <h3 class="card-title" style="margin-bottom: 0.15rem;">Genre Snapshot</h3>
                       <p class="anime-card-meta" style="margin-bottom: 0;">A quick preview of your completed anime taste.</p>
                     </div>
-                    <button type="button" class="wl-control-btn" data-open-view="insights-view">Open Insights</button>
                   </div>
                   <div class="legend">
                     <div class="legend-item">
@@ -268,7 +267,6 @@
                     <h3 class="card-title" style="margin-bottom: 0.15rem;">Insights Snapshot</h3>
                     <p class="anime-card-meta" style="margin-bottom: 0;">A compact preview of your full analytics profile.</p>
                   </div>
-                  <button type="button" class="wl-control-btn" data-open-view="insights-view">Open Insights</button>
                 </div>
                 <div class="quick-stats-list">
                   <div class="stat-row">
@@ -320,7 +318,6 @@
                   <h2 class="section-title" style="margin-bottom: 0.35rem;">Discover Anime</h2>
                   <p class="anime-card-meta" style="margin-bottom: 0;">Use filters to search across genres, years, formats, and seasonal metadata.</p>
                 </div>
-                <button type="button" class="wl-control-btn" data-open-view="season-view">Browse Seasonal Picks</button>
               </div>
               <div class="advanced-search-header">
                 <h2 class="section-title mb-4">Discovery Filters</h2>
@@ -719,10 +716,6 @@
                     <h2 class="section-title" style="margin-bottom: 0.35rem;">Profile</h2>
                     <p class="anime-card-meta" style="margin-bottom: 0;">Manage your public identity, avatar, banner, and social profile links.</p>
                   </div>
-                  <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
-                    <button type="button" class="wl-control-btn" data-open-view="settings-view">Open Settings</button>
-                    <button type="button" class="wl-control-btn" data-open-view="export-view">Open Data</button>
-                  </div>
                 </div>
 
                 <!-- Card Header -->
@@ -788,10 +781,6 @@
                 <p class="anime-card-meta" style="margin-bottom: 0.35rem;">Preferences Center</p>
                 <h2 class="section-title" style="margin-bottom: 0.35rem;">Settings</h2>
                 <p class="anime-card-meta" style="margin-bottom: 0;">Control app appearance, notifications, playback behavior, and default library actions.</p>
-              </div>
-              <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
-                <button type="button" class="wl-control-btn" data-open-view="profile-view">Open Profile</button>
-                <button type="button" class="wl-control-btn" data-open-view="export-view">Open Data</button>
               </div>
             </div>
 
@@ -925,10 +914,6 @@
                 <h2 class="section-title" style="margin-bottom: 0.35rem;">Import & Export</h2>
                 <p class="anime-card-meta" style="margin-bottom: 0;">Back up your library, download account data, and import MyAnimeList XML safely.</p>
               </div>
-              <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
-                <button type="button" class="wl-control-btn" data-open-view="profile-view">Open Profile</button>
-                <button type="button" class="wl-control-btn" data-open-view="settings-view">Open Settings</button>
-              </div>
             </div>
 
             <!-- Stats Preview -->
@@ -1031,16 +1016,13 @@
                 <h2 class="premium-season-title">Discover <span class="season-gradient-word">Seasonal Anime</span></h2>
                 <p class="season-subtitle">Curated picks from every season — from anticipated premieres to hidden gems worth your time.</p>
               </div>
-              <div style="display: flex; align-items: center; gap: 0.85rem; flex-wrap: wrap; justify-content: flex-end;">
-                <button type="button" class="wl-control-btn" data-open-view="search-view">Open Discover</button>
-                <div class="season-dropdown" data-season-dropdown-wrapper>
+              <div class="season-dropdown" data-season-dropdown-wrapper>
                 <button id="season-dropdown-toggle" class="season-dropdown-toggle" aria-haspopup="true"
                   aria-expanded="false">
                   Select Season
                   <span class="chevron">▾</span>
                 </button>
-                  <div class="season-dropdown-menu" id="season-dropdown-menu" role="listbox"></div>
-                </div>
+                <div class="season-dropdown-menu" id="season-dropdown-menu" role="listbox"></div>
               </div>
             </div>
 

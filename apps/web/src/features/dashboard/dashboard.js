@@ -264,6 +264,32 @@ function initRecommendations({ store, libraryStore, selectors, toast = null }) {
     }).join("");
   }
 
+  const GENRE_META = {
+    action: { icon: "local_fire_department", color: "#ef4444" },
+    adventure: { icon: "explore", color: "#f59e0b" },
+    comedy: { icon: "sentiment_very_satisfied", color: "#eab308" },
+    drama: { icon: "theater_comedy", color: "#8b5cf6" },
+    fantasy: { icon: "auto_fix_high", color: "#10b981" },
+    romance: { icon: "favorite", color: "#ec4899" },
+    "sci-fi": { icon: "rocket_launch", color: "#06b6d4" },
+    slice: { icon: "local_cafe", color: "#14b8a6" },
+    mystery: { icon: "search", color: "#6366f1" },
+    thriller: { icon: "bolt", color: "#dc2626" },
+    horror: { icon: "psychology", color: "#7f1d1d" },
+    sports: { icon: "sports_baseball", color: "#f97316" },
+    supernatural: { icon: "visibility", color: "#8b5cf6" },
+    isekai: { icon: "vpn_key", color: "#34d399" },
+    mecha: { icon: "smart_toy", color: "#94a3b8" }
+  };
+
+  function getGenreConfig(genreName) {
+    const norm = String(genreName).toLowerCase().replace(/_/g, " ");
+    for (const [key, val] of Object.entries(GENRE_META)) {
+      if (norm.includes(key)) return val;
+    }
+    return { icon: "local_offer", color: "#8b5cf6" };
+  }
+
   function render() {
     const dataState = store.getState();
     const libraryItems = libraryStore.getAll();
@@ -282,7 +308,11 @@ function initRecommendations({ store, libraryStore, selectors, toast = null }) {
     if (refs.quickTopGenres) {
       refs.quickTopGenres.innerHTML = genres.length
         ? genres.map(([genre]) => {
-          return `<span class="genre-badge" data-genre="${escapeHtml(genre)}">${escapeHtml(genre)}</span>`;
+          const conf = getGenreConfig(genre);
+          return `<div class="genre-chip" style="--accent: ${conf.color}">
+            <span class="material-icons">${conf.icon}</span>
+            <span>${escapeHtml(genre)}</span>
+          </div>`;
         }).join("")
         : '<span class="anime-card-meta">No genre data yet</span>';
     }
@@ -554,10 +584,10 @@ function initUpcomingWidget({ fetchImpl = fetch.bind(globalThis), storage = glob
         <div class="news-thumb">
           ${img ? `<img class="news-thumb-img" src="${escapeHtml(img)}" alt="${escapeHtml(title)}" loading="lazy" />` : '<div class="news-thumb-fallback">🎬</div>'}
         </div>
-        <div class="news-badge news-badge-mal">HYPE</div>
+        <div class="news-badge news-badge-mal" style="background: rgba(249, 115, 22, 0.15); color: #f97316; border: 1px solid rgba(249, 115, 22, 0.3);">🔥 Trending</div>
         <div>
-          <h4 class="anime-card-title" style="font-size: 13px; font-weight: 500; line-height: 1.3;">${escapeHtml(title)}</h4>
-          <div class="flex items-center gap-1 anime-card-meta" style="margin-top: 0.3rem;">
+          <h4 class="anime-card-title" style="font-size: 14px; font-weight: 700; line-height: 1.4; margin-bottom: 0.35rem;">${escapeHtml(title)}</h4>
+          <div class="flex items-center gap-1 anime-card-meta" style="margin-top: 0.4rem; font-size: 0.7rem;">
             <span>${escapeHtml(date)} • ${escapeHtml(studio)}</span>
           </div>
         </div>
@@ -857,9 +887,23 @@ function initMilestones({ libraryStore }) {
   function render() {
     const stats = libraryStore.getStats();
     const tiles = MILESTONES_DEF.map((m) => {
-      const unlocked = m.check(stats, cachedNotifs);
-      return `<div class="milestone-tile ${unlocked ? "unlocked" : "locked"}" title="${escapeHtml(m.desc)}">
-        <span class="milestone-icon">${m.icon}</span>
+      const isCompleted = m.check(stats, cachedNotifs);
+      
+      let isUnlocked = false;
+      if (!isCompleted) {
+         if (m.key === "lost_found" || m.key === "archivist") isUnlocked = stats.total > 0;
+         if (m.key === "active_tracker") isUnlocked = stats.watching > 0;
+         if (m.key === "series_finished") isUnlocked = stats.watching > 0;
+      }
+      
+      const stateClass = isCompleted ? "completed" : (isUnlocked ? "unlocked" : "locked");
+      const checkmark = isCompleted ? `<div class="milestone-checkmark"><span class="material-icons" style="font-size:0.75rem; font-weight:bold;">check</span></div>` : '';
+
+      return `<div class="milestone-tile ${stateClass}" title="${escapeHtml(m.desc)}">
+        <div style="position:relative;">
+          <span class="milestone-icon">${m.icon}</span>
+          ${checkmark}
+        </div>
         <span class="milestone-name">${escapeHtml(m.name)}</span>
         <span class="milestone-desc">${escapeHtml(m.desc)}</span>
       </div>`;

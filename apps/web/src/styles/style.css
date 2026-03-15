@@ -596,3 +596,39 @@
         transform: translateY(0);
     }
 }
+
+/* ── Dashboard Quick Stats: Genre Chips ── */
+.genre-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #e2e8f0;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: default;
+    transition: all 0.25s ease;
+    margin-right: 6px;
+    margin-bottom: 6px;
+}
+
+.genre-chip .material-icons {
+    font-size: 1.1rem;
+    color: var(--accent, #8b5cf6);
+    transition: transform 0.25s ease;
+}
+
+.genre-chip:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--accent, #8b5cf6);
+    box-shadow: 0 0 15px var(--accent, rgba(139, 92, 246, 0.2));
+    transform: translateY(-2px);
+    color: #fff;
+}
+
+.genre-chip:hover .material-icons {
+    transform: scale(1.1);
+}

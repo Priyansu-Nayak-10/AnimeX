@@ -129,31 +129,50 @@ body.auth-page {
 .form-group-minimal {
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
+    position: relative;
+    /* Floating Label Structure */
 }
 
 .form-group-minimal label {
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: #fff;
-    margin-left: 0.5rem;
+    position: absolute;
+    left: 1.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.95rem;
+    color: var(--auth-text-muted);
+    pointer-events: none;
+    transition: 0.3s ease all;
+    z-index: 2;
+    margin-left: 0;
+}
+
+.form-group-minimal.focused label,
+.form-group-minimal.has-value label {
+    top: 0.8rem;
+    font-size: 0.72rem;
+    color: var(--auth-accent);
 }
 
 .form-group-minimal input {
     background: var(--auth-input-bg);
     border: 1.5px solid var(--auth-input-border);
     border-radius: 100px;
-    padding: 1rem 1.75rem;
+    padding: 1.5rem 1.75rem 0.5rem; /* give space for floating label */
     color: #fff;
     font-family: inherit;
     font-size: 0.95rem;
     transition: all 0.3s;
+    width: 100%;
+}
+
+.form-group-minimal input::placeholder {
+    color: transparent; /* Hide placeholder to allow floating label to perform properly */
 }
 
 .form-group-minimal input:focus {
     outline: none;
-    border-color: var(--auth-primary);
-    box-shadow: 0 0 15px rgba(139, 92, 246, 0.15);
+    border-color: var(--auth-accent);
+    box-shadow: 0 0 25px rgba(192, 132, 252, 0.25), inset 0 0 12px rgba(192, 132, 252, 0.1);
 }
 
 .password-wrapper {
@@ -167,7 +186,7 @@ body.auth-page {
     padding-right: 3.5rem;
 }
 
-.minimal-toggle-pass {
+.toggle-password {
     position: absolute;
     right: 1.5rem;
     background: none;
@@ -176,9 +195,10 @@ body.auth-page {
     cursor: pointer;
     font-size: 1rem;
     transition: color 0.3s;
+    z-index: 3;
 }
 
-.minimal-toggle-pass:hover {
+.toggle-password:hover {
     color: #fff;
 }
 
@@ -228,7 +248,9 @@ body.auth-page {
 
 .btn-minimal-submit {
     margin-top: 1.5rem;
-    background: linear-gradient(to right, #6d28d9, #8b5cf6);
+    background: linear-gradient(270deg, #6d28d9, #8b5cf6, #c084fc, #6d28d9);
+    background-size: 300% 300%;
+    animation: gradientShift 6s ease infinite;
     color: #fff;
     border: none;
     border-radius: 100px;
@@ -239,12 +261,19 @@ body.auth-page {
     transition: all 0.3s;
     box-shadow: 0 10px 20px rgba(109, 40, 217, 0.2);
     position: relative;
+    overflow: hidden;
+}
+
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
 }
 
 .btn-minimal-submit:hover {
     transform: translateY(-2px);
-    box-shadow: 0 15px 30px rgba(109, 40, 217, 0.3);
-    filter: brightness(1.1);
+    box-shadow: 0 15px 30px rgba(109, 40, 217, 0.4), 0 0 20px rgba(192, 132, 252, 0.3);
+    filter: brightness(1.15);
 }
 
 .btn-minimal-submit .spinner {
@@ -263,6 +292,49 @@ body.auth-page {
 
 @keyframes auth-spin {
     to { transform: translateY(-50%) rotate(360deg); }
+}
+
+/* Availability Indicator */
+.availability-indicator {
+    position: absolute;
+    right: 1.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1rem;
+    z-index: 3;
+    display: none;
+    pointer-events: none;
+}
+
+.availability-indicator.loading {
+    display: block;
+    color: var(--auth-text-muted);
+}
+.availability-indicator.loading::before {
+    content: '\f110'; /* FontAwesome spinner */
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    animation: auth-spin 1s infinite linear;
+}
+
+.availability-indicator.success {
+    display: block;
+    color: #22c55e;
+}
+.availability-indicator.success::before {
+    content: '\f00c'; /* FontAwesome check */
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+}
+
+.availability-indicator.error {
+    display: block;
+    color: #ef4444;
+}
+.availability-indicator.error::before {
+    content: '\f00d'; /* FontAwesome xmark */
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
 }
 
 /* --- Right: Mascot Section --- */

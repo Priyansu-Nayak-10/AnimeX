@@ -36,14 +36,15 @@ export const initAnimations = () => {
     const inputs = document.querySelectorAll('.auth-input');
 
     inputs.forEach(input => {
-        if (input.value.trim() !== '') input.classList.add('has-value');
+        const parent = input.closest('.form-group-minimal') || input.parentElement;
+        if (input.value.trim() !== '') parent.classList.add('has-value');
 
-        input.addEventListener('focus', () => input.parentElement.classList.add('focused'));
+        input.addEventListener('focus', () => parent.classList.add('focused'));
 
         input.addEventListener('blur', () => {
-            input.parentElement.classList.remove('focused');
-            if (input.value.trim() !== '') input.classList.add('has-value');
-            else input.classList.remove('has-value');
+            parent.classList.remove('focused');
+            if (input.value.trim() !== '') parent.classList.add('has-value');
+            else parent.classList.remove('has-value');
         });
 
         input.addEventListener('input', () => {
@@ -164,6 +165,50 @@ function isSessionValid(session) {
     return Date.now() < (exp * 1000 - 15000);
 }
 
+// --- Utils ---
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
+async function checkUsernameAvailability(username, indicator) {
+    if (!username || username.length < 3) {
+        indicator.className = 'availability-indicator';
+        return false;
+    }
+    indicator.className = 'availability-indicator loading';
+    try {
+        const { data, error } = await supabase
+            .from('user_profiles')
+            .select('name')
+            .ilike('name', username)
+            .maybeSingle();
+            
+        if (error) throw error;
+        
+        if (data) {
+            indicator.className = 'availability-indicator error';
+            indicator.title = 'Username is already taken';
+            return false;
+        } else {
+            indicator.className = 'availability-indicator success';
+            indicator.title = 'Username is available';
+            return true;
+        }
+    } catch (err) {
+        console.error('Check username auth error', err);
+        indicator.className = 'availability-indicator';
+        return true; 
+    }
+}
+
 // --- Main Auth Logic (SignIn & SignUp) ---
 document.addEventListener('DOMContentLoaded', async () => {
     // Prevent redirect loops with a short-lived lock
@@ -230,11 +275,51 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Sign Up Logic
     if (signUpForm) {
         const submitBtn = document.getElementById('signup-btn');
+        const usernameInput = document.getElementById('username');
+        const indicator = document.getElementById('username-indicator');
+        
+        let isUsernameAvailable = false;
+        let lastCheckedUsername = '';
+        
+        if (usernameInput && indicator) {
+            usernameInput.addEventListener('input', debounce(async (e) => {
+                const val = e.target.value.trim();
+                if (val === lastCheckedUsername) return;
+                lastCheckedUsername = val;
+                
+                if (val.length < 3) {
+                    showInlineError(usernameInput, 'Username must be at least 3 characters');
+                    indicator.className = 'availability-indicator error';
+                    isUsernameAvailable = false;
+                    return;
+                }
+                clearInlineError(usernameInput);
+                isUsernameAvailable = await checkUsernameAvailability(val, indicator);
+                if (!isUsernameAvailable) {
+                     showInlineError(usernameInput, 'Username is unavailable');
+                }
+            }, 500));
+        }
+
         signUpForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             clearBackendError(errorContainer);
 
             let isValid = true;
+            
+            if (usernameInput) {
+                const uname = usernameInput.value.trim();
+                if (uname.length < 3) {
+                    showInlineError(usernameInput, 'Username is required');
+                    isValid = false;
+                } else if (!isUsernameAvailable && uname === lastCheckedUsername) {
+                    showInlineError(usernameInput, 'Please choose an available username');
+                    isValid = false;
+                } else {
+                    clearInlineError(usernameInput);
+                }
+            }
+            
             if (!validateEmail(emailInput.value)) {
                 showInlineError(emailInput, 'Please enter a valid email address');
                 isValid = false;
@@ -265,6 +350,15 @@ document.addEventListener('DOMContentLoaded', async () => {
                     password: passwordInput.value
                 });
                 if (error) throw error;
+                
+                // Immediately create a profile if successful and session is given (no email confirmation needed)
+                if (data?.user && usernameInput && data.session) {
+                   await supabase.from('user_profiles').insert([{
+                       user_id: data.user.id,
+                       name: usernameInput.value.trim()
+                   }]);
+                }
+                
                 if (data?.user && !data.session) {
                     showBackendError(errorContainer, 'Registration successful. Please check your email inbox to confirm your account.');
                     return;

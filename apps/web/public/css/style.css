@@ -841,7 +841,7 @@ body.dark .username {
     display: grid;
     grid-template-columns: repeat(12, minmax(0, 1fr));
     gap: 2rem;
-    max-width: 100rem;
+    max-width: 1200px;
     margin: 0 auto;
 }
 
@@ -4968,7 +4968,7 @@ body.modal-open {
 
 .insights-main-grid {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: 1fr;
     gap: 2rem;
 }
 
@@ -7172,27 +7172,56 @@ body:not(.dark) .milestone-tile {
     border-color: rgba(124, 58, 237, 0.1);
 }
 
+.milestone-tile:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
 .milestone-tile.locked {
     opacity: 0.42;
     filter: saturate(0);
 }
 
-.milestone-tile.locked::after {
-    content: '??';
-    position: absolute;
-    top: 0.35rem;
-    right: 0.45rem;
-    font-size: 0.65rem;
-    opacity: 0.55;
+.milestone-tile.locked .milestone-icon {
+    filter: blur(2px);
 }
 
 .milestone-tile.unlocked {
     opacity: 1;
-    filter: saturate(1);
     border-color: rgba(124, 58, 237, 0.35);
-    background: rgba(124, 58, 237, 0.08);
-    box-shadow: 0 0 0 1px rgba(124, 58, 237, 0.2), 0 4px 24px rgba(124, 58, 237, 0.15);
-    animation: milestone-pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    background: linear-gradient(135deg, rgba(124, 58, 237, 0.08), transparent);
+    box-shadow: 0 0 10px rgba(124, 58, 237, 0.15);
+}
+
+.milestone-tile.unlocked:hover {
+    box-shadow: 0 0 0 1px rgba(124, 58, 237, 0.4), 0 8px 28px rgba(124, 58, 237, 0.2);
+}
+
+.milestone-tile.completed {
+    opacity: 1;
+    border-color: #22c55e;
+    background: rgba(34, 197, 94, 0.08);
+    box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.2), 0 4px 24px rgba(34, 197, 94, 0.15);
+}
+
+.milestone-tile.completed:hover {
+    box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.4), 0 8px 28px rgba(34, 197, 94, 0.25);
+}
+
+.milestone-checkmark {
+    position: absolute;
+    top: -4px;
+    right: -10px;
+    background: #22c55e;
+    color: white;
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    box-shadow: 0 2px 8px rgba(34, 197, 94, 0.4);
+    z-index: 2;
 }
 
 @keyframes milestone-pop {
@@ -7203,11 +7232,6 @@ body:not(.dark) .milestone-tile {
     100% {
         transform: scale(1);
     }
-}
-
-.milestone-tile.unlocked:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 0 0 1px rgba(124, 58, 237, 0.4), 0 8px 28px rgba(124, 58, 237, 0.2);
 }
 
 .milestone-icon {
@@ -7665,15 +7689,30 @@ body.dark .tracker-item-title {
 #profile-view .edit-banner-btn {
     bottom: 0.85rem;
     right: 0.85rem;
-    border-radius: 999px;
+    border-radius: 50%;
     border: 1px solid rgba(255, 255, 255, 0.28);
-    background: rgba(2, 6, 23, 0.5);
-    padding: 0.35rem 0.75rem;
-    font-size: 0.68rem;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 0.6rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    color: white;
+}
+
+#profile-view .edit-banner-btn:hover {
+    transform: scale(1.1);
+    background: rgba(255, 255, 255, 0.25);
+    border-color: white;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
 }
 
 #profile-view .edit-banner-btn .material-icons {
-    font-size: 0.95rem;
+    font-size: 1.2rem;
 }
 
 #profile-view .profile-avatar-section {
